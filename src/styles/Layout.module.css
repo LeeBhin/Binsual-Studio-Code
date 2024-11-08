@@ -1,0 +1,49 @@
+.titlebar {
+  background-color: #1f1f1f;
+  width: 100vw;
+  height: 35px;
+  color: #cccccc;
+}
+
+.titlebar-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+}
+
+.titlebar-center {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 17px;
+}
+
+.titlebar-arrow-bg {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.titlebar-arrow-bg:hover {
+  background-color: #3e3e3eb0;
+}
+
+.search-wrap {
+  font-size: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 370px;
+  height: 23px;
+  background-color: #ffffff0d;
+  border: solid 1px #9d9d9d40;
+  border-radius: 6px;
+  cursor: pointer;
+  margin: 0 6px;
+}
