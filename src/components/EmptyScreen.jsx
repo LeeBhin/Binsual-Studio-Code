@@ -13,9 +13,9 @@ const EmptyScreen = () => {
           </div>
         </div>
         <div>
-          <div className={css["short-txt"]}>페이지에서 찾기</div>
+          <div className={css["short-txt"]}>파일에서 찾기</div>
           <div className={css.keys}>
-            <span>Ctrl</span>+<span>F</span>
+            <span>Ctrl</span>+<span>Shift</span>+<span>F</span>
           </div>
         </div>
         <div>
