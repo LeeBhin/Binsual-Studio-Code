@@ -19,15 +19,15 @@ const EmptyScreen = () => {
           </div>
         </div>
         <div>
-          <div className={css["short-txt"]}>전체 화면 설정/해제</div>
-          <div className={css.keys}>
-            <span>F11</span>
-          </div>
-        </div>
-        <div>
           <div className={css["short-txt"]}>페이지 닫기</div>
           <div className={css.keys}>
             <span>Alt</span>+<span>F4</span>
+          </div>
+        </div>
+        <div>
+          <div className={css["short-txt"]}>전체 화면 설정/해제</div>
+          <div className={css.keys}>
+            <span>F11</span>
           </div>
         </div>
         <div>
