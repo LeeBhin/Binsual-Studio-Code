@@ -34,7 +34,7 @@
   gap: 4px;
 }
 
-.titlebar-icon-bg {
+.icon-bg {
   width: 22px;
   height: 22px;
   border-radius: 5px;
@@ -44,7 +44,7 @@
   cursor: pointer;
 }
 
-.titlebar-icon-bg:hover {
+.icon-bg:hover {
   background-color: #2d2e2e;
 }
 
@@ -71,16 +71,11 @@
 /* activitybar */
 .activitybar {
   background-color: #181818;
-  width: 48px;
+  width: 253px;
   height: calc(100vh - 36px);
   color: #868686;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.activitybar > div {
-  cursor: pointer;
+  float: left;
 }
 
 .menubar:hover,
@@ -89,11 +84,12 @@
 }
 
 .menubar {
-  width: 100%;
+  width: 48px;
   height: 35px;
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
 }
 
 .taskbar-wrap {
@@ -103,4 +99,30 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+}
+
+/* sidebar */
+.sidebar {
+  width: 205px;
+  background-color: #181818;
+  border-left: 1px solid #2b2b2b;
+  color: #cccccc;
+}
+
+.sidebar-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 35px;
+  font-size: 11px;
+  padding: 0 15px;
+}
+
+.ellipsis {
+  font-size: 16px;
+}
+
+.main {
+  float: left;
 }
