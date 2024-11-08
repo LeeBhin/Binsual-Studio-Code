@@ -2,6 +2,47 @@
   background-color: #1f1f1f;
   display: flex;
   height: 100%;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+  font-size: 13px;
+}
+
+.shortkey {
+  width: auto;
+  margin-top: 5px;
+}
+
+.shortkey > div {
+  display: flex;
+  align-items: center;
+}
+
+.short-txt {
+  list-style-type: none;
+  color: #cccccc99;
+  margin: 10px;
+  flex: 1;
+  text-align: right;
+  float: right;
+}
+
+.keys {
+  color: #cccccc;
+  flex: 1;
+}
+
+.keys span {
+  background-color: #8080802b;
+  border: 0.67px solid #33333399;
+  border-radius: 3px;
+  border-bottom-color: #44444499;
+  box-shadow: inset 0px -1px 0px #0000005c;
+  color: #cccccc;
+  font-size: 11px;
+  height: 10px;
+  line-height: 10px;
+  padding: 2px 6px;
+  width: auto;
+  margin: 0 2px;
 }

@@ -30,7 +30,7 @@
   justify-content: flex-end;
   align-items: center;
   flex: 2;
-  padding-right: 2px;
+  padding-right: 3px;
   gap: 4px;
 }
 
@@ -60,6 +60,7 @@
   gap: 5px;
   width: 40vw;
   max-width: 600px;
+  min-width: 10px;
   height: 23px;
   background-color: #ffffff0d;
   border: solid 1px #9d9d9d40;
@@ -127,6 +128,6 @@
   font-size: 16px;
 }
 
-.main{
+.main {
   flex: 1;
 }

@@ -1,12 +1,12 @@
+import EmptyScreen from "../components/EmptyScreen";
 import css from "../styles/Home.module.css";
-import { ReactComponent as BackgroundSVG } from "../assets/svgs/background-icon.svg";
 
-function Home() {
+const Home = () => {
   return (
     <div className={css.Home}>
-      <BackgroundSVG />
+      <EmptyScreen />
     </div>
   );
-}
+};
 
 export default Home;
