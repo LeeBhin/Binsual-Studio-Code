@@ -68,6 +68,10 @@
   margin: 0 6px;
 }
 
+.wrap {
+  display: flex;
+}
+
 /* activitybar */
 .activitybar {
   background-color: #181818;
@@ -75,7 +79,7 @@
   height: calc(100vh - 36px);
   color: #868686;
   display: flex;
-  float: left;
+  float: 1;
 }
 
 .menubar:hover,
@@ -123,6 +127,6 @@
   font-size: 16px;
 }
 
-.main {
-  float: left;
+.main{
+  flex: 1;
 }

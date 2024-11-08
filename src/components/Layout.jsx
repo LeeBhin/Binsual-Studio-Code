@@ -56,44 +56,47 @@ const Layout = ({ children }) => {
         </div>
       </header>
 
-      <header className={css.activitybar}>
-        <div className={css["activitybar-wrap"]}>
-          <div className={css.menubar}>
-            <VscMenu />
+      <div className={css.wrap}>
+        <header className={css.activitybar}>
+          <div className={css["activitybar-wrap"]}>
+            <div className={css.menubar}>
+              <VscMenu />
+            </div>
+
+            <div className={css.taskbar}>
+              <div className={css["taskbar-wrap"]}>
+                <VscFiles />
+              </div>
+              <div className={css["taskbar-wrap"]}>
+                <VscSearch />
+              </div>
+              <div className={css["taskbar-wrap"]}>
+                <VscSourceControl />
+              </div>
+              <div className={css["taskbar-wrap"]}>
+                <VscDebugAlt />
+              </div>
+              <div className={css["taskbar-wrap"]}>
+                <VscDatabase />
+              </div>
+              <div className={css["taskbar-wrap"]}>
+                <VscExtensions />
+              </div>
+            </div>
           </div>
 
-          <div className={css.taskbar}>
-            <div className={css["taskbar-wrap"]}>
-              <VscFiles />
-            </div>
-            <div className={css["taskbar-wrap"]}>
-              <VscSearch />
-            </div>
-            <div className={css["taskbar-wrap"]}>
-              <VscSourceControl />
-            </div>
-            <div className={css["taskbar-wrap"]}>
-              <VscDebugAlt />
-            </div>
-            <div className={css["taskbar-wrap"]}>
-              <VscDatabase />
-            </div>
-            <div className={css["taskbar-wrap"]}>
-              <VscExtensions />
+          <div className={css.sidebar}>
+            <div className={css["sidebar-title"]}>
+              <span className={css["sidebar-title-txt"]}>탐색기</span>
+              <div className={`${css["icon-bg"]} ${css.ellipsis}`}>
+                <VscEllipsis />
+              </div>
             </div>
           </div>
-        </div>
-
-        <div className={css.sidebar}>
-          <div className={css["sidebar-title"]}>
-            <span className={css["sidebar-title-txt"]}>탐색기</span>
-            <div className={`${css["icon-bg"]} ${css.ellipsis}`}>
-              <VscEllipsis />
-            </div>
-          </div>
-        </div>
-      </header>
-      <main className={css.main}>{children}</main>
+        </header>
+        
+        <main className={css.main}>{children}</main>
+      </div>
 
       <footer className={css.footer}></footer>
     </div>
