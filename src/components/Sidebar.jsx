@@ -1,5 +1,6 @@
 import { VscEllipsis } from "react-icons/vsc";
 import css from "../styles/Layout.module.css";
+import FolderTree from "./TreeNode";
 
 const Sidebar = () => {
   return (
@@ -9,6 +10,9 @@ const Sidebar = () => {
         <div className={`${css["icon-bg"]} ${css.ellipsis}`}>
           <VscEllipsis />
         </div>
+      </div>
+      <div className={css["sidebar-content"]}>
+        <FolderTree />
       </div>
     </div>
   );

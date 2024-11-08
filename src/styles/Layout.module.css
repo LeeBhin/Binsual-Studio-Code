@@ -131,3 +131,12 @@
 .main {
   flex: 1;
 }
+
+/* treeNode */
+.treeNode {
+  cursor: pointer;
+}
+
+.treeChildren {
+  margin-left: 15px;
+}
