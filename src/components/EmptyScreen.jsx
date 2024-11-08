@@ -7,7 +7,7 @@ const EmptyScreen = () => {
       <BackgroundSVG />
       <div className={css.shortkey}>
         <div>
-          <div className={css["short-txt"]}>깃허브 열기</div>
+          <div className={css["short-txt"]}>GitHub 열기</div>
           <div className={css.keys}>
             <span>Ctrl</span>+<span>Alt</span>+<span>G</span>
           </div>
@@ -31,9 +31,9 @@ const EmptyScreen = () => {
           </div>
         </div>
         <div>
-          <div className={css["short-txt"]}>페이지에서 찾기</div>
+          <div className={css["short-txt"]}>응원하기</div>
           <div className={css.keys}>
-            <span>Ctrl</span>+<span>F</span>
+            <span>Ctrl</span>+<span>Shift</span>+<span>Alt</span>+<span>F</span>
           </div>
         </div>
       </div>
