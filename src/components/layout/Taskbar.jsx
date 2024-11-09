@@ -1,4 +1,4 @@
-import css from "../styles/Layout.module.css";
+import css from "../../styles/Layout.module.css"
 
 import {
   VscSearch,
