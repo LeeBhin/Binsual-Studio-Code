@@ -28,7 +28,7 @@ const TreeNode = memo(({ name, children, isFile, extension }) => {
     };
 
     return (
-        <div className={css.treeNodeWrap} style={name === "LEE BHIN" ? { paddingLeft: '0' } : {}}>
+        <div className={css.treeNodeWrap} style={name === "LEE BHIN" ? { paddingLeft: '2px' } : {}}>
             <div
                 className={css.treeNode}
                 onClick={handleClick}
@@ -39,7 +39,7 @@ const TreeNode = memo(({ name, children, isFile, extension }) => {
                         <div className={css.file}>
                             <div><VscBlank style={{ marginRight: '-1px' }} /></div>
                             <div><FileIcon extension={extension} /></div>
-                            <div className={css.name}>{name}</div>
+                            <span className={css.name}>{name}</span>
                         </div>
                     </div>
                 ) : (
@@ -70,7 +70,7 @@ const TreeNode = memo(({ name, children, isFile, extension }) => {
                                 </>
                             )}
                             <span style={name === "LEE BHIN" ? { fontWeight: 'bold', fontSize: '12px' } : {}}>
-                                {name}
+                                <div className={css.name}>{name}</div>
                             </span>
                         </div>
                     </div>

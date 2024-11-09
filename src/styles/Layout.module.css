@@ -152,10 +152,11 @@
 .fileWrap,
 .folderWrap {
   height: 22px;
+  width: 100%;
 }
 
 .fileHover {
-  width: 204px;
+  width: 205px;
   height: 22px;
   position: absolute;
   left: 0;
@@ -167,13 +168,20 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  width: 204px;
   height: 22px;
+  line-height: 1;
+  position: relative;
+  width: 205px;
+}
+
+.name {
+  width: 136px;
+  height: 22px;
+  line-height: 22px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1;
-  position: relative;
+  word-break: break-all;
 }
 
 .file div {
