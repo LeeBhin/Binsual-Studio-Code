@@ -234,3 +234,20 @@
   min-width: 16px;
   min-height: 20px;
 }
+
+.treeChildren {
+  overflow-x: hidden;
+}
+
+.treeChildren::-webkit-scrollbar {
+  width: 10px;
+}
+
+.treeChildren::-webkit-scrollbar-track {
+  background: transparent;
+  border: none;
+}
+
+.treeNodeWrap:hover .treeChildren::-webkit-scrollbar-thumb {
+  background-color: #4d4d4dcc;
+}
