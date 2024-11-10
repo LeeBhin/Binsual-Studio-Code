@@ -33,7 +33,7 @@ const EmptyScreen = () => {
         <div>
           <div className={css["short-txt"]}>응원하기</div>
           <div className={css.keys}>
-            <span>Ctrl</span>+<span>Shift</span>+<span>Alt</span>+<span>F</span>
+            <span>Ctrl</span>+<span>Shift</span>+<span>Alt</span>+<span>Enter</span>
           </div>
         </div>
       </div>

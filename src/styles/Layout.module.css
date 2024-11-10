@@ -138,10 +138,6 @@
   font-size: 13px;
 }
 
-.treeNodeWrap {
-  padding-left: 8px;
-}
-
 .treeNode {
   cursor: pointer;
   display: flex;
@@ -155,7 +151,12 @@
   width: 100%;
 }
 
-.fileHover {
+.fileWrap:hover,
+.folderWrap:hover {
+  background-color: #2d2e2e;
+}
+
+.hoverDiv {
   width: 205px;
   height: 22px;
   position: absolute;
@@ -184,15 +185,42 @@
   word-break: break-all;
 }
 
+.nameTxt {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.rootFolderTool {
+  display: none;
+  align-items: center;
+  font-size: 16px;
+  gap: 3px;
+}
+
+.name:hover .rootFolderTool {
+  display: flex;
+}
+
+.side-icon-bg {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.side-icon-bg:hover {
+  background-color: #2d2e2e;
+}
+
 .file div {
   display: flex;
   align-items: center;
   height: 22px;
-}
-
-.folderWrap:hover .fileHover,
-.fileWrap:hover .fileHover {
-  background: #37373d;
 }
 
 .treeIcon {

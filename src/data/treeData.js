@@ -25,16 +25,15 @@ const treeData = {
         },
         projects: {
             ChatHSF: {
-                'README.md': null,
                 images: {
                     'chathsf-1.png': null,
                     'chathsf-2.png': null,
                     'chathsf-3.png': null,
                     'chathsf-4.png': null,
-                }
+                },
+                'README.md': null,
             },
             Thiscord: {
-                'README.md': null,
                 images: {
                     'thiscord-1.png': null,
                     'thiscord-2.png': null,
@@ -44,10 +43,10 @@ const treeData = {
                     'thiscord-6.png': null,
                     'thiscord-7.png': null,
                     'thiscord-8.png': null,
-                }
+                },
+                'README.md': null,
             },
             Windows: {
-                'README.md': null,
                 images: {
                     'windows-1.png': null,
                     'windows-2.png': null,
@@ -55,20 +54,20 @@ const treeData = {
                     'windows-4.png': null,
                     'windows-5.png': null,
                     'windows-6.png': null,
-                }
+                },
+                'README.md': null,
             },
             community: {
-                'README.md': null,
                 images: {
                     'community-1.png': null,
                     'community-2.png': null,
                     'community-3.png': null,
                     'community-4.png': null,
                     'community-5.png': null,
-                }
+                },
+                'README.md': null,
             },
             Portfolio: {
-                'README.md': null,
                 images: {
                     'portfolio-1.png': null,
                     'portfolio-2.png': null,
@@ -76,7 +75,8 @@ const treeData = {
                     'portfolio-4.png': null,
                     'portfolio-5.png': null,
                     'portfolio-6.png': null,
-                }
+                },
+                'README.md': null,
             },
         },
         certification: {

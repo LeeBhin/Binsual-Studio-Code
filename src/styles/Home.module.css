@@ -22,20 +22,20 @@
 .shortkey>div {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .short-txt {
   list-style-type: none;
   color: #cccccc99;
-  margin: 10px;
-  flex: .5;
+  padding: 10px 0 10px 10px;
   text-align: right;
-  width: 200px;
+  width: 120px;
 }
 
 .keys {
+  padding: 10px 10px 10px 0;
   color: #cccccc;
-  flex: .65;
 }
 
 .keys span {

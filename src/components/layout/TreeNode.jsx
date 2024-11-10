@@ -1,5 +1,5 @@
 import React, { useState, memo } from 'react';
-import { VscChevronDown, VscChevronRight, VscBlank } from 'react-icons/vsc';
+import { VscChevronDown, VscChevronRight, VscBlank, VscNewFile, VscNewFolder, VscRefresh, VscCollapseAll } from 'react-icons/vsc';
 import Icons from '../../assets/icons';
 import css from "../../styles/Layout.module.css"
 import treeData from '../../data/treeData'
@@ -18,7 +18,7 @@ const FileIcon = ({ extension }) => {
     }
 };
 
-const TreeNode = memo(({ name, children, isFile, extension }) => {
+const TreeNode = memo(({ name, children, isFile, extension, depth }) => {
     const [isOpen, setIsOpen] = useState(false);
 
     const handleClick = () => {
@@ -28,30 +28,28 @@ const TreeNode = memo(({ name, children, isFile, extension }) => {
     };
 
     return (
-        <div className={css.treeNodeWrap} style={name === "LEE BHIN" ? { paddingLeft: '2px' } : {}}>
+        <div className={css.treeNodeWrap} >
             <div
                 className={css.treeNode}
                 onClick={handleClick}
             >
                 {isFile ? (
                     <div className={css.fileWrap}>
-                        <div className={css.fileHover} />
-                        <div className={css.file}>
+                        <div className={css.file} style={{ paddingLeft: `${depth * 8}px` }}>
                             <div><VscBlank style={{ marginRight: '-1px' }} /></div>
                             <div><FileIcon extension={extension} /></div>
                             <span className={css.name}>{name}</span>
                         </div>
                     </div>
                 ) : (
-                    <div className={css.folderWrap}>
-                        <div className={css.fileHover} />
-                        <div className={css.folder}>
+                    <div className={css.folderWrap} style={name === "LEE BHIN" ? { background: 'none' } : {}}>
+                        <div className={css.folder} style={{ paddingLeft: `${depth * 8}px` }}>
                             {name === "LEE BHIN" ? (
                                 <>
                                     {isOpen ? (
-                                        <div><VscChevronDown className={css.treeIcon} /></div>
+                                        <div><VscChevronDown className={css.treeIcon} style={{ paddingLeft: '1px' }} /></div>
                                     ) : (
-                                        <div><VscChevronRight className={css.treeIcon} /></div>
+                                        <div><VscChevronRight className={css.treeIcon} style={{ paddingLeft: '1px' }} /></div>
                                     )}
                                 </>
                             ) : (
@@ -70,13 +68,42 @@ const TreeNode = memo(({ name, children, isFile, extension }) => {
                                 </>
                             )}
                             <span style={name === "LEE BHIN" ? { fontWeight: 'bold', fontSize: '12px' } : {}}>
-                                <div className={css.name}>{name}</div>
+                                <div className={css.name} style={name === "LEE BHIN" ? { width: '180px', display: 'flex', justifyContent: 'space-between' } : {}}>
+                                    <div className={css.nameTxt}>
+                                        {name}
+                                    </div>
+                                    {name === "LEE BHIN" && (<div className={css.rootFolderTool}>
+                                        <div className={css["side-icon-bg"]}>
+                                            <VscNewFile />
+                                        </div>
+                                        <div className={css["side-icon-bg"]}>
+                                            <VscNewFolder />
+                                        </div>
+                                        <div className={css["side-icon-bg"]}>
+                                            <VscRefresh />
+                                        </div>
+                                        <div className={css["side-icon-bg"]}>
+                                            <VscCollapseAll />
+                                        </div>
+                                    </div>)}
+                                </div>
                             </span>
                         </div>
                     </div>
                 )}
             </div>
-            <div className={css.treeChildren} style={{ display: isOpen ? 'block' : 'none' }}>
+            <div className={css.treeChildren}
+                style={name === "LEE BHIN" ?
+                    {
+                        display: isOpen ? 'block' : 'none',
+                        overflowY: 'auto',
+                        overflowX: 'hidden',
+                        height: 'calc(100vh - 93px)'
+                    } :
+                    {
+                        display: isOpen ? 'block' : 'none'
+                    }
+                }>
                 {!isFile && Object.keys(children).map((key) => (
                     <TreeNode
                         key={key}
@@ -84,10 +111,11 @@ const TreeNode = memo(({ name, children, isFile, extension }) => {
                         children={children[key]}
                         isFile={children[key] === null}
                         extension={children[key] === null ? getExtension(key) : null}
+                        depth={depth + 1}
                     />
                 ))}
             </div>
-        </div>
+        </div >
     );
 });
 
@@ -105,7 +133,7 @@ const FolderTree = () => {
                     name={key}
                     children={treeData[key]}
                     isFile={false}
-                    path=""
+                    depth={0}
                 />
             ))}
         </div>
