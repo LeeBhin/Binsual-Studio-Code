@@ -57,7 +57,7 @@ const treeData = {
                 },
                 'README.md': null,
             },
-            community: {
+            Community: {
                 images: {
                     'community-1.png': null,
                     'community-2.png': null,
@@ -152,6 +152,7 @@ const treeData = {
         },
         '.env': null,
         'README.md': null,
+        '': null
     },
 };
 

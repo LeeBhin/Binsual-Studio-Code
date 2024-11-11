@@ -243,14 +243,8 @@
 }
 
 .treeChildren::-webkit-scrollbar {
-  /* width: 10px; */
   display: none;
 }
-
-/* .treeChildren::-webkit-scrollbar-track {
-  background: transparent;
-  border: none;
-} */
 
 .treeNodeWrap:hover .treeChildren::-webkit-scrollbar-thumb {
   background-color: #4d4d4dcc;
@@ -265,7 +259,7 @@
   top: 22px;
   right: 0;
   width: 10px;
-  height: calc(100% - 22px);
+  height: calc(100% - 30px);
 }
 
 .slider {
@@ -273,6 +267,7 @@
   position: absolute;
   transition: 1.3s background-color;
   z-index: 1;
+  max-height: calc(100% - 30px);
 }
 
 .slider:hover {
@@ -292,7 +287,6 @@
 }
 
 .content {
-  height: 1000px;
   overflow-y: scroll;
 }
 

@@ -160,7 +160,7 @@ const TreeNode = memo(
               ? {
                   display: isOpen ? "block" : "none",
                   overflowY: "auto",
-                  maxHeight: "calc(100vh - 95px)",
+                  maxHeight: "calc(100vh - 98px)",
                   height: "auto",
                   position: "relative",
                 }

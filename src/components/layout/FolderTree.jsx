@@ -16,31 +16,27 @@ const FolderTree = () => {
     if (!track || !slider || !scrollArea) return;
 
     const updateScrollbar = () => {
-      if (scrollArea.scrollHeight <= scrollArea.clientHeight) {
+      const { scrollHeight, clientHeight } = scrollArea;
+
+      if (scrollHeight <= clientHeight) {
         track.style.display = "none";
         return;
       }
 
-      console.log(scrollArea.scrollHeight, scrollArea.clientHeight);
-
       track.style.display = "block";
 
-      const scrollRatio = scrollArea.clientHeight / scrollArea.scrollHeight;
+      const scrollRatio = clientHeight / scrollHeight;
       const sliderHeight = Math.max(track.clientHeight * scrollRatio, 30);
       slider.style.height = `${sliderHeight}px`;
 
       const scrollTop = scrollArea.scrollTop;
-      const maxScroll = scrollArea.scrollHeight - scrollArea.clientHeight;
-      const scrollProgress = scrollTop / maxScroll;
+      const maxScrollTop = scrollHeight - clientHeight;
       const maxSliderTop = track.clientHeight - sliderHeight;
-      const sliderTop = scrollProgress * maxSliderTop;
-
+      const sliderTop = (scrollTop / maxScrollTop) * maxSliderTop;
       slider.style.top = `${sliderTop}px`;
     };
 
-    const handleScroll = () => {
-      updateScrollbar();
-    };
+    const handleScroll = () => updateScrollbar();
 
     let isDragging = false;
     let startY = 0;
@@ -57,9 +53,11 @@ const FolderTree = () => {
       if (!isDragging) return;
 
       const delta = e.clientY - startY;
-      const scrollRatio =
-        (scrollArea.scrollHeight - scrollArea.clientHeight) /
-        (track.clientHeight - slider.clientHeight);
+      const { scrollHeight, clientHeight } = scrollArea;
+      const maxScrollTop = scrollHeight - clientHeight;
+      const maxSliderTop = track.clientHeight - slider.clientHeight;
+      const scrollRatio = maxScrollTop / maxSliderTop;
+
       scrollArea.scrollTop = startScrollTop + delta * scrollRatio;
     };
 
@@ -74,25 +72,26 @@ const FolderTree = () => {
       const trackRect = track.getBoundingClientRect();
       const clickPosition = e.clientY - trackRect.top;
       const sliderHeight = slider.offsetHeight;
-
-      const newSliderTop = clickPosition - sliderHeight / 2;
-
       const maxSliderTop = track.clientHeight - sliderHeight;
       const boundedSliderTop = Math.max(
         0,
-        Math.min(newSliderTop, maxSliderTop)
+        Math.min(clickPosition - sliderHeight / 2, maxSliderTop)
       );
 
       const scrollRatio = boundedSliderTop / maxSliderTop;
-      const maxScroll = scrollArea.scrollHeight - scrollArea.clientHeight;
+      const maxScrollTop = scrollArea.scrollHeight - scrollArea.clientHeight;
 
-      scrollArea.scrollTop = scrollRatio * maxScroll;
+      scrollArea.scrollTop = scrollRatio * maxScrollTop;
+    };
+
+    const handleScrollAreaMouseUp = () => {
+      requestAnimationFrame(updateScrollbar);
     };
 
     const resizeObserver = new ResizeObserver(updateScrollbar);
     resizeObserver.observe(scrollArea);
 
-    scrollArea.addEventListener("click", updateScrollbar);
+    scrollArea.addEventListener("mouseup", handleScrollAreaMouseUp);
     scrollArea.addEventListener("scroll", handleScroll);
     slider.addEventListener("mousedown", handleMouseDown);
     track.addEventListener("mousedown", handleTrackClick);
@@ -103,6 +102,7 @@ const FolderTree = () => {
 
     return () => {
       resizeObserver.disconnect();
+      scrollArea.removeEventListener("mouseup", handleScrollAreaMouseUp);
       scrollArea.removeEventListener("scroll", handleScroll);
       slider.removeEventListener("mousedown", handleMouseDown);
       track.removeEventListener("click", handleTrackClick);
