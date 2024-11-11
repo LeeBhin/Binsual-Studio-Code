@@ -1,6 +1,6 @@
 import { VscEllipsis } from "react-icons/vsc";
-import css from "../../styles/Layout.module.css"
-import FolderTree from "./TreeNode";
+import css from "../../styles/Layout.module.css";
+import FolderTree from "./FolderTree";
 
 const Sidebar = () => {
   return (

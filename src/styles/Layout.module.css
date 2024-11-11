@@ -272,11 +272,22 @@
   width: 100%;
   position: absolute;
   transition: 1.3s background-color;
+  z-index: 1;
+}
+
+.slider:hover {
+  background-color: #7979798e !important;
+  transition: none !important;
+}
+
+.slider:active {
+  background-color: #797979bc !important;
+  transition: none !important;
 }
 
 .folderTree:hover .slider,
 .folderTree:active .slider {
-  background-color: #6767677b;
+  background-color: #79797966;
   transition: 0.3s background-color;
 }
 
