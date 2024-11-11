@@ -1,8 +1,8 @@
-import css from "../../styles/Layout.module.css"
+import css from "../../styles/Layout.module.css";
 import { VscMenu } from "react-icons/vsc";
 import Titlebar from "./Titlebar";
 import Taskbar from "./Taskbar";
-import Sidebar from './Sidebar'
+import Sidebar from "./Sidebar";
 
 const Layout = ({ children }) => {
   return (
