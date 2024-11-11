@@ -1,12 +1,17 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import treeData from "../../data/treeData";
 import TreeNode from "./TreeNode";
 import css from "../../styles/Layout.module.css";
 
 const FolderTree = () => {
+  const [activeNode, setActiveNode] = useState(null);
   const trackRef = useRef();
   const sliderRef = useRef();
   const scrollAreaRef = useRef();
+
+  useEffect(() => {
+    console.log(activeNode)
+  }, [activeNode])
 
   useEffect(() => {
     const track = trackRef.current;
@@ -121,6 +126,8 @@ const FolderTree = () => {
           isFile={false}
           depth={0}
           scrollref={scrollAreaRef}
+          activeNode={activeNode}
+          setActiveNode={setActiveNode}
         />
       ))}
       <div className={css.track} ref={trackRef}>

@@ -156,7 +156,6 @@
 .folderWrap {
   height: 22px;
   width: 100%;
-  position: absolute;
 }
 
 .fileWrap:hover,
@@ -181,6 +180,12 @@
   line-height: 1;
   position: relative;
   width: 205px;
+}
+
+.active,
+.active:hover {
+  background-color: #04395e;
+  box-shadow: 0 0 0 1px #0078d4 inset;
 }
 
 .name {
@@ -287,7 +292,7 @@
 .indent-guide,
 .indent-guide-folder {
   opacity: 0;
-  transition: 0.2s;
+  transition: .1s linear;
 }
 
 .indent-guide:first-child,
