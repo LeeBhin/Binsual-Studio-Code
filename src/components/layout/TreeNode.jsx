@@ -186,7 +186,11 @@ const TreeNode = ({
                         <VscChevronDown className={css.treeIcon} />
                       </div>
                       <div>
-                        <Icons.FolderOpen className={css.folderIcon} />
+                        {name === "images" ? (
+                          <Icons.FolderImagesOpen className={css.folderIcon} />
+                        ) : (
+                          <Icons.FolderOpen className={css.folderIcon} />
+                        )}
                       </div>
                     </>
                   ) : (
@@ -195,7 +199,11 @@ const TreeNode = ({
                         <VscChevronRight className={css.treeIcon} />
                       </div>
                       <div>
-                        <Icons.Folder className={css.folderIcon} />
+                        {name === "images" ? (
+                          <Icons.FolderImages className={css.folderIcon} />
+                        ) : (
+                          <Icons.Folder className={css.folderIcon} />
+                        )}
                       </div>
                     </>
                   )}
