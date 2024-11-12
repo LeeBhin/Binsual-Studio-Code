@@ -151,6 +151,7 @@ const treeData = {
             'instagram.url': null,
         },
         '.env': null,
+        '.gitignore': null,
         'README.md': null,
         '': null
     },
