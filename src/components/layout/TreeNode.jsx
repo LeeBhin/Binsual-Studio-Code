@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   VscChevronDown,
   VscChevronRight,
@@ -38,6 +38,24 @@ const TreeNode = ({
   path = name,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const sidebarRef = useRef(null);
+  const handleClickOutside = (event) => {
+    if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+      const activeElement = document.querySelector(`.${css.active}`);
+      if (activeElement) {
+        activeElement.classList.remove(css.active);
+        activeElement.classList.add(css.lowActive);
+      }
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  });
 
   const depthArray = Array(depth).fill(null);
 
@@ -102,7 +120,10 @@ const TreeNode = ({
   };
 
   return (
-    <div className={css.treeNodeWrap}>
+    <div
+      className={css.treeNodeWrap}
+      ref={name === "LEE BHIN" ? sidebarRef : null}
+    >
       <div className={css.treeNode} onClick={handleClick}>
         {isFile ? (
           <div
@@ -260,7 +281,7 @@ const TreeNode = ({
             ? {
                 display: isOpen ? "block" : "none",
                 overflowY: "auto",
-                maxHeight: "calc(100vh - 98px)",
+                maxHeight: "calc(100vh - 106px)",
                 height: "auto",
                 position: "relative",
               }

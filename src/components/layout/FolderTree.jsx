@@ -10,10 +10,6 @@ const FolderTree = () => {
   const scrollAreaRef = useRef();
 
   useEffect(() => {
-    console.log(activeNode)
-  }, [activeNode])
-
-  useEffect(() => {
     const track = trackRef.current;
     const slider = sliderRef.current;
     const scrollArea = scrollAreaRef.current;
