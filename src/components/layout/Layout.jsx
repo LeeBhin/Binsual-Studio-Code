@@ -3,6 +3,7 @@ import { VscMenu } from "react-icons/vsc";
 import Titlebar from "./Titlebar";
 import Taskbar from "./Taskbar";
 import Sidebar from "./Sidebar";
+import Footer from "./Footer";
 
 const Layout = ({ children }) => {
   return (
@@ -25,7 +26,9 @@ const Layout = ({ children }) => {
         <main className={css.main}>{children}</main>
       </div>
 
-      <footer className={css.footer}></footer>
+      <footer className={css.footer}>
+        <Footer />
+      </footer>
     </div>
   );
 };
