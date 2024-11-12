@@ -18,6 +18,8 @@ const FileIcon = ({ extension }) => {
     iconKey = "sql";
   }
 
+  if (extension === "robots") iconKey = "robots";
+
   const IconComponent =
     Icons[iconKey.charAt(0).toUpperCase() + iconKey.slice(1)];
 
@@ -66,6 +68,7 @@ const TreeNode = ({
   };
 
   const getExtension = (fileName) => {
+    if (fileName === "robots.txt") return "robots";
     const parts = fileName.split(".");
     return parts.length > 1 ? "." + parts[parts.length - 1] : "";
   };

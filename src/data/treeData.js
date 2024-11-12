@@ -153,6 +153,7 @@ const treeData = {
         '.env': null,
         '.gitignore': null,
         'README.md': null,
+        'robots.txt': null,
         '': null
     },
 };

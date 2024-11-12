@@ -3,22 +3,22 @@ import { createSlice } from '@reduxjs/toolkit';
 const historySlice = createSlice({
     name: 'history',
     initialState: {
-        listOne: [],
-        listTwo: [],
-        count: 0,
+        currentFiles: [],
+        history: [],
+        focusedFile: 0,
     },
     reducers: {
-        setListOne: (state, action) => {
-            state.listOne = action.payload;
+        setCurrentFiles: (state, action) => {
+            state.currentFiles = action.payload;
         },
-        setListTwo: (state, action) => {
-            state.listTwo = action.payload;
+        setHistory: (state, action) => {
+            state.history = action.payload;
         },
-        setCount: (state, action) => {
-            state.count = action.payload;
+        setFocusedFile: (state, action) => {
+            state.focusedFile = action.payload;
         },
     },
 });
 
-export const { setListOne, setListTwo, setCount } = historySlice.actions;
+export const { setCurrentFiles, setHistory, setFocusedFile } = historySlice.actions;
 export default historySlice.reducer;
