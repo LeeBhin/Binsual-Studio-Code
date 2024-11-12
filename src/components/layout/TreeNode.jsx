@@ -10,6 +10,12 @@ import {
 } from "react-icons/vsc";
 import Icons from "../../assets/icons";
 import css from "../../styles/Layout.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setCurrentFiles,
+  setFocusedFile,
+  setHistory,
+} from "../../features/historySlice";
 
 const FileIcon = ({ extension }) => {
   let iconKey = extension.replace(".", "");
@@ -41,6 +47,11 @@ const TreeNode = ({
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null);
+  const dispatch = useDispatch();
+  const { currentFiles, history, focusedFile } = useSelector(
+    (state) => state.history
+  );
+
   const handleClickOutside = (event) => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
       const activeElement = document.querySelector(`.${css.active}`);
@@ -62,8 +73,41 @@ const TreeNode = ({
   const depthArray = Array(depth).fill(null);
 
   const handleClick = () => {
+    if (name === "") return;
+
     if (!isFile) {
       setIsOpen((prev) => !prev);
+    } else {
+      dispatch(setFocusedFile(name));
+
+      const fileExists = currentFiles.some((file) => file.name === name);
+
+      if (currentFiles.length === 0 && !fileExists) {
+        dispatch(setCurrentFiles([{ pinned: false, name }]));
+      }
+
+      const lastFile = history[history.length - 1];
+
+      if (lastFile !== name) {
+        dispatch(setHistory([...history, name]));
+      }
+
+      if (focusedFile === "") return;
+
+      const i = currentFiles.findIndex((f) => f.name === focusedFile);
+
+      const files = currentFiles.map((file, index) => {
+        if (index === i && !file.pinned) {
+          return { ...file, name };
+        }
+        return file;
+      });
+
+      if (currentFiles[i]?.pinned && !fileExists) {
+        files.splice(i + 1, 0, { pinned: false, name });
+      }
+
+      dispatch(setCurrentFiles(files));
     }
   };
 

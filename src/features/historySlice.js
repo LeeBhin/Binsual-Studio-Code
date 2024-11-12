@@ -5,17 +5,20 @@ const historySlice = createSlice({
     initialState: {
         currentFiles: [],
         history: [],
-        focusedFile: 0,
+        focusedFile: '',
     },
     reducers: {
         setCurrentFiles: (state, action) => {
             state.currentFiles = action.payload;
+            console.log('currentfiles', state.currentFiles)
         },
         setHistory: (state, action) => {
             state.history = action.payload;
+            console.log('his', state.history)
         },
         setFocusedFile: (state, action) => {
             state.focusedFile = action.payload;
+            console.log('focus', state.focusedFile)
         },
     },
 });
