@@ -76,6 +76,8 @@
 
 .wrap {
   display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
   height: calc(100vh - 57px);
 }
 
