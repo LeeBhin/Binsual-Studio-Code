@@ -7,7 +7,12 @@
   user-select: none;
 }
 
+:root {
+  --vh: 100%;
+}
+
 html,
 body {
   overflow: hidden;
+  height: calc(var(--vh, 1vh) * 100);
 }

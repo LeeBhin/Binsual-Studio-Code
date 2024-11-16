@@ -76,16 +76,15 @@
 
 .wrap {
   display: flex;
-  overflow-x: auto;
   overflow-y: hidden;
-  height: calc(100vh - 57px);
+  height: calc((var(--vh, 1vh) * 100) - 57px);
 }
 
 /* activitybar */
 .activitybar {
   background-color: #181818;
   width: 253px;
-  height: calc(100vh - 36px);
+  height: 100%;
   color: #868686;
   display: flex;
   float: 1;
