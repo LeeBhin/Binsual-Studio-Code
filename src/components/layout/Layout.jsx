@@ -36,6 +36,8 @@ const Layout = ({ children }) => {
         else if (fileIndex === reversedHistory.length - 1) {
           return;
         }
+      } else {
+        dispatch(setFocusedFile(currentFiles[0]?.path));
       }
     }
   }, [currentFiles]);

@@ -92,7 +92,7 @@ const TreeNode = ({
         files.splice(i + 1, 0, { pinned: false, path });
       }
 
-      if (!fileExists) {
+      if (currentFiles.length !== 0 && !fileExists) {
         dispatch(setCurrentFiles(files));
       }
     }
@@ -170,7 +170,7 @@ const TreeNode = ({
         {isFile ? (
           <div
             className={`${css.fileWrap} ${activeNode?.path === path && name !== "" ? css.active : ""} 
-          ${focusedFile === path ? css.lowActive : ""}`}
+          ${focusedFile === path && currentFiles.length > 0 ? css.lowActive : ""}`}
             onDoubleClick={() => handleDoubleClick(path)}
             onClick={() => setActiveNode({ path, name, depth, isFile })}
             style={name === "" ? { background: "none", cursor: "default" } : {}}
