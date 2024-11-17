@@ -135,7 +135,7 @@ const treeData = {
                 }
             },
             seminars: {
-                'README.me': null,
+                'README.md': null,
                 images: {
                     'seminar-1.png': null,
                     'seminar-2.png': null,

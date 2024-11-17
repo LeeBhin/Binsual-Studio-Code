@@ -48,3 +48,21 @@
   padding: 1px 6px;
   margin: 0 2px;
 }
+
+.fileArea {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.filesTop {
+  width: calc(100vw - 251px);
+  height: 35px;
+  background-color: #181818;
+}
+
+.file {
+  width: 100%;
+  border-top: solid 1px #2b2b2b;
+}

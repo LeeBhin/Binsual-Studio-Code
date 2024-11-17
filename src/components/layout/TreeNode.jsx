@@ -9,6 +9,7 @@ import {
   VscCollapseAll,
 } from "react-icons/vsc";
 import Icons from "../../assets/icons";
+import FileIcon from '../FileIcon'
 import css from "../../styles/Layout.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -16,23 +17,6 @@ import {
   setFocusedFile,
   setHistory,
 } from "../../features/historySlice";
-
-const FileIcon = ({ extension }) => {
-  let iconKey = extension.replace(".", "");
-
-  if (iconKey === "sql" || iconKey === "accdb") {
-    iconKey = "sql";
-  }
-
-  if (extension === "robots") iconKey = "robots";
-
-  const IconComponent =
-    Icons[iconKey.charAt(0).toUpperCase() + iconKey.slice(1)];
-
-  if (IconComponent) {
-    return <IconComponent className={css.icon} />;
-  }
-};
 
 const TreeNode = ({
   name,
@@ -59,6 +43,7 @@ const TreeNode = ({
         activeElement.classList.remove(css.active);
         activeElement.classList.add(css.lowActive);
       }
+      setActiveNode()
     }
   };
 
@@ -78,36 +63,38 @@ const TreeNode = ({
     if (!isFile) {
       setIsOpen((prev) => !prev);
     } else {
-      dispatch(setFocusedFile(name));
+      dispatch(setFocusedFile(path));
 
-      const fileExists = currentFiles.some((file) => file.name === name);
+      const fileExists = currentFiles.some((file) => file.path === path);
 
       if (currentFiles.length === 0 && !fileExists) {
-        dispatch(setCurrentFiles([{ pinned: false, name }]));
+        dispatch(setCurrentFiles([{ pinned: false, path }]));
       }
 
       const lastFile = history[history.length - 1];
 
-      if (lastFile !== name) {
-        dispatch(setHistory([...history, name]));
+      if (lastFile !== path) {
+        dispatch(setHistory([...history, path]));
       }
 
       if (focusedFile === "") return;
 
-      const i = currentFiles.findIndex((f) => f.name === focusedFile);
+      const i = currentFiles.findIndex((f) => f.path === focusedFile);
 
       const files = currentFiles.map((file, index) => {
         if (index === i && !file.pinned) {
-          return { ...file, name };
+          return { ...file, path };
         }
         return file;
       });
 
       if (currentFiles[i]?.pinned && !fileExists) {
-        files.splice(i + 1, 0, { pinned: false, name });
+        files.splice(i + 1, 0, { pinned: false, path });
       }
 
-      dispatch(setCurrentFiles(files));
+      if (!fileExists) {
+        dispatch(setCurrentFiles(files));
+      }
     }
   };
 
@@ -166,6 +153,14 @@ const TreeNode = ({
     );
   };
 
+  const handleDoubleClick = (path) => {
+    const updatedFiles = currentFiles.map((file) =>
+      file.path === path ? { ...file, pinned: true } : file
+    );
+
+    dispatch(setCurrentFiles(updatedFiles));
+  };
+
   return (
     <div
       className={css.treeNodeWrap}
@@ -174,9 +169,9 @@ const TreeNode = ({
       <div className={css.treeNode} onClick={handleClick}>
         {isFile ? (
           <div
-            className={`${css.fileWrap} ${
-              activeNode?.path === path && name !== "" ? css.active : ""
-            }`}
+            className={`${css.fileWrap} ${activeNode?.path === path && name !== "" ? css.active : ""} 
+          ${focusedFile === path ? css.lowActive : ""}`}
+            onDoubleClick={() => handleDoubleClick(path)}
             onClick={() => setActiveNode({ path, name, depth, isFile })}
             style={name === "" ? { background: "none", cursor: "default" } : {}}
           >
@@ -206,9 +201,8 @@ const TreeNode = ({
         ) : (
           <div
             style={name === "LEE BHIN" ? { background: "none" } : {}}
-            className={`${css.folderWrap} ${
-              activeNode?.path === path && name !== "" ? css.active : ""
-            }`}
+            className={`${css.folderWrap} ${activeNode?.path === path && name !== "" ? css.active : ""
+              }`}
             onClick={() => setActiveNode({ path, name, depth, isFile, isOpen })}
           >
             <div
@@ -289,10 +283,10 @@ const TreeNode = ({
                   style={
                     name === "LEE BHIN"
                       ? {
-                          width: "180px",
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }
+                        width: "180px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }
                       : {}
                   }
                 >
@@ -326,15 +320,15 @@ const TreeNode = ({
         style={
           name === "LEE BHIN"
             ? {
-                display: isOpen ? "block" : "none",
-                overflowY: "auto",
-                maxHeight: "calc(100vh - 106px)",
-                height: "auto",
-                position: "relative",
-              }
+              display: isOpen ? "block" : "none",
+              overflowY: "auto",
+              maxHeight: "calc(100vh - 106px)",
+              height: "auto",
+              position: "relative",
+            }
             : {
-                display: isOpen ? "block" : "none",
-              }
+              display: isOpen ? "block" : "none",
+            }
         }
       >
         {!isFile &&

@@ -76,7 +76,7 @@
 
 .wrap {
   display: flex;
-  overflow-y: hidden;
+  overflow: hidden;
   height: calc((var(--vh, 1vh) * 100) - 57px);
 }
 
@@ -119,8 +119,10 @@
   width: 205px;
   background-color: #181818;
   border-left: 1px solid #2b2b2b;
+  border-right: 1px solid #2b2b2b;
   color: #cccccc;
   position: relative;
+  z-index: 1;
 }
 
 .sidebar-title {
