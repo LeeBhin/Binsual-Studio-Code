@@ -45,7 +45,11 @@ const CurrentFiles = () => {
 
     const handleScroll = (e) => {
       e.preventDefault();
-      scrollArea.scrollLeft += e.deltaY
+
+      const scrollAmount = e.type === 'wheel'
+        ? e.deltaY
+        : e.movementX * 2;
+      scrollArea.scrollLeft += scrollAmount;
       updateScrollbar();
     };
 
@@ -58,23 +62,18 @@ const CurrentFiles = () => {
       startX = e.clientX;
       startScrollLeft = scrollArea.scrollLeft;
       document.body.style.userSelect = "none";
-    };
 
-    const handleMouseMove = (e) => {
-      if (!isDragging) return;
-
-      const delta = e.clientX - startX;
-      const { scrollWidth, clientWidth } = scrollArea;
-      const maxScrollLeft = scrollWidth - clientWidth;
-      const maxSliderLeft = track.clientWidth - slider.clientWidth;
-      const scrollRatio = maxScrollLeft / maxSliderLeft;
-
-      scrollArea.scrollLeft = startScrollLeft + delta * scrollRatio;
+      document.addEventListener("mousemove", handleScroll);
     };
 
     const handleMouseUp = () => {
       isDragging = false;
       document.body.style.userSelect = "";
+      document.body.style.cursor = "default";
+
+      document.removeEventListener("mousemove", handleScroll);
+
+      requestAnimationFrame(updateScrollbar);
     };
 
     const handleTrackClick = (e) => {
@@ -93,20 +92,15 @@ const CurrentFiles = () => {
       const maxScrollLeft = scrollArea.scrollWidth - scrollArea.clientWidth;
 
       scrollArea.scrollLeft = scrollRatio * maxScrollLeft;
-    };
-
-    const handleScrollAreaMouseUp = () => {
-      requestAnimationFrame(updateScrollbar);
+      updateScrollbar();
     };
 
     const resizeObserver = new ResizeObserver(updateScrollbar);
     resizeObserver.observe(scrollArea);
 
     scrollArea.addEventListener("wheel", handleScroll, { passive: false });
-    scrollArea.addEventListener("mouseup", handleScrollAreaMouseUp);
     slider.addEventListener("mousedown", handleMouseDown);
     track.addEventListener("mousedown", handleTrackClick);
-    document.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseup", handleMouseUp);
 
     updateScrollbar();
@@ -114,14 +108,12 @@ const CurrentFiles = () => {
     return () => {
       resizeObserver.disconnect();
       scrollArea.removeEventListener("wheel", handleScroll);
-      scrollArea.removeEventListener("mouseup", handleScrollAreaMouseUp);
       slider.removeEventListener("mousedown", handleMouseDown);
-      track.removeEventListener("click", handleTrackClick);
-      document.removeEventListener("mousemove", handleMouseMove);
+      track.removeEventListener("mousedown", handleTrackClick);
       document.removeEventListener("mouseup", handleMouseUp);
+      document.removeEventListener("mousemove", handleScroll);
     };
   }, []);
-
 
   return (
     <div className={css.wrap}>
