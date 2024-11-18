@@ -1,19 +1,18 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
 import './styles/App.css';
 
 const App = () => {
-  let vh = 0;
+  const vh = useRef(0);
 
   useEffect(() => {
     const updateVH = () => {
-      vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty('--vh', `${vh}px`);
+      vh.current = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh.current}px`);
     };
 
     updateVH();
-
     window.addEventListener('resize', updateVH);
 
     return () => {
