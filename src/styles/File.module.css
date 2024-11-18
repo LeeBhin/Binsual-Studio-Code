@@ -1,91 +1,127 @@
 /* filetab */
 .FileTab {
-  width: auto;
-  min-width: 120px;
-  padding: 7px 5px 7px 10px;
-  border-right: 1px solid #2b2b2b;
-  border-bottom: 1px solid #2b2b2b;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
-  font-size: 13px;
-  color: #9d9d9d;
-  position: relative;
-  flex-shrink: 0;
+    width: auto;
+    min-width: 120px;
+    padding: 7px 5px 7px 10px;
+    border-right: 1px solid #2b2b2b;
+    border-bottom: 1px solid #2b2b2b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #9d9d9d;
+    position: relative;
+    flex-shrink: 0;
 }
 
 .tabLine {
-  width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  border-top: solid 1px #0078d4;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-top: solid 1px #0078d4;
 }
 
 .fileWrap {
-  display: flex;
-  gap: 5px;
+    display: flex;
+    gap: 5px;
 }
 
 .FileTab:hover {
-  background-color: #1f1f1f;
+    background-color: #1f1f1f;
 }
 
 .FileTab:hover .close {
-  opacity: 1;
+    opacity: 1;
 }
 
 .name {
-  line-height: 20px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+    line-height: 20px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .path {
-  line-height: 20px;
-  font-size: 11px;
+    line-height: 20px;
+    font-size: 11px;
 }
 
 .close {
-  font-size: 14px;
-  height: auto;
-  opacity: 0;
-  width: 20px;
-  height: 20px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 5px;
+    font-size: 14px;
+    height: auto;
+    opacity: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
 }
 
 .close:hover {
-  background-color: #2d2e2e;
+    background-color: #2d2e2e;
 }
 
 .outline {
-  width: 100%;
-  border-bottom: solid 2px #1f1f1f;
-  position: absolute;
-  left: 0;
-  bottom: -2px;
+    width: 100%;
+    border-bottom: solid 2px #1f1f1f;
+    position: absolute;
+    left: 0;
+    bottom: -2px;
 }
 
 /* currentfiles */
 .CurrentFiles {
-  height: 35px;
-  width: 100%;
-  display: flex;
-  overflow-x: scroll;
+    height: 35px;
+    width: 100%;
+    display: flex;
+    overflow-x: scroll;
 }
 
 .CurrentFiles::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .fill {
-  flex: 1;
-  border-bottom: solid 1px #2b2b2b;
+    flex: 1;
+    border-bottom: solid 1px #2b2b2b;
+}
+
+.wrap {
+    position: relative;
+}
+
+.track {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 3px;
+}
+
+.slider {
+    height: 100%;
+    position: absolute;
+    transition: 1.3s background-color;
+    z-index: 1;
+    max-width: calc(100% - 30px);
+}
+
+.slider:hover {
+    background-color: #7979798e !important;
+    transition: none !important;
+}
+
+.slider:active {
+    background-color: #797979bc !important;
+    transition: none !important;
+}
+
+.wrap:hover .slider,
+.wrap:active .slider {
+    background-color: #79797966;
+    transition: 0.3s background-color;
 }
