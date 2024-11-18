@@ -4,9 +4,11 @@ import FileIcon from "./FileIcon";
 import { VscChromeClose } from "react-icons/vsc";
 import { setFocusedFile, setHistory } from "../features/historySlice";
 import { setCurrentFiles } from "../features/historySlice";
+import { useEffect, useState } from "react";
 
 const FileTab = ({ fileName, filePath }) => {
   const dispatch = useDispatch();
+  const [dup, setDup] = useState(null);
 
   const { focusedFile, currentFiles, history } = useSelector(
     (state) => state.history
@@ -34,21 +36,44 @@ const FileTab = ({ fileName, filePath }) => {
   };
 
   const getUpPath = (filePath) => {
-    return `...\\${filePath.split("/").slice(-2, -1)[0]}`;
+    if (filePath.startsWith(`LEE BHIN/${fileName}`)) {
+      return filePath.split("/").slice(0)[0];
+    } else {
+      return `...\\${filePath.split("/").slice(-2, -1)[0]}`;
+    }
   };
+
+  useEffect(() => {
+    const fileNames = currentFiles.map((file) => file.path.split("/").pop());
+    const duplicateFile = fileNames.find(
+      (name, index) => fileNames.indexOf(name) !== index
+    );
+    if (duplicateFile) {
+      setDup(duplicateFile);
+    } else {
+      setDup(null);
+    }
+  }, [currentFiles]);
 
   return (
     <div
       className={css.FileTab}
       onClick={() => tabClick()}
-      style={focusedFile === filePath ? { backgroundColor: "#1f1f1f" } : {}}
+      style={
+        focusedFile === filePath
+          ? {
+              backgroundColor: "#1f1f1f",
+              borderBottom: "solid 1px #1f1f1f",
+            }
+          : {}
+      }
     >
       {focusedFile === filePath && <div className={css.tabLine} />}
 
       <div className={css.fileWrap}>
         <FileIcon extension={getExtension(fileName)} />
         <div className={css.name}>{fileName}</div>
-        {fileName === "README.md" && (
+        {dup && dup === fileName && (
           <div className={css.path}>{getUpPath(filePath)}</div>
         )}
       </div>
@@ -56,7 +81,6 @@ const FileTab = ({ fileName, filePath }) => {
       <div className={css.close} onClick={(e) => closeFile(e)}>
         <VscChromeClose />
       </div>
-      {focusedFile === filePath && <div className={css.outline} />}
     </div>
   );
 };
