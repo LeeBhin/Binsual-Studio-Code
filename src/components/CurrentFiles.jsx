@@ -53,21 +53,13 @@ const CurrentFiles = () => {
       updateScrollbar();
     };
 
-    let isDragging = false;
-    let startX = 0;
-    let startScrollLeft = 0;
-
-    const handleMouseDown = (e) => {
-      isDragging = true;
-      startX = e.clientX;
-      startScrollLeft = scrollArea.scrollLeft;
+    const handleMouseDown = () => {
       document.body.style.userSelect = "none";
 
       document.addEventListener("mousemove", handleScroll);
     };
 
     const handleMouseUp = () => {
-      isDragging = false;
       document.body.style.userSelect = "";
       document.body.style.cursor = "default";
 
