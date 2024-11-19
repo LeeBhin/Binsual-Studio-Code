@@ -8,6 +8,8 @@ const START_WIDTH = 170;
 const MIN_WIDTH = 170;
 const HOVER_EDGE_AREA = 6.1;
 const HOVER_DELAY = 300;
+const CLOSE_RANGE = 85;
+const OPEN_RANGE = 90;
 
 const Sidebar = () => {
   const [isHover, setIsHover] = useState(false);
@@ -15,10 +17,10 @@ const Sidebar = () => {
   const [timer, setTimer] = useState(null);
   const [maxWidth, setMaxWidth] = useState(0);
   const [isResizing, setIsResizing] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
     const updateMaxWidth = () => setMaxWidth(window.innerWidth * 0.86);
-
     updateMaxWidth();
     window.addEventListener("resize", updateMaxWidth);
     return () => window.removeEventListener("resize", updateMaxWidth);
@@ -26,9 +28,25 @@ const Sidebar = () => {
 
   const handleMouseMove = useCallback(
     (e) => {
-      if (isResizing) return;
-
       const rect = e.currentTarget.getBoundingClientRect();
+
+      if (isResizing) {
+        if (!isCollapsed && resizeWidth === MIN_WIDTH) {
+          if (rect.right - e.clientX >= CLOSE_RANGE) {
+            setIsCollapsed(true);
+            setResizeWidth(0);
+            return;
+          }
+        } else if (isCollapsed) {
+          if (e.clientX - rect.left >= OPEN_RANGE) {
+            setIsCollapsed(false);
+            setResizeWidth(START_WIDTH);
+            return;
+          }
+        }
+        return;
+      }
+
       const isNearRightEdge =
         Math.abs(e.clientX - rect.right) < HOVER_EDGE_AREA;
 
@@ -43,7 +61,7 @@ const Sidebar = () => {
         setIsHover(false);
       }
     },
-    [timer, isResizing]
+    [timer, isResizing, isCollapsed, resizeWidth]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -53,18 +71,25 @@ const Sidebar = () => {
     setIsHover(false);
   }, [isResizing, timer]);
 
-  const handleResize = () => setIsHover(true);
+  const handleResize = (e, direction, ref) => {
+    setIsHover(true);
+    const rect = ref.getBoundingClientRect();
+    const newWidth = e.clientX - rect.left;
+
+    if (!isCollapsed) {
+      setResizeWidth(Math.max(MIN_WIDTH, Math.min(newWidth, maxWidth)));
+    }
+  };
 
   const handleResizeStart = () => {
     setIsResizing(true);
     setIsHover(true);
   };
 
-  const handleResizeStop = (e, delta, node) => {
-    const rect = node.getBoundingClientRect();
+  const handleResizeStop = (e, direction, ref) => {
+    const rect = ref.getBoundingClientRect();
     const isNearRightEdge = Math.abs(e.clientX - rect.right) < HOVER_EDGE_AREA;
 
-    setResizeWidth((prev) => prev + delta.width);
     setIsResizing(false);
     if (!isNearRightEdge) setIsHover(false);
   };
@@ -72,8 +97,8 @@ const Sidebar = () => {
   return (
     <Resizable
       size={{ width: resizeWidth, height: "100%" }}
-      minWidth={MIN_WIDTH}
-      maxWidth={maxWidth}
+      minWidth={isCollapsed ? 0 : MIN_WIDTH}
+      maxWidth={isCollapsed ? 0 : maxWidth}
       enable={{ right: true }}
       onResizeStart={handleResizeStart}
       onResize={handleResize}
@@ -83,7 +108,10 @@ const Sidebar = () => {
       onMouseLeave={handleMouseLeave}
       handleStyles={{ right: { cursor: "ew-resize" } }}
     >
-      <div className={css.ResizableWrap}>
+      <div
+        className={css.ResizableWrap}
+        style={{ opacity: isCollapsed ? 0 : 1 }}
+      >
         <div className={css["sidebar-title"]}>
           <span className={css["sidebar-title-txt"]}>탐색기</span>
           <div className={`${css["icon-bg"]} ${css.ellipsis}`}>
