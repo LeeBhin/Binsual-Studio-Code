@@ -285,8 +285,11 @@ const TreeNode = ({
                         fontSize: "12px",
                         display: "flex",
                         justifyContent: "space-between",
+                        overflow: "hidden",
                       }
-                    : {}
+                    : {
+                        overflow: "hidden",
+                      }
                 }
               >
                 <div

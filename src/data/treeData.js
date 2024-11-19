@@ -79,7 +79,7 @@ const treeData = {
                 'README.md': null,
             },
         },
-        certification: {
+        certifications: {
             '정보기기운용기능사.pkt': null,
             '웹디자인기능사.html': null,
             '정보처리기능사.md': null,
@@ -104,7 +104,7 @@ const treeData = {
                         'bigdata-2.png': null,
                     }
                 },
-                'AI-ESG': {
+                'AI-ESG-School': {
                     'README.md': null,
                     images: {
                         'ESG-1.png': null,
@@ -117,6 +117,15 @@ const treeData = {
                     'README.md': null,
                     images: {
                         'club-1.png': null,
+                    }
+                },
+                'AI-지니어스-아카데미': {
+                    'README.md': null,
+                    images: {
+                        'genius-1.png': null,
+                        'genius-2.png': null,
+                        'genius-3.png': null,
+                        'genius-4.png': null,
                     }
                 },
             },

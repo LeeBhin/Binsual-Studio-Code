@@ -222,6 +222,7 @@
   overflow: hidden;
   text-overflow: ellipsis;
   word-break: break-all;
+  width: 100%;
 }
 
 .rootFolderTool {
