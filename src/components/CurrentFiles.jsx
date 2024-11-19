@@ -1,18 +1,42 @@
 import css from "../styles/File.module.css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import FileTab from "./FileTab";
 import { useEffect, useRef } from "react";
+import { setFocusedFile } from "../features/historySlice";
 
 const CurrentFiles = () => {
   const trackRef = useRef();
   const sliderRef = useRef();
   const scrollAreaRef = useRef();
+  const dispatch = useDispatch();
 
-  const { currentFiles } = useSelector((state) => state.history);
+  const { currentFiles, focusedFile } = useSelector((state) => state.history);
 
   const getFileName = (filePath) => {
     const parts = filePath.split("/");
     return parts[parts.length - 1];
+  };
+
+  const scrollToFile = (fileIndex) => {
+    const scrollArea = scrollAreaRef.current;
+    if (!scrollArea) return;
+
+    const fileElements = scrollArea.getElementsByClassName(css.FileTab);
+    if (!fileElements[fileIndex]) return;
+
+    const fileElement = fileElements[fileIndex];
+    const scrollAreaRect = scrollArea.getBoundingClientRect();
+    const fileRect = fileElement.getBoundingClientRect();
+
+    if (fileRect.left < scrollAreaRect.left) {
+      scrollArea.scrollBy({
+        left: fileRect.left - scrollAreaRect.left,
+      });
+    } else if (fileRect.right > scrollAreaRect.right) {
+      scrollArea.scrollBy({
+        left: fileRect.right - scrollAreaRect.right,
+      });
+    }
   };
 
   useEffect(() => {
@@ -21,6 +45,25 @@ const CurrentFiles = () => {
     const scrollArea = scrollAreaRef.current;
 
     if (!track || !slider || !scrollArea) return;
+
+    const handleShiftScroll = (deltaY) => {
+      const currentIndex = currentFiles.findIndex(
+        (file) => file.path === focusedFile
+      );
+      if (currentIndex === -1) return;
+
+      let nextIndex;
+      if (deltaY > 0) {
+        nextIndex = currentIndex + 1;
+        if (nextIndex >= currentFiles.length) return;
+      } else {
+        nextIndex = currentIndex - 1;
+        if (nextIndex < 0) return;
+      }
+
+      dispatch(setFocusedFile(currentFiles[nextIndex].path));
+      scrollToFile(nextIndex);
+    };
 
     const updateScrollbar = () => {
       const { scrollWidth, clientWidth } = scrollArea;
@@ -44,27 +87,27 @@ const CurrentFiles = () => {
     };
 
     const handleScroll = (e) => {
-      e.preventDefault();
+      if (e.shiftKey) {
+        e.preventDefault();
+        handleShiftScroll(e.deltaY);
+        return;
+      }
 
-      const scrollAmount = e.type === 'wheel'
-        ? e.deltaY
-        : e.movementX * 2;
+      e.preventDefault();
+      const scrollAmount = e.type === "wheel" ? e.deltaY : e.movementX * 2;
       scrollArea.scrollLeft += scrollAmount;
       updateScrollbar();
     };
 
     const handleMouseDown = () => {
       document.body.style.userSelect = "none";
-
       document.addEventListener("mousemove", handleScroll);
     };
 
     const handleMouseUp = () => {
       document.body.style.userSelect = "";
       document.body.style.cursor = "default";
-
       document.removeEventListener("mousemove", handleScroll);
-
       requestAnimationFrame(updateScrollbar);
     };
 
@@ -105,7 +148,7 @@ const CurrentFiles = () => {
       document.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mousemove", handleScroll);
     };
-  }, []);
+  }, [currentFiles, focusedFile, dispatch]);
 
   return (
     <div className={css.wrap}>
