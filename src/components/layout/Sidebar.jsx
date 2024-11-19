@@ -3,6 +3,8 @@ import { VscEllipsis } from "react-icons/vsc";
 import { Resizable } from "re-resizable";
 import FolderTree from "./FolderTree";
 import css from "../../styles/Layout.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { setIsLayoutActive } from "../../features/historySlice";
 
 const START_WIDTH = 170;
 const MIN_WIDTH = 170;
@@ -18,6 +20,20 @@ const Sidebar = () => {
   const [maxWidth, setMaxWidth] = useState(0);
   const [isResizing, setIsResizing] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+
+  const { isLayoutActive } = useSelector((state) => state.history);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!isLayoutActive.from) return;
+    if (isLayoutActive.isActive) {
+      setIsCollapsed(false);
+      setResizeWidth(isLayoutActive.width);
+    } else {
+      setIsCollapsed(true);
+      setResizeWidth(0);
+    }
+  }, [isLayoutActive, dispatch]);
 
   useEffect(() => {
     const updateMaxWidth = () => setMaxWidth(window.innerWidth * 0.86);
@@ -35,12 +51,14 @@ const Sidebar = () => {
           if (rect.right - e.clientX >= CLOSE_RANGE) {
             setIsCollapsed(true);
             setResizeWidth(0);
+            dispatch(setIsLayoutActive({ isActive: false, width: 0 }));
             return;
           }
         } else if (isCollapsed) {
           if (e.clientX - rect.left >= OPEN_RANGE) {
             setIsCollapsed(false);
             setResizeWidth(START_WIDTH);
+            dispatch(setIsLayoutActive({ isActive: true, width: START_WIDTH }));
             return;
           }
         }
@@ -61,7 +79,7 @@ const Sidebar = () => {
         setIsHover(false);
       }
     },
-    [timer, isResizing, isCollapsed, resizeWidth]
+    [timer, isResizing, isCollapsed, resizeWidth, dispatch]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -92,6 +110,13 @@ const Sidebar = () => {
 
     setIsResizing(false);
     if (!isNearRightEdge) setIsHover(false);
+
+    dispatch(
+      setIsLayoutActive({
+        isActive: isLayoutActive.isActive,
+        width: resizeWidth,
+      })
+    );
   };
 
   return (

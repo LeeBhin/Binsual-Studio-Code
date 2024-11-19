@@ -1,39 +1,61 @@
-import css from "../../styles/Layout.module.css"
-
+import { useDispatch, useSelector } from "react-redux";
+import css from "../../styles/Layout.module.css";
 import {
+  VscFiles,
   VscSearch,
   VscSourceControl,
+  VscDebugAlt,
   VscExtensions,
   VscDatabase,
-  VscDebugAlt,
-  VscFiles,
   VscMail,
 } from "react-icons/vsc";
+import { setFocusedTask, setIsLayoutActive } from "../../features/historySlice";
+import { useEffect } from "react";
+
+const icons = [
+  { id: "files", Icon: VscFiles },
+  { id: "search", Icon: VscSearch },
+  { id: "git", Icon: VscSourceControl },
+  { id: "debug", Icon: VscDebugAlt },
+  { id: "extensions", Icon: VscExtensions },
+  { id: "db", Icon: VscDatabase },
+  { id: "mail", Icon: VscMail },
+];
 
 const Taskbar = () => {
+  const { focusedTask, isLayoutActive } = useSelector((state) => state.history);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setFocusedTask(isLayoutActive.isActive ? "files" : ""));
+  }, [isLayoutActive.isActive, dispatch]);
+
+  const handleClick = (id, Icon) => {
+    if (Icon === VscFiles) {
+      dispatch(
+        setIsLayoutActive({
+          isActive:
+            isLayoutActive.width === 0 ? true : !isLayoutActive.isActive,
+          width: isLayoutActive.width || 170,
+          from: "layout",
+        })
+      );
+    }
+    dispatch(setFocusedTask(id));
+  };
+
   return (
     <div className={css.taskbar}>
-      <div className={css["taskbar-wrap"]}>
-        <VscFiles />
-      </div>
-      <div className={css["taskbar-wrap"]}>
-        <VscSearch />
-      </div>
-      <div className={css["taskbar-wrap"]}>
-        <VscSourceControl />
-      </div>
-      <div className={css["taskbar-wrap"]}>
-        <VscDebugAlt />
-      </div>
-      <div className={css["taskbar-wrap"]}>
-        <VscExtensions />
-      </div>
-      <div className={css["taskbar-wrap"]}>
-        <VscDatabase />
-      </div>
-      <div className={css["taskbar-wrap"]}>
-        <VscMail />
-      </div>
+      {icons.map(({ id, Icon }) => (
+        <div
+          key={id}
+          className={css["taskbar-wrap"]}
+          onClick={() => handleClick(id, Icon)}
+          style={focusedTask === id ? { color: "#cccccc" } : {}}
+        >
+          <Icon />
+        </div>
+      ))}
     </div>
   );
 };
