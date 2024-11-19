@@ -59,6 +59,12 @@ const FileTab = ({ fileName, filePath }) => {
     <div
       className={css.FileTab}
       onClick={() => tabClick()}
+      onDoubleClick={() => {
+        const updatedFiles = currentFiles.map((file) =>
+          file.path === filePath ? { ...file, pinned: true } : file
+        );
+        dispatch(setCurrentFiles(updatedFiles));
+      }}
       style={
         focusedFile === filePath
           ? {
@@ -70,7 +76,17 @@ const FileTab = ({ fileName, filePath }) => {
     >
       {focusedFile === filePath && <div className={css.tabLine} />}
 
-      <div className={css.fileWrap}>
+      <div
+        className={css.fileWrap}
+        style={{
+          color: focusedFile === filePath ? "#ffffff" : undefined,
+          fontStyle: currentFiles.find(
+            (file) => file.path === filePath && !file.pinned
+          )
+            ? "italic"
+            : "normal",
+        }}
+      >
         <FileIcon extension={getExtension(fileName)} />
         <div className={css.name}>{fileName}</div>
         {dup && dup === fileName && (
@@ -78,7 +94,11 @@ const FileTab = ({ fileName, filePath }) => {
         )}
       </div>
 
-      <div className={css.close} onClick={(e) => closeFile(e)}>
+      <div
+        className={css.close}
+        onClick={(e) => closeFile(e)}
+        style={focusedFile === filePath ? { color: "#ffffff" } : {}}
+      >
         <VscChromeClose />
       </div>
     </div>

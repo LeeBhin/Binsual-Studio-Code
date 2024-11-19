@@ -193,6 +193,7 @@
   line-height: 1;
   position: relative;
   width: 100%;
+  padding-right: 2px;
 }
 
 .active,
