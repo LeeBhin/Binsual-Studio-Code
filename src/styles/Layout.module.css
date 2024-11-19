@@ -83,7 +83,7 @@
 /* activitybar */
 .activitybar {
   background-color: #181818;
-  width: 253px;
+  width: auto;
   height: 100%;
   color: #868686;
   display: flex;
@@ -142,6 +142,15 @@
   flex: 1;
 }
 
+.resizeBar {
+  position: absolute;
+  right: -2.5px;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  transition: 0.15s;
+}
+
 /* treeNode */
 .folderTree {
   font-size: 13px;
@@ -183,7 +192,7 @@
   height: 22px;
   line-height: 1;
   position: relative;
-  width: 205px;
+  width: 100%;
 }
 
 .active,
@@ -198,7 +207,7 @@
 }
 
 .name {
-  width: 136px;
+  width: 100%;
   height: 22px;
   line-height: 22px;
   white-space: nowrap;
@@ -219,6 +228,7 @@
   align-items: center;
   font-size: 16px;
   gap: 3px;
+  padding-right: 3px;
 }
 
 .name:hover .rootFolderTool {

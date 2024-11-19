@@ -9,7 +9,7 @@ import {
   VscCollapseAll,
 } from "react-icons/vsc";
 import Icons from "../../assets/icons";
-import FileIcon from '../FileIcon'
+import FileIcon from "../FileIcon";
 import css from "../../styles/Layout.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -43,7 +43,7 @@ const TreeNode = ({
         activeElement.classList.remove(css.active);
         activeElement.classList.add(css.lowActive);
       }
-      setActiveNode()
+      setActiveNode();
     }
   };
 
@@ -169,8 +169,12 @@ const TreeNode = ({
       <div className={css.treeNode} onClick={handleClick}>
         {isFile ? (
           <div
-            className={`${css.fileWrap} ${activeNode?.path === path && name !== "" ? css.active : ""} 
-          ${focusedFile === path && currentFiles.length > 0 ? css.lowActive : ""}`}
+            className={`${css.fileWrap} ${
+              activeNode?.path === path && name !== "" ? css.active : ""
+            } 
+          ${
+            focusedFile === path && currentFiles.length > 0 ? css.lowActive : ""
+          }`}
             onDoubleClick={() => handleDoubleClick(path)}
             onClick={() => setActiveNode({ path, name, depth, isFile })}
             style={name === "" ? { background: "none", cursor: "default" } : {}}
@@ -201,8 +205,9 @@ const TreeNode = ({
         ) : (
           <div
             style={name === "LEE BHIN" ? { background: "none" } : {}}
-            className={`${css.folderWrap} ${activeNode?.path === path && name !== "" ? css.active : ""
-              }`}
+            className={`${css.folderWrap} ${
+              activeNode?.path === path && name !== "" ? css.active : ""
+            }`}
             onClick={() => setActiveNode({ path, name, depth, isFile, isOpen })}
           >
             <div
@@ -274,7 +279,13 @@ const TreeNode = ({
               <span
                 style={
                   name === "LEE BHIN"
-                    ? { fontWeight: "bold", fontSize: "12px" }
+                    ? {
+                        width: "100%",
+                        fontWeight: "bold",
+                        fontSize: "12px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }
                     : {}
                 }
               >
@@ -283,10 +294,10 @@ const TreeNode = ({
                   style={
                     name === "LEE BHIN"
                       ? {
-                        width: "180px",
-                        display: "flex",
-                        justifyContent: "space-between",
-                      }
+                          width: "100%",
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }
                       : {}
                   }
                 >
@@ -320,15 +331,15 @@ const TreeNode = ({
         style={
           name === "LEE BHIN"
             ? {
-              display: isOpen ? "block" : "none",
-              overflowY: "auto",
-              maxHeight: "calc(100vh - 106px)",
-              height: "auto",
-              position: "relative",
-            }
+                display: isOpen ? "block" : "none",
+                overflowY: "auto",
+                maxHeight: "calc(100vh - 106px)",
+                height: "auto",
+                position: "relative",
+              }
             : {
-              display: isOpen ? "block" : "none",
-            }
+                display: isOpen ? "block" : "none",
+              }
         }
       >
         {!isFile &&
