@@ -29,12 +29,6 @@ const Titlebar = () => {
   const prevFocusedRef = useRef(focusedFile);
 
   useEffect(() => {
-    if (history[history.length - 1] === focusedFile) {
-      setFocusedIndex(history.length - 1);
-    }
-  }, [history, focusedFile]);
-
-  useEffect(() => {
     if (
       prevFocusedRef.current !== focusedFile &&
       focusedFile !== history[focusedIndex]
@@ -57,7 +51,7 @@ const Titlebar = () => {
 
       if (!fileExists) {
         const currentFocusedFileIndex = currentFiles.findIndex(
-          (file) => file.path === focusedFile
+          (file) => file.path === prevFocusedRef.current
         );
 
         updatedFiles.splice(currentFocusedFileIndex + 1, 0, {
@@ -68,7 +62,7 @@ const Titlebar = () => {
       }
 
       dispatch(setFocusedFile(prevFocusedFile));
-      setFocusedIndex(focusedIndex - 1);
+      setFocusedIndex((prevIndex) => prevIndex - 1);
     }
   };
 
