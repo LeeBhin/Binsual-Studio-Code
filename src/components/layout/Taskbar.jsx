@@ -51,7 +51,11 @@ const Taskbar = () => {
           key={id}
           className={css["taskbar-wrap"]}
           onClick={() => handleClick(id, Icon)}
-          style={focusedTask === id ? { color: "#cccccc" } : {}}
+          style={
+            focusedTask === id
+              ? { color: "#cccccc", borderLeft: "solid 2px #d7d7d7" }
+              : {}
+          }
         >
           <Icon />
         </div>
