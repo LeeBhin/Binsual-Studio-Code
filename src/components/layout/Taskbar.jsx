@@ -53,11 +53,11 @@ const Taskbar = () => {
           onClick={() => handleClick(id, Icon)}
           style={
             focusedTask === id
-              ? { color: "#cccccc", borderLeft: "solid 2px #d7d7d7" }
-              : {}
+              ? { color: "#cccccc", borderLeft: "solid 2px #0078d4" }
+              : { borderLeft: "solid 2px transparent" }
           }
         >
-          <Icon />
+          <Icon style={{ marginRight: "2px" }} />
         </div>
       ))}
     </div>
