@@ -163,3 +163,10 @@
 .pathIcon {
   font-size: 18px;
 }
+
+.screen {
+  width: 100%;
+  height: calc(100% - 26px);
+  position: relative;
+  overflow: hidden;
+}

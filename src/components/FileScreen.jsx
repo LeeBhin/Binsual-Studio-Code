@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import css from "../styles/File.module.css";
 import { VscChevronRight } from "react-icons/vsc";
 import FileIcon from "./FileIcon";
+import MonacoEditor from "@monaco-editor/react";
 
 const FileScreen = () => {
   const { focusedFile } = useSelector((state) => state.history);
@@ -35,6 +36,19 @@ const FileScreen = () => {
             )}
           </div>
         ))}
+      </div>
+      <div className={css.screen}>
+        <MonacoEditor
+          height="100%"
+          width="100%"
+          language="javascript"
+          value={"hello world"}
+          theme="vs-dark"
+          options={{
+            selectOnLineNumbers: true,
+          }}
+          onResize={() => {}}
+        />
       </div>
     </div>
   );

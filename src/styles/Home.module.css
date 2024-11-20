@@ -58,7 +58,7 @@
 }
 
 .filesTop {
-  width: calc(100vw - 251px);
+  width: 100%;
   height: 35px;
   background-color: #181818;
 }
