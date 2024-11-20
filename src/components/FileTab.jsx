@@ -5,6 +5,7 @@ import { VscChromeClose } from "react-icons/vsc";
 import { setFocusedFile, setHistory } from "../features/historySlice";
 import { setCurrentFiles } from "../features/historySlice";
 import { useEffect, useState } from "react";
+import getExtension from "../features/getExtension";
 
 const FileTab = ({ fileName, filePath }) => {
   const dispatch = useDispatch();
@@ -13,12 +14,6 @@ const FileTab = ({ fileName, filePath }) => {
   const { focusedFile, currentFiles, history } = useSelector(
     (state) => state.history
   );
-
-  const getExtension = (fileName) => {
-    if (fileName === "robots.txt") return "robots";
-    const parts = fileName.split(".");
-    return parts.length > 1 ? "." + parts[parts.length - 1] : "";
-  };
 
   const closeFile = (e) => {
     e.stopPropagation();

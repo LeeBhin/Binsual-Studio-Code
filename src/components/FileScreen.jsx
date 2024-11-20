@@ -6,6 +6,7 @@ import MonacoEditor from "@monaco-editor/react";
 import { setErr, setRowCol, setSelected } from "../features/historySlice";
 import { errorMsg } from "./../data/errorMsg";
 import getLanguage from "./../features/getLanguage";
+import getExtension from './../features/getExtension';
 
 const FileScreen = () => {
   const { focusedFile } = useSelector((state) => state.history);
@@ -15,12 +16,6 @@ const FileScreen = () => {
   const getFileName = (filePath) => {
     const parts = filePath.split("/");
     return parts[parts.length - 1];
-  };
-
-  const getExtension = (fileName) => {
-    if (fileName === "robots.txt") return "robots";
-    const parts = fileName.split(".");
-    return parts.length > 1 ? "." + parts[parts.length - 1] : "";
   };
 
   const handleEditorMount = (editor, monaco) => {

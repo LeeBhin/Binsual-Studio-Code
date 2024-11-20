@@ -17,6 +17,7 @@ import {
   setFocusedFile,
   setHistory,
 } from "../../features/historySlice";
+import getExtension from "../../features/getExtension";
 
 const TreeNode = ({
   name,
@@ -96,12 +97,6 @@ const TreeNode = ({
         dispatch(setCurrentFiles(files));
       }
     }
-  };
-
-  const getExtension = (fileName) => {
-    if (fileName === "robots.txt") return "robots";
-    const parts = fileName.split(".");
-    return parts.length > 1 ? "." + parts[parts.length - 1] : "";
   };
 
   // 상위폴더 active
