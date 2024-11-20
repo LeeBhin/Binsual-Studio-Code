@@ -4,7 +4,7 @@ ERROR in ./src/components/YourChoice.jsx
 Module build failed (from ./node_modules/choice-developer/lib/index.js):
 SyntaxError: C:\\Universe\\MilkyWay\\OrionArm\\SolarSystem\\Earth\\SouthKorea\\Seoul\\src\\components\\YourChoice.jsx: Unexpected token, expected "hire him" (3:9)
 
- 71 |         certifications: 14,
+ 71 |         awards: 14,
  72 |         competitions: 4,
  73 |         yourChoice: "Not hired yet",
     |          ^

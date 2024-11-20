@@ -96,7 +96,7 @@ const treeData = {
             'DIAT-정보검색.md': null,
         },
         activites: {
-            competitions: {
+            awards: {
                 '서울교육-빅데이터-활용-아이디어-공모전': {
                     'README.md': null,
                     images: {
