@@ -2,15 +2,18 @@ import css from "../styles/File.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import FileTab from "./FileTab";
 import { useEffect, useRef } from "react";
-import { setFocusedFile } from "../features/historySlice";
+import { setFileSplit, setFocusedFile } from "../features/historySlice";
+import { VscEllipsis, VscSplitHorizontal } from "react-icons/vsc";
 
-const CurrentFiles = () => {
+const CurrentFiles = ({activeFile}) => {
   const trackRef = useRef();
   const sliderRef = useRef();
   const scrollAreaRef = useRef();
   const dispatch = useDispatch();
 
-  const { currentFiles, focusedFile } = useSelector((state) => state.history);
+  const { currentFiles, focusedFile, fileSplit } = useSelector(
+    (state) => state.history
+  );
 
   const getFileName = (filePath) => {
     const parts = filePath.split("/");
@@ -160,7 +163,19 @@ const CurrentFiles = () => {
             filePath={file.path}
           />
         ))}
-        <div className={css.fill} />
+        <div className={css.fill}>
+          <div className={css.fillWrap}>
+            <div
+              className={css["icon-bg"]}
+              onClick={() => dispatch(setFileSplit(fileSplit + 1))}
+            >
+              {activeFile && <VscSplitHorizontal />}
+            </div>
+            <div className={css["icon-bg"]}>
+              <VscEllipsis />
+            </div>
+          </div>
+        </div>
       </div>
       <div className={css.track} ref={trackRef}>
         <div className={css.slider} ref={sliderRef} />

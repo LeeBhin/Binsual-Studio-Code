@@ -10,7 +10,8 @@ const historySlice = createSlice({
         isLayoutActive: { isActive: true, width: 170 },
         rowAndCol: { row: 0, col: 0 },
         selected: 0,
-        errors: { err: 0, warning: 0 }
+        errors: { err: 0, warning: 0 },
+        fileSplit: 1
     },
     reducers: {
         setCurrentFiles: (state, action) => {
@@ -40,8 +41,11 @@ const historySlice = createSlice({
         setErr: (state, action) => {
             state.errors = action.payload
         },
+        setFileSplit: (state, action) => {
+            state.fileSplit = action.payload
+        },
     },
 });
 
-export const { setCurrentFiles, setHistory, setFocusedFile, setFocusedTask, setIsLayoutActive, setRowCol, setSelected, setErr } = historySlice.actions;
+export const { setCurrentFiles, setHistory, setFocusedFile, setFocusedTask, setIsLayoutActive, setRowCol, setSelected, setErr, setFileSplit } = historySlice.actions;
 export default historySlice.reducer;

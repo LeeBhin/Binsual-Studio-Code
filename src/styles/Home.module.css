@@ -54,7 +54,31 @@
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: row;
+  position: relative;
+}
+
+.fileWrap {
+  display: flex;
+  height: 100%;
   flex-direction: column;
+  overflow: hidden;
+  border-right: solid 1px #2b2b2b;
+}
+
+.fileWrap:last-child {
+  border-right: none;
+}
+
+.resizeHandle {
+  width: 1px;
+  height: 100%;
+  z-index: 1;
+  background-color: #2b2b2b;
+}
+
+.resizeHandle:hover{
+  width: 4px;
 }
 
 .filesTop {

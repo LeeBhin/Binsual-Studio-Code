@@ -36,7 +36,6 @@ const Taskbar = () => {
         })
       );
     } else {
-      console.log(isLayoutActive.isActive);
       if (!isLayoutActive.isActive) {
         dispatch(
           setIsLayoutActive({

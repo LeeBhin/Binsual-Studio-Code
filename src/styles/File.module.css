@@ -87,7 +87,34 @@
 
 .fill {
   flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  color: #cccccc;
+  font-size: 16px;
   border-bottom: solid 1px #2b2b2b;
+}
+
+.fillWrap {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  margin-right: 10px;
+}
+
+.icon-bg {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon-bg:hover {
+  background-color: #2d2e2e;
 }
 
 .wrap {
