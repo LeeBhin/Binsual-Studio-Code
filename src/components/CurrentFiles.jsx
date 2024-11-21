@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { setFileSplit, setFocusedFile } from "../features/historySlice";
 import { VscEllipsis, VscSplitHorizontal } from "react-icons/vsc";
 
-const CurrentFiles = ({activeFile}) => {
+const CurrentFiles = ({ activeFile }) => {
   const trackRef = useRef();
   const sliderRef = useRef();
   const scrollAreaRef = useRef();
@@ -165,12 +165,16 @@ const CurrentFiles = ({activeFile}) => {
         ))}
         <div className={css.fill}>
           <div className={css.fillWrap}>
-            <div
-              className={css["icon-bg"]}
-              onClick={() => dispatch(setFileSplit(fileSplit + 1))}
-            >
-              {activeFile && <VscSplitHorizontal />}
-            </div>
+            {activeFile && (
+              <>
+                <div
+                  className={css["icon-bg"]}
+                  onClick={() => dispatch(setFileSplit(fileSplit + 1))}
+                >
+                  <VscSplitHorizontal />
+                </div>
+              </>
+            )}
             <div className={css["icon-bg"]}>
               <VscEllipsis />
             </div>

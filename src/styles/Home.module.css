@@ -71,14 +71,35 @@
 }
 
 .resizeHandle {
-  width: 1px;
+  width: 4px;
   height: 100%;
   z-index: 1;
-  background-color: #2b2b2b;
+  transition: 0.2s;
+  background-color: #0078d4;
+  opacity: 0;
 }
 
-.resizeHandle:hover{
-  width: 4px;
+.resizeWrap {
+  position: absolute;
+  height: 100%;
+  margin-left: -5.8px;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  width: 12.2px;
+}
+
+.resizewrap:not(:hover) .resizeHandle {
+  transition: 0.2s;
+}
+
+.resizeWrap:hover .resizeHandle {
+  transition: 0.2s 0.3s;
+  opacity: 1;
+}
+
+.resizeWrap:active .resizeHandle {
+  opacity: 1;
 }
 
 .filesTop {

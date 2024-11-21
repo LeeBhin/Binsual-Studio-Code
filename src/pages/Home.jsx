@@ -17,22 +17,28 @@ const Home = () => {
       ) : (
         <PanelGroup direction="horizontal">
           {[...Array(fileSplit)].map((_, index) => (
-            <React.Fragment key={index}>
-              {index > 0 && <PanelResizeHandle className={css.resizeHandle} />}
-              <Panel minSize={9.5} defaultSize={100 / fileSplit}>
-                <div
-                  className={css.fileWrap}
-                  onClick={() => setActiveFile(index)}
-                >
-                  <div className={css.filesTop}>
-                    <CurrentFiles activeFile={activeFile === index} />
-                  </div>
-                  <div className={css.file}>
-                    <FileScreen />
-                  </div>
+            <Panel
+              minSize={9.5}
+              defaultSize={100 / fileSplit}
+              style={{ borderRight: "solid 1px #2b2b2b" }}
+            >
+              {index > 0 && (
+                <div className={css.resizeWrap}>
+                  <PanelResizeHandle className={css.resizeHandle} />{" "}
                 </div>
-              </Panel>
-            </React.Fragment>
+              )}
+              <div
+                className={css.fileWrap}
+                onClick={() => setActiveFile(index)}
+              >
+                <div className={css.filesTop}>
+                  <CurrentFiles activeFile={activeFile === index} />
+                </div>
+                <div className={css.file}>
+                  <FileScreen />
+                </div>
+              </div>
+            </Panel>
           ))}
         </PanelGroup>
       )}
