@@ -10,7 +10,6 @@ import {
   VscMail,
 } from "react-icons/vsc";
 import { setFocusedTask, setIsLayoutActive } from "../../features/historySlice";
-import { useEffect } from "react";
 
 const icons = [
   { id: "files", Icon: VscFiles },
@@ -26,12 +25,8 @@ const Taskbar = () => {
   const { focusedTask, isLayoutActive } = useSelector((state) => state.history);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(setFocusedTask(isLayoutActive.isActive ? "files" : ""));
-  }, [isLayoutActive.isActive, dispatch]);
-
-  const handleClick = (id, Icon) => {
-    if (Icon === VscFiles) {
+  const handleClick = (id) => {
+    if (focusedTask === id) {
       dispatch(
         setIsLayoutActive({
           isActive:
@@ -40,7 +35,19 @@ const Taskbar = () => {
           from: "layout",
         })
       );
+    } else {
+      console.log(isLayoutActive.isActive);
+      if (!isLayoutActive.isActive) {
+        dispatch(
+          setIsLayoutActive({
+            width: isLayoutActive.width,
+            isActive: true,
+            from: "layout",
+          })
+        );
+      }
     }
+
     dispatch(setFocusedTask(id));
   };
 
@@ -52,7 +59,7 @@ const Taskbar = () => {
           className={css["taskbar-wrap"]}
           onClick={() => handleClick(id, Icon)}
           style={
-            focusedTask === id
+            focusedTask === id && isLayoutActive.isActive
               ? { color: "#cccccc", borderLeft: "solid 2px #0078d4" }
               : { borderLeft: "solid 2px transparent" }
           }

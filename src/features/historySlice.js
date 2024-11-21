@@ -6,7 +6,7 @@ const historySlice = createSlice({
         currentFiles: [],
         history: [],
         focusedFile: '',
-        focusedTask: '',
+        focusedTask: 'files',
         isLayoutActive: { isActive: true, width: 170 },
         rowAndCol: { row: 0, col: 0 },
         selected: 0,

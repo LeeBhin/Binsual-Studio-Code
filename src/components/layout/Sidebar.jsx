@@ -5,6 +5,12 @@ import FolderTree from "./FolderTree";
 import css from "../../styles/Layout.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setIsLayoutActive } from "../../features/historySlice";
+import Search from "./tasks/Search";
+import Git from "./tasks/Git";
+import Debug from "./tasks/Debug";
+import Extension from "./tasks/Extension";
+import Database from "./tasks/Database";
+import Mail from "./tasks/Mail";
 
 const START_WIDTH = 170;
 const MIN_WIDTH = 170;
@@ -21,7 +27,7 @@ const Sidebar = () => {
   const [isResizing, setIsResizing] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  const { isLayoutActive } = useSelector((state) => state.history);
+  const { isLayoutActive, focusedTask } = useSelector((state) => state.history);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -119,6 +125,27 @@ const Sidebar = () => {
     );
   };
 
+  const focusedComponent = () => {
+    switch (focusedTask) {
+      case "files":
+        return <FolderTree />;
+      case "search":
+        return <Search />;
+      case "git":
+        return <Git />;
+      case "debug":
+        return <Debug />;
+      case "extensions":
+        return <Extension />;
+      case "db":
+        return <Database />;
+      case "mail":
+        return <Mail />;
+      default:
+        return <FolderTree />;
+    }
+  };
+
   return (
     <Resizable
       size={{ width: resizeWidth, height: "100%" }}
@@ -143,9 +170,7 @@ const Sidebar = () => {
             <VscEllipsis />
           </div>
         </div>
-        <div className={css["sidebar-content"]}>
-          <FolderTree />
-        </div>
+        <div className={css["sidebar-content"]}>{focusedComponent()}</div>
       </div>
 
       <div
