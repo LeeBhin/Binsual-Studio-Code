@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { setFileSplit, setFocusedFile } from "../features/historySlice";
 import { VscEllipsis, VscSplitHorizontal } from "react-icons/vsc";
 
-const CurrentFiles = ({ activeFile }) => {
+const CurrentFiles = ({ isActive }) => {
   const trackRef = useRef();
   const sliderRef = useRef();
   const scrollAreaRef = useRef();
@@ -165,7 +165,7 @@ const CurrentFiles = ({ activeFile }) => {
         ))}
         <div className={css.fill}>
           <div className={css.fillWrap}>
-            {activeFile && (
+            {isActive && (
               <>
                 <div
                   className={css["icon-bg"]}

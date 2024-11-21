@@ -1,14 +1,16 @@
-import React, { useState } from "react";
 import { Panel, PanelGroup, PanelResizeHandle } from "react-resizable-panels";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CurrentFiles from "../components/CurrentFiles";
 import EmptyScreen from "../components/EmptyScreen";
 import FileScreen from "../components/FileScreen";
 import css from "../styles/Home.module.css";
+import { setActiveFile } from "../features/historySlice";
 
 const Home = () => {
-  const { currentFiles, fileSplit } = useSelector((state) => state.history);
-  const [activeFile, setActiveFile] = useState();
+  const { currentFiles, fileSplit, activeFile } = useSelector(
+    (state) => state.history
+  );
+  const dispatch = useDispatch();
 
   return (
     <div className={css.Home}>
@@ -21,6 +23,7 @@ const Home = () => {
               minSize={9.5}
               defaultSize={100 / fileSplit}
               style={{ borderRight: "solid 1px #2b2b2b" }}
+              key={index}
             >
               {index > 0 && (
                 <div className={css.resizeWrap}>
@@ -29,10 +32,10 @@ const Home = () => {
               )}
               <div
                 className={css.fileWrap}
-                onClick={() => setActiveFile(index)}
+                onClick={() => dispatch(setActiveFile(index))}
               >
                 <div className={css.filesTop}>
-                  <CurrentFiles activeFile={activeFile === index} />
+                  <CurrentFiles isActive={activeFile === index} />
                 </div>
                 <div className={css.file}>
                   <FileScreen />
