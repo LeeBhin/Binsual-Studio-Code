@@ -17,13 +17,20 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 const Titlebar = () => {
-  const { currentFiles, history, focusedFile } = useSelector(
-    (state) => state.history
-  );
+  const { activeFile } = useSelector((state) => state.history);
+
+  const {
+    currentFiles,
+    focusedFile,
+    history = [],
+  } = useSelector((state) => state.history.windows[activeFile] || {});
+
   const dispatch = useDispatch();
 
   const [focusedIndex, setFocusedIndex] = useState(
-    history.findIndex((path) => path === focusedFile)
+    Array.isArray(history)
+      ? history.findIndex((path) => path === focusedFile)
+      : -1
   );
 
   const prevFocusedRef = useRef(focusedFile);
@@ -34,12 +41,12 @@ const Titlebar = () => {
       focusedFile !== history[focusedIndex]
     ) {
       const newHistory = [...history.slice(0, focusedIndex + 1), focusedFile];
-      dispatch(setHistory(newHistory));
+      dispatch(setHistory({ id: activeFile, history: newHistory }));
       setFocusedIndex(newHistory.length - 1);
     }
 
     prevFocusedRef.current = focusedFile;
-  }, [focusedFile, focusedIndex, history, dispatch]);
+  }, [focusedFile, focusedIndex, history, dispatch, activeFile]);
 
   const prevFile = () => {
     if (focusedIndex > 0) {
@@ -58,10 +65,20 @@ const Titlebar = () => {
           pinned: false,
           path: prevFocusedFile,
         });
-        dispatch(setCurrentFiles(updatedFiles));
+        dispatch(
+          setCurrentFiles({
+            id: activeFile,
+            currentFiles: updatedFiles,
+          })
+        );
       }
 
-      dispatch(setFocusedFile(prevFocusedFile));
+      dispatch(
+        setFocusedFile({
+          id: activeFile,
+          focusedFile: prevFocusedFile,
+        })
+      );
       setFocusedIndex((prevIndex) => prevIndex - 1);
     }
   };
@@ -83,10 +100,20 @@ const Titlebar = () => {
           pinned: false,
           path: nextFocusedFile,
         });
-        dispatch(setCurrentFiles(updatedFiles));
+        dispatch(
+          setCurrentFiles({
+            id: activeFile,
+            currentFiles: updatedFiles,
+          })
+        );
       }
 
-      dispatch(setFocusedFile(nextFocusedFile));
+      dispatch(
+        setFocusedFile({
+          id: activeFile,
+          focusedFile: nextFocusedFile,
+        })
+      );
       setFocusedIndex(focusedIndex + 1);
     }
   };

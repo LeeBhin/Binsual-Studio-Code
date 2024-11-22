@@ -9,9 +9,13 @@ import { useEffect } from "react";
 import { setFocusedFile } from "../../features/historySlice";
 
 const Layout = ({ children }) => {
-  const { currentFiles, history, focusedFile } = useSelector(
-    (state) => state.history
-  );
+  const { activeFile } = useSelector((state) => state.history);
+
+  const {
+    currentFiles = [],
+    focusedFile = null,
+    history = [],
+  } = useSelector((state) => state.history.windows[activeFile] || {});
 
   const dispatch = useDispatch();
 
@@ -28,12 +32,14 @@ const Layout = ({ children }) => {
         );
 
       dispatch(
-        setFocusedFile(
-          nextFocusedFile || currentFiles[currentFiles.length - 1]?.path
-        )
+        setFocusedFile({
+          id: activeFile,
+          focusedFile:
+            nextFocusedFile || currentFiles[currentFiles.length - 1]?.path,
+        })
       );
     }
-  }, [currentFiles, dispatch, focusedFile, history]);
+  }, [currentFiles, dispatch, focusedFile, history, activeFile]);
 
   return (
     <div className={css.Layout}>

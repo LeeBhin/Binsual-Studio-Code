@@ -33,8 +33,10 @@ const TreeNode = ({
   const [isOpen, setIsOpen] = useState(false);
   const sidebarRef = useRef(null);
   const dispatch = useDispatch();
-  const { currentFiles, history, focusedFile } = useSelector(
-    (state) => state.history
+  const { activeFile } = useSelector((state) => state.history);
+
+  const { currentFiles, focusedFile, history } = useSelector(
+    (state) => state.history.windows[activeFile] || {}
   );
 
   const handleClickOutside = (event) => {
@@ -64,18 +66,28 @@ const TreeNode = ({
     if (!isFile) {
       setIsOpen((prev) => !prev);
     } else {
-      dispatch(setFocusedFile(path));
+      dispatch(
+        setFocusedFile({
+          id: activeFile,
+          focusedFile: path,
+        })
+      );
 
       const fileExists = currentFiles.some((file) => file.path === path);
 
       if (currentFiles.length === 0 && !fileExists) {
-        dispatch(setCurrentFiles([{ pinned: false, path }]));
+        dispatch(
+          setCurrentFiles({
+            id: activeFile,
+            currentFiles: [{ pinned: false, path }],
+          })
+        );
       }
 
       const lastFile = history[history.length - 1];
 
       if (lastFile !== path) {
-        dispatch(setHistory([...history, path]));
+        dispatch(setHistory({ id: activeFile, history: [...history, path] }));
       }
 
       if (focusedFile === "") return;
@@ -94,7 +106,12 @@ const TreeNode = ({
       }
 
       if (currentFiles.length !== 0 && !fileExists) {
-        dispatch(setCurrentFiles(files));
+        dispatch(
+          setCurrentFiles({
+            id: activeFile,
+            currentFiles: files,
+          })
+        );
       }
     }
   };
@@ -153,7 +170,7 @@ const TreeNode = ({
       file.path === path ? { ...file, pinned: true } : file
     );
 
-    dispatch(setCurrentFiles(updatedFiles));
+    dispatch(setCurrentFiles({ id: activeFile, currentFiles: updatedFiles }));
   };
 
   return (

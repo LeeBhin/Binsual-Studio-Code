@@ -7,38 +7,39 @@ import css from "../styles/Home.module.css";
 import { setActiveFile } from "../features/historySlice";
 
 const Home = () => {
-  const { currentFiles, fileSplit, activeFile } = useSelector(
-    (state) => state.history
-  );
+  const { fileSplit, activeFile } = useSelector((state) => state.history);
   const dispatch = useDispatch();
-
+  const { currentFiles = [] } = useSelector(
+    (state) => state.history.windows[activeFile] || {}
+  );
   return (
     <div className={css.Home}>
       {currentFiles.length === 0 ? (
         <EmptyScreen />
       ) : (
         <PanelGroup direction="horizontal">
-          {[...Array(fileSplit)].map((_, index) => (
+          {[...Array(fileSplit + 1)].map((_, index) => (
             <Panel
               minSize={9.5}
-              defaultSize={100 / fileSplit}
+              defaultSize={100 / fileSplit + 1}
               style={{ borderRight: "solid 1px #2b2b2b" }}
               key={index}
+              onClick={() => dispatch(setActiveFile(index))}
             >
               {index > 0 && (
                 <div className={css.resizeWrap}>
-                  <PanelResizeHandle className={css.resizeHandle} />{" "}
+                  <PanelResizeHandle className={css.resizeHandle} />
                 </div>
               )}
-              <div
-                className={css.fileWrap}
-                onClick={() => dispatch(setActiveFile(index))}
-              >
+              <div className={css.fileWrap}>
                 <div className={css.filesTop}>
-                  <CurrentFiles isActive={activeFile === index} />
+                  <CurrentFiles
+                    isActive={activeFile === index}
+                    fileIndex={index}
+                  />
                 </div>
                 <div className={css.file}>
-                  <FileScreen />
+                  <FileScreen fileIndex={index} />
                 </div>
               </div>
             </Panel>

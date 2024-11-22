@@ -2,31 +2,46 @@ import { useDispatch, useSelector } from "react-redux";
 import css from "../styles/File.module.css";
 import FileIcon from "./FileIcon";
 import { VscChromeClose } from "react-icons/vsc";
-import { setFocusedFile, setHistory } from "../features/historySlice";
+import {
+  setFocusedFile,
+  setHistory,
+} from "../features/historySlice";
 import { setCurrentFiles } from "../features/historySlice";
 import { useEffect, useState } from "react";
 import getExtension from "../features/getExtension";
 
-const FileTab = ({ fileName, filePath }) => {
+const FileTab = ({ fileName, filePath, fileIndex }) => {
   const dispatch = useDispatch();
+  const { activeFile } = useSelector((state) => state.history);
   const [dup, setDup] = useState(null);
 
-  const { focusedFile, currentFiles, history } = useSelector(
-    (state) => state.history
+  const { currentFiles, focusedFile, history } = useSelector(
+    (state) => state.history.windows[fileIndex]
   );
 
   const closeFile = (e) => {
+    console.log(fileIndex)
     e.stopPropagation();
     const updatedFiles = currentFiles.filter((file) => file.path !== filePath);
-
-    dispatch(setCurrentFiles(updatedFiles));
+    console.log(fileIndex);
+    dispatch(
+      setCurrentFiles({
+        id: fileIndex,
+        currentFiles: updatedFiles,
+      })
+    );
   };
 
   const tabClick = () => {
     const lastFile = history[history.length - 1];
-    dispatch(setFocusedFile(filePath));
+    dispatch(
+      setFocusedFile({
+        id: activeFile,
+        focusedFile: filePath,
+      })
+    );
     if (lastFile !== filePath) {
-      dispatch(setHistory([...history, filePath]));
+      dispatch(setHistory({ id: activeFile, history: [...history, filePath] }));
     }
   };
 
@@ -58,7 +73,9 @@ const FileTab = ({ fileName, filePath }) => {
         const updatedFiles = currentFiles.map((file) =>
           file.path === filePath ? { ...file, pinned: true } : file
         );
-        dispatch(setCurrentFiles(updatedFiles));
+        dispatch(
+          setCurrentFiles({ id: activeFile, currentFiles: updatedFiles })
+        );
       }}
       style={
         focusedFile === filePath

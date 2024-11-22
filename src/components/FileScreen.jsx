@@ -8,8 +8,10 @@ import { errorMsg } from "./../data/errorMsg";
 import getLanguage from "./../features/getLanguage";
 import getExtension from "./../features/getExtension";
 
-const FileScreen = () => {
-  const { focusedFile } = useSelector((state) => state.history);
+const FileScreen = ({ fileIndex }) => {
+  const { focusedFile } = useSelector(
+    (state) => state.history.windows[fileIndex]
+  );
   const dispatch = useDispatch();
   const splitPath = focusedFile.split("/").slice(1);
 

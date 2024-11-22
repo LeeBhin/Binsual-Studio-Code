@@ -36,8 +36,12 @@ const extensionMap = {
 };
 
 const Footer = () => {
-  const { focusedFile, rowAndCol, selected, errors } = useSelector(
+  const { rowAndCol, selected, errors, activeFile } = useSelector(
     (state) => state.history
+  );
+
+  const { focusedFile } = useSelector(
+    (state) => state.history.windows[activeFile]||{}
   );
 
   const getExtension = (filePath) => {

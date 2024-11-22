@@ -2,17 +2,24 @@ import css from "../styles/File.module.css";
 import { useSelector, useDispatch } from "react-redux";
 import FileTab from "./FileTab";
 import { useEffect, useRef } from "react";
-import { setFileSplit, setFocusedFile } from "../features/historySlice";
+import {
+  addWindow,
+  setActiveFile,
+  setFileSplit,
+  setFocusedFile,
+} from "../features/historySlice";
 import { VscEllipsis, VscSplitHorizontal } from "react-icons/vsc";
 
-const CurrentFiles = ({ isActive }) => {
+const CurrentFiles = ({ isActive, fileIndex }) => {
   const trackRef = useRef();
   const sliderRef = useRef();
   const scrollAreaRef = useRef();
   const dispatch = useDispatch();
 
-  const { currentFiles, focusedFile, fileSplit } = useSelector(
-    (state) => state.history
+  const { fileSplit, activeFile } = useSelector((state) => state.history);
+
+  const { currentFiles, focusedFile } = useSelector(
+    (state) => state.history.windows[fileIndex]
   );
 
   const getFileName = (filePath) => {
@@ -64,7 +71,12 @@ const CurrentFiles = ({ isActive }) => {
         if (nextIndex < 0) return;
       }
 
-      dispatch(setFocusedFile(currentFiles[nextIndex].path));
+      dispatch(
+        setFocusedFile({
+          id: activeFile,
+          focusedFile: currentFiles[nextIndex].path,
+        })
+      );
       scrollToFile(nextIndex);
     };
 
@@ -151,7 +163,7 @@ const CurrentFiles = ({ isActive }) => {
       document.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mousemove", handleScroll);
     };
-  }, [currentFiles, focusedFile, dispatch]);
+  }, [currentFiles, focusedFile, dispatch, activeFile]);
 
   return (
     <div className={css.wrap}>
@@ -161,6 +173,7 @@ const CurrentFiles = ({ isActive }) => {
             key={index}
             fileName={getFileName(file.path)}
             filePath={file.path}
+            fileIndex={fileIndex}
           />
         ))}
         <div className={css.fill}>
@@ -169,7 +182,10 @@ const CurrentFiles = ({ isActive }) => {
               <>
                 <div
                   className={css["icon-bg"]}
-                  onClick={() => dispatch(setFileSplit(fileSplit + 1))}
+                  onClick={() => {
+                    dispatch(setFileSplit(fileSplit + 1));
+                    dispatch(addWindow(fileSplit + 1));
+                  }}
                 >
                   <VscSplitHorizontal />
                 </div>
