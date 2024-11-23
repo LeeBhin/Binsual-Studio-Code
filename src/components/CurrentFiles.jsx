@@ -182,9 +182,11 @@ const CurrentFiles = ({ isActive, fileIndex }) => {
               <>
                 <div
                   className={css["icon-bg"]}
-                  onClick={() => {
-                    dispatch(setFileSplit(fileSplit + 1));
-                    dispatch(addWindow(fileSplit + 1));
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(setFileSplit([...fileSplit, fileSplit.length]));
+                    dispatch(addWindow(fileSplit.length));
+                    dispatch(setActiveFile(fileIndex + 1));
                   }}
                 >
                   <VscSplitHorizontal />

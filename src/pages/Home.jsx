@@ -12,16 +12,17 @@ const Home = () => {
   const { currentFiles = [] } = useSelector(
     (state) => state.history.windows[activeFile] || {}
   );
+
   return (
     <div className={css.Home}>
       {currentFiles.length === 0 ? (
         <EmptyScreen />
       ) : (
         <PanelGroup direction="horizontal">
-          {[...Array(fileSplit + 1)].map((_, index) => (
+          {fileSplit.map((_, index) => (
             <Panel
               minSize={9.5}
-              defaultSize={100 / fileSplit + 1}
+              defaultSize={100 / fileSplit.length}
               style={{ borderRight: "solid 1px #2b2b2b" }}
               key={index}
               onClick={() => dispatch(setActiveFile(index))}

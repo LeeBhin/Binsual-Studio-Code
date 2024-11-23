@@ -20,10 +20,8 @@ const FileTab = ({ fileName, filePath, fileIndex }) => {
   );
 
   const closeFile = (e) => {
-    console.log(fileIndex)
     e.stopPropagation();
     const updatedFiles = currentFiles.filter((file) => file.path !== filePath);
-    console.log(fileIndex);
     dispatch(
       setCurrentFiles({
         id: fileIndex,
@@ -36,12 +34,12 @@ const FileTab = ({ fileName, filePath, fileIndex }) => {
     const lastFile = history[history.length - 1];
     dispatch(
       setFocusedFile({
-        id: activeFile,
+        id: fileIndex,
         focusedFile: filePath,
       })
     );
     if (lastFile !== filePath) {
-      dispatch(setHistory({ id: activeFile, history: [...history, filePath] }));
+      dispatch(setHistory({ id: fileIndex, history: [...history, filePath] }));
     }
   };
 
@@ -80,18 +78,25 @@ const FileTab = ({ fileName, filePath, fileIndex }) => {
       style={
         focusedFile === filePath
           ? {
-              backgroundColor: "#1f1f1f",
-              borderBottom: "solid 1px #1f1f1f",
-            }
+            backgroundColor: "#1f1f1f",
+            borderBottom: "solid 1px #1f1f1f",
+          }
           : {}
       }
     >
-      {focusedFile === filePath && <div className={css.tabLine} />}
+      {(focusedFile === filePath) && <div className={css.tabLine} style={activeFile === fileIndex ? { borderTop: "solid 1px #0078d4" } : { borderTop: "solid 1px #2b2b2b" }} />}
 
       <div
         className={css.fileWrap}
         style={{
-          color: focusedFile === filePath ? "#ffffff" : undefined,
+          color:
+            focusedFile === filePath
+              ? activeFile === fileIndex
+                ? "#ffffff"
+                : "#ffffff80"
+              : activeFile === fileIndex
+                ? "#9d9d9d"
+                : "#9d9d9d80",
           fontStyle: currentFiles.find(
             (file) => file.path === filePath && !file.pinned
           )
@@ -99,6 +104,7 @@ const FileTab = ({ fileName, filePath, fileIndex }) => {
             : "normal",
         }}
       >
+
         <FileIcon extension={getExtension(fileName)} />
         <div className={css.name}>{fileName}</div>
         {dup && dup === fileName && (

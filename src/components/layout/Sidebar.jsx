@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect, useRef } from "react";
 import { VscEllipsis } from "react-icons/vsc";
 import { Resizable } from "re-resizable";
 import FolderTree from "./FolderTree";
@@ -26,6 +26,7 @@ const Sidebar = () => {
   const [maxWidth, setMaxWidth] = useState(0);
   const [isResizing, setIsResizing] = useState(false);
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const contentRef = useRef(null);
 
   const { isLayoutActive, focusedTask } = useSelector((state) => state.history);
   const dispatch = useDispatch();
@@ -47,6 +48,26 @@ const Sidebar = () => {
     window.addEventListener("resize", updateMaxWidth);
     return () => window.removeEventListener("resize", updateMaxWidth);
   }, []);
+
+  useEffect(() => {
+    const handleDocumentMouseMove = (e) => {
+      if (isResizing) return;
+
+      if (contentRef.current) {
+        const rect = contentRef.current.getBoundingClientRect();
+        const isNearRightEdge = Math.abs(e.clientX - rect.right) < HOVER_EDGE_AREA;
+
+        if (!isNearRightEdge) {
+          clearTimeout(timer);
+          setTimer(null);
+          setIsHover(false);
+        }
+      }
+    };
+
+    document.addEventListener('mousemove', handleDocumentMouseMove);
+    return () => document.removeEventListener('mousemove', handleDocumentMouseMove);
+  }, [isResizing, timer]);
 
   const handleMouseMove = useCallback(
     (e) => {
@@ -161,6 +182,7 @@ const Sidebar = () => {
       handleStyles={{ right: { cursor: "ew-resize" } }}
     >
       <div
+        ref={contentRef}
         className={css.ResizableWrap}
         style={{ opacity: isCollapsed ? 0 : 1 }}
       >

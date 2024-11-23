@@ -15,7 +15,7 @@ const historySlice = createSlice({
         rowAndCol: { row: 0, col: 0 },
         selected: 0,
         errors: { err: 0, warning: 0 },
-        fileSplit: 0,
+        fileSplit: [0],
         activeFile: 0,
     },
     reducers: {
@@ -40,34 +40,36 @@ const historySlice = createSlice({
             const id = action.payload;
             if (state.windows[id]) {
                 delete state.windows[id];
-                state.fileSplit = Math.max(-1, state.fileSplit - 1);
+                state.fileSplit.pop();
                 state.activeFile = Math.max(0, state.activeFile - 1);
             }
-            console.log('removeWindow state.windows:', state.windows);
         },
         setCurrentFiles: (state, action) => {
             const { id, currentFiles } = action.payload;
-            console.log(id, JSON.parse(JSON.stringify(state.windows[id])))
             if (state.windows[id]) {
                 if (currentFiles.length === 0) {
-                    // const hasNextWindow = Object.keys(state.windows).some(windowId => Number(windowId) > id);
-                    // delete state.windows[id]
-                    state.windows[id] = {
-                        currentFiles: [],
-                        history: [],
-                        focusedFile: '',
+                    if (Object.keys(state.windows).length === 1) {
+                        state.windows[id] = {
+                            currentFiles: [],
+                            history: [],
+                            focusedFile: '',
+                        }
                     }
-                    // if (hasNextWindow) {
-                    //     const maxWindowId = Math.max(...Object.keys(state.windows).map(Number));
-                    //     for (let i = id + 1; i <= maxWindowId; i++) {
-                    //         if (state.windows[i]) {
-                    //             state.windows[i].id = i - 1;
-                    //         }
-                    //     }
-                    // }
+                    else {
+                        const reorderedWindows = {};
+                        Object.entries(state.windows).forEach(([key, value]) => {
+                            const numKey = parseInt(key);
+                            if (numKey < id) {
+                                reorderedWindows[numKey] = value;
+                            } else if (numKey > id) {
+                                reorderedWindows[numKey - 1] = value;
+                            }
+                        });
 
-                    // state.fileSplit = state.fileSplit - 1;
-                    // state.activeFile = Math.max(0, state.activeFile - 1);
+                        state.windows = reorderedWindows;
+                        state.fileSplit.splice(id, 1)
+                    }
+                    state.activeFile = Math.max(0, id - 1);
                 } else {
                     state.windows[id].currentFiles = currentFiles;
                 }
@@ -84,7 +86,6 @@ const historySlice = createSlice({
             if (state.windows[id]) {
                 state.windows[id].focusedFile = focusedFile;
             }
-            console.log('setFocusedFile focusedFile:', focusedFile);
         },
         setFocusedTask: (state, action) => {
             state.focusedTask = action.payload;
@@ -103,11 +104,9 @@ const historySlice = createSlice({
         },
         setFileSplit: (state, action) => {
             state.fileSplit = action.payload;
-            console.log('setFileSplit fileSplit:', state.fileSplit);
         },
         setActiveFile: (state, action) => {
             state.activeFile = action.payload;
-            console.log('setActiveFile activeFile:', state.activeFile);
         },
     },
 });
