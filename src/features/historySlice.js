@@ -5,9 +5,9 @@ const historySlice = createSlice({
     initialState: {
         windows: {
             0: {
-                currentFiles: [],
+                currentFiles: [{ pinned: true, path: 'LEE BHIN/시작.vs' }],
                 history: [],
-                focusedFile: '',
+                focusedFile: 'LEE BHIN/시작.vs',
             }
         },
         focusedTask: 'files',

@@ -27,11 +27,12 @@ import { ReactComponent as Txt } from './svgs/txt.svg';
 import { ReactComponent as FolderImages } from './svgs/folder-images.svg';
 import { ReactComponent as FolderImagesOpen } from './svgs/folder-images-open.svg';
 import { ReactComponent as Robots } from './svgs/robots.svg';
+import { ReactComponent as Vscode } from './svgs/vscode.svg';
 
 const Icons = {
     Folder, FolderOpen, FolderImages, FolderImagesOpen,
     Json, Png, Yaml, Html, Css, Js, Jsx, Tsx, Vue, Py, Sql, Ts, Cql, Md,
-    Pkt, Xlsx, Psd, Pptx, Docx, Gitignore, Url, Env, Hwp, Txt, Robots
+    Pkt, Xlsx, Psd, Pptx, Docx, Gitignore, Url, Env, Hwp, Txt, Robots, Vscode
 };
 
 export default Icons;

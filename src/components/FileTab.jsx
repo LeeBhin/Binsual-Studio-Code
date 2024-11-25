@@ -2,10 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import css from "../styles/File.module.css";
 import FileIcon from "./FileIcon";
 import { VscChromeClose } from "react-icons/vsc";
-import {
-  setFocusedFile,
-  setHistory,
-} from "../features/historySlice";
+import { setFocusedFile, setHistory } from "../features/historySlice";
 import { setCurrentFiles } from "../features/historySlice";
 import { useEffect, useState } from "react";
 import getExtension from "../features/getExtension";
@@ -78,13 +75,22 @@ const FileTab = ({ fileName, filePath, fileIndex }) => {
       style={
         focusedFile === filePath
           ? {
-            backgroundColor: "#1f1f1f",
-            borderBottom: "solid 1px #1f1f1f",
-          }
+              backgroundColor: "#1f1f1f",
+              borderBottom: "solid 1px #1f1f1f",
+            }
           : {}
       }
     >
-      {(focusedFile === filePath) && <div className={css.tabLine} style={activeFile === fileIndex ? { borderTop: "solid 1px #0078d4" } : { borderTop: "solid 1px #2b2b2b" }} />}
+      {focusedFile === filePath && (
+        <div
+          className={css.tabLine}
+          style={
+            activeFile === fileIndex
+              ? { borderTop: "solid 1px #0078d4" }
+              : { borderTop: "solid 1px #2b2b2b" }
+          }
+        />
+      )}
 
       <div
         className={css.fileWrap}
@@ -95,8 +101,8 @@ const FileTab = ({ fileName, filePath, fileIndex }) => {
                 ? "#ffffff"
                 : "#ffffff80"
               : activeFile === fileIndex
-                ? "#9d9d9d"
-                : "#9d9d9d80",
+              ? "#9d9d9d"
+              : "#9d9d9d80",
           fontStyle: currentFiles.find(
             (file) => file.path === filePath && !file.pinned
           )
@@ -104,9 +110,10 @@ const FileTab = ({ fileName, filePath, fileIndex }) => {
             : "normal",
         }}
       >
-
         <FileIcon extension={getExtension(fileName)} />
-        <div className={css.name}>{fileName}</div>
+        <div className={css.name}>
+          {fileName === "시작.vs" ? "시작" : fileName}
+        </div>
         {dup && dup === fileName && (
           <div className={css.path}>{getUpPath(filePath)}</div>
         )}

@@ -6,6 +6,7 @@ import {
   VscLayoutPanelOff,
   VscLayoutSidebarRightOff,
   VscLayoutSidebarLeftOff,
+  VscLayoutSidebarLeft,
   VscLayout,
   VscSearch,
 } from "react-icons/vsc";
@@ -13,11 +14,12 @@ import {
   setCurrentFiles,
   setFocusedFile,
   setHistory,
+  setIsLayoutActive,
 } from "../../features/historySlice";
 import { useEffect, useRef, useState } from "react";
 
 const Titlebar = () => {
-  const { activeFile } = useSelector((state) => state.history);
+  const { activeFile, isLayoutActive } = useSelector((state) => state.history);
 
   const {
     currentFiles,
@@ -131,13 +133,29 @@ const Titlebar = () => {
       <div className={css["titlebar-wrap"]}>
         <div className={css["titlebar-left"]}></div>
         <div className={css["titlebar-center"]}>
-          <div className={css["icon-bg"]} onClick={prevFile}>
+          <div
+            className={css["icon-bg"]}
+            onClick={prevFile}
+            style={
+              focusedIndex > 0
+                ? { pointerEvents: "auto" }
+                : { pointerEvents: "none" }
+            }
+          >
             <VscArrowLeft
               className={css["titlebar-arrow"]}
               style={{ color: prevArrowColor }}
             />
           </div>
-          <div className={css["icon-bg"]} onClick={nextFile}>
+          <div
+            className={css["icon-bg"]}
+            onClick={nextFile}
+            style={
+              focusedIndex < history.length - 1
+                ? { pointerEvents: "auto" }
+                : { pointerEvents: "none" }
+            }
+          >
             <VscArrowRight
               className={css["titlebar-arrow"]}
               style={{ color: nextArrowColor }}
@@ -150,10 +168,27 @@ const Titlebar = () => {
             </div>
           </div>
         </div>
-        <div className={css["titlebar-right"]}>
-          <div className={css["icon-bg"]}>
-            <VscLayoutSidebarLeftOff />
-          </div>
+        <div
+          className={css["titlebar-right"]}
+          onClick={() =>
+            dispatch(
+              setIsLayoutActive({
+                isActive: !isLayoutActive.isActive,
+                width: isLayoutActive.width,
+                from: "layout",
+              })
+            )
+          }
+        >
+          {isLayoutActive.isActive ? (
+            <div className={css["icon-bg"]}>
+              <VscLayoutSidebarLeft />
+            </div>
+          ) : (
+            <div className={css["icon-bg"]}>
+              <VscLayoutSidebarLeftOff />
+            </div>
+          )}
           <div className={css["icon-bg"]}>
             <VscLayoutPanelOff />
           </div>

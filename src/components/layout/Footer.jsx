@@ -93,7 +93,7 @@ const Footer = () => {
 
       <div className={css["footer-right"]}>
         <div className={css["right-content"]}>
-          {focusedFile && (
+          {focusedFile && !focusedFile.includes("vs") && (
             <>
               <div className={css["row-colmun"]}>
                 줄 {rowAndCol.row}, 열 {rowAndCol.col}

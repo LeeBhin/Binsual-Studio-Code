@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="256" height="256" viewBox="0 0 256 256" xml:space="preserve">
+
+<defs>
+</defs>
+<g style="stroke: none; stroke-width: 0; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)" >
+	<path d="M 86.817 9.738 L 68.284 0.815 c -2.145 -1.033 -4.709 -0.597 -6.392 1.086 L 1.223 57.217 c -1.632 1.488 -1.63 4.057 0.004 5.542 l 4.956 4.505 c 1.336 1.214 3.348 1.304 4.786 0.213 l 73.06 -55.425 C 86.48 10.193 90 11.942 90 15.018 v -0.215 C 90 12.643 88.763 10.675 86.817 9.738 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,101,169); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+	<path d="M 86.817 80.262 l -18.533 8.923 c -2.145 1.033 -4.709 0.597 -6.392 -1.086 L 1.223 32.783 c -1.632 -1.488 -1.63 -4.057 0.004 -5.543 l 4.956 -4.505 c 1.336 -1.214 3.348 -1.304 4.786 -0.213 l 73.06 55.425 C 86.48 79.806 90 78.058 90 74.982 v 0.215 C 90 77.356 88.763 79.325 86.817 80.262 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(0,122,204); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+	<path d="M 68.285 89.187 c -2.146 1.032 -4.709 0.596 -6.393 -1.088 c 2.074 2.074 5.622 0.605 5.622 -2.329 V 4.23 c 0 -2.934 -3.547 -4.403 -5.622 -2.329 c 1.684 -1.684 4.247 -2.12 6.393 -1.088 l 18.53 8.911 C 88.762 10.66 90 12.63 90 14.79 v 60.42 c 0 2.16 -1.238 4.13 -3.185 5.066 L 68.285 89.187 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(31,156,240); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
+</g>
+</svg>

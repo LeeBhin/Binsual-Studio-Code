@@ -7,6 +7,7 @@ import { setErr, setRowCol, setSelected } from "../features/historySlice";
 import { errorMsg } from "./../data/errorMsg";
 import getLanguage from "./../features/getLanguage";
 import getExtension from "./../features/getExtension";
+import Start from "./layout/filePages/Start";
 
 const FileScreen = ({ fileIndex }) => {
   const { focusedFile } = useSelector(
@@ -73,31 +74,41 @@ const FileScreen = ({ fileIndex }) => {
 
   return (
     <div className={css.FileScreen}>
-      <div className={css.pathTab}>
-        {splitPath.map((item, index) => (
-          <div key={index} className={css.pathElement}>
-            {index === splitPath.length - 1 && (
-              <div className={css.fileIcon}>
-                <FileIcon extension={getExtension(getFileName(focusedFile))} />
+      {getFileName(focusedFile) === "시작.vs" ? (
+        <>
+          <Start />
+        </>
+      ) : (
+        <>
+          <div className={css.pathTab}>
+            {splitPath.map((item, index) => (
+              <div key={index} className={css.pathElement}>
+                {index === splitPath.length - 1 && (
+                  <div className={css.fileIcon}>
+                    <FileIcon
+                      extension={getExtension(getFileName(focusedFile))}
+                    />
+                  </div>
+                )}
+                <div className={css.pathName}>{item}</div>
+                {index !== splitPath.length - 1 && (
+                  <VscChevronRight className={css.pathIcon} />
+                )}
               </div>
-            )}
-            <div className={css.pathName}>{item}</div>
-            {index !== splitPath.length - 1 && (
-              <VscChevronRight className={css.pathIcon} />
-            )}
+            ))}
           </div>
-        ))}
-      </div>
-      <div className={css.screen}>
-        <MonacoEditor
-          height="100%"
-          width="100%"
-          language={getLanguage(getExtension(getFileName(focusedFile)))}
-          value={"hello world"}
-          theme="vs-dark"
-          onMount={handleEditorMount}
-        />
-      </div>
+          <div className={css.screen}>
+            <MonacoEditor
+              height="100%"
+              width="100%"
+              language={getLanguage(getExtension(getFileName(focusedFile)))}
+              value={"hello world"}
+              theme="vs-dark"
+              onMount={handleEditorMount}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };
