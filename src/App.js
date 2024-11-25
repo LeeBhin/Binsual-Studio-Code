@@ -2,8 +2,13 @@ import { useEffect, useRef } from 'react';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
 import './styles/App.css';
+import { useSelector } from 'react-redux';
 
 const App = () => {
+  const { activeFile } = useSelector((state) => state.history);
+  const { focusedFile } = useSelector(
+    (state) => state.history.windows[activeFile]
+  );
   const vh = useRef(0);
 
   useEffect(() => {
@@ -19,6 +24,18 @@ const App = () => {
       window.removeEventListener('resize', updateVH);
     };
   }, []);
+
+  const getFileName = (path) => {
+    return path.split("/").at(-1)
+  }
+
+  useEffect(() => {
+    if (focusedFile) {
+      document.title = `${getFileName(focusedFile)} - 작업 영역 - Visual Studio Code`;
+    } else {
+      document.title = '작업 영역 - Visual Studio Code'
+    }
+  }, [focusedFile]);
 
   return (
     <div>
