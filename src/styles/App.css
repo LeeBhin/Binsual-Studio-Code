@@ -17,3 +17,9 @@ body {
   overflow: hidden;
   height: calc(var(--vh, 1vh) * 100);
 }
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh);
+  }
+}

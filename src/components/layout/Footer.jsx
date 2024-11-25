@@ -7,6 +7,9 @@ import {
   VscBell,
   VscJson,
 } from "react-icons/vsc";
+import { doc, onSnapshot } from "firebase/firestore";
+import { db } from "../../firebase";
+import { useEffect, useState } from "react";
 
 const extensionMap = {
   js: "JavaScript",
@@ -41,13 +44,29 @@ const Footer = () => {
   );
 
   const { focusedFile } = useSelector(
-    (state) => state.history.windows[activeFile]||{}
+    (state) => state.history.windows[activeFile] || {}
   );
+
+  const [thumbs, setThumbs] = useState();
 
   const getExtension = (filePath) => {
     const extension = filePath?.split(".").pop();
     return extensionMap[extension] || "일반 텍스트";
   };
+
+  useEffect(() => {
+    const docRef = doc(db, "rainThumbsData", "triggerCount");
+
+    const unsubscribe = onSnapshot(docRef, (docSnap) => {
+      if (docSnap.exists()) {
+        setThumbs(docSnap.data().count);
+      } else {
+        setThumbs(0);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div className={css.footerWrap}>
@@ -97,6 +116,7 @@ const Footer = () => {
           )}
 
           <div className={css["key-array"]}>배열: US</div>
+          <div className={css["key-array"]}>응원: {thumbs}</div>
           <div className={css["bell"]}>
             <VscBell />
           </div>
