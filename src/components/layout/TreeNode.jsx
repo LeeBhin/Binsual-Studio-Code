@@ -30,14 +30,20 @@ const TreeNode = ({
   setActiveNode,
   path = name,
 }) => {
-  const [isOpen, setIsOpen] = useState(name === "LEE BHIN");
   const sidebarRef = useRef(null);
   const dispatch = useDispatch();
-  const { activeFile } = useSelector((state) => state.history);
-
+  const { activeFile, startLink } = useSelector((state) => state.history);
+  const [isOpen, setIsOpen] = useState(
+    name === "LEE BHIN" || startLink.includes(name)
+  );
   const { currentFiles, focusedFile, history } = useSelector(
     (state) => state.history.windows[activeFile] || {}
   );
+
+  useEffect(() => {
+    if (startLink.length < 1) return;
+    setIsOpen(name === "LEE BHIN" || startLink.includes(name));
+  }, [startLink, name]);
 
   const handleClickOutside = (event) => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {

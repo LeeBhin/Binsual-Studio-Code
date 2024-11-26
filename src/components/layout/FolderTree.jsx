@@ -2,12 +2,18 @@ import React, { useRef, useEffect, useState } from "react";
 import treeData from "../../data/treeData";
 import TreeNode from "./TreeNode";
 import css from "../../styles/Layout.module.css";
+import { useSelector } from "react-redux";
 
 const FolderTree = () => {
   const [activeNode, setActiveNode] = useState(null);
   const trackRef = useRef();
   const sliderRef = useRef();
   const scrollAreaRef = useRef();
+  const { startLink } = useSelector((state) => state.history);
+
+  useEffect(() => {
+    setActiveNode({ path: startLink.join("/"), name: startLink.at(-1) });
+  }, [startLink]);
 
   useEffect(() => {
     const track = trackRef.current;

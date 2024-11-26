@@ -1,3 +1,5 @@
+import { useDispatch } from "react-redux";
+import { setStartLink } from "../../../features/historySlice";
 import css from "../../../styles/Start.module.css";
 import {
   VscAccount,
@@ -12,6 +14,7 @@ import {
 } from "react-icons/vsc";
 
 const Start = () => {
+  const dispatch = useDispatch();
   return (
     <div className={css.Start}>
       <div className={css.wrap}>
@@ -67,7 +70,14 @@ const Start = () => {
                   return (
                     <li key={index} className={css.link}>
                       <div className={css.recentBtn}>
-                        <span className={css.linkTxt}>{fileName}</span>
+                        <span
+                          className={css.linkTxt}
+                          onClick={() => {
+                            dispatch(setStartLink(file.split("/")));
+                          }}
+                        >
+                          {fileName}
+                        </span>
                         <span className={css.linkPath}>{filePath}</span>
                       </div>
                     </li>

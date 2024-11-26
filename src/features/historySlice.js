@@ -17,6 +17,7 @@ const historySlice = createSlice({
         errors: { err: 0, warning: 0 },
         fileSplit: [0],
         activeFile: 0,
+        startLink: [],
     },
     reducers: {
         addWindow: (state, action) => {
@@ -122,6 +123,9 @@ const historySlice = createSlice({
         setActiveFile: (state, action) => {
             state.activeFile = action.payload;
         },
+        setStartLink: (state, action) => {
+            state.startLink = action.payload;
+        },
     },
 });
 
@@ -138,6 +142,7 @@ export const {
     setErr,
     setFileSplit,
     setActiveFile,
+    setStartLink
 } = historySlice.actions;
 
 export default historySlice.reducer;
