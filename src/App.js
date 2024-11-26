@@ -36,12 +36,12 @@ const App = () => {
   useEffect(() => {
     if (focusedFile) {
       if (focusedFile.includes('시작.vs')) {
-        document.title = `시작 - 작업 영역 - Visual Studio Code`;
+        document.title = `시작 - 작업 영역 - Binsual Studio Code`;
       } else {
-        document.title = `${getFileName(focusedFile)} - 작업 영역 - Visual Studio Code`;
+        document.title = `${getFileName(focusedFile)} - 작업 영역 - Binsual Studio Code`;
       }
     } else {
-      document.title = '작업 영역 - Visual Studio Code';
+      document.title = '작업 영역 - Binsual Studio Code';
     }
   }, [focusedFile]);
 

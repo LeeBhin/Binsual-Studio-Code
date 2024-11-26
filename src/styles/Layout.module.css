@@ -89,6 +89,12 @@
   display: flex;
 }
 
+.taskWrap {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .menubar:hover,
 .taskbar-wrap:hover {
   color: #cccccc;
@@ -113,6 +119,15 @@
   cursor: pointer;
 }
 
+.setting {
+  width: 48px;
+  position: absolute;
+  bottom: 22px;
+  font-size: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 /* sidebar */
 .sidebar {
   width: 205px;

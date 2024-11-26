@@ -39,7 +39,6 @@
 .name {
   line-height: 20px;
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
 }
 
@@ -86,6 +85,7 @@
 
 .fill {
   flex: 1;
+  padding-left: 3px;
   display: flex;
   align-items: center;
   justify-content: flex-end;

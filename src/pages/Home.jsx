@@ -24,6 +24,7 @@ const Home = () => {
               minSize={9.5}
               defaultSize={100 / fileSplit.length}
               style={{ borderRight: "solid 1px #2b2b2b" }}
+              
               key={index}
               onClick={() => dispatch(setActiveFile(index))}
             >

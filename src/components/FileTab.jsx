@@ -35,7 +35,7 @@ const FileTab = ({ fileName, filePath, fileIndex }) => {
         focusedFile: filePath,
       })
     );
-    if (lastFile !== filePath) {
+    if (lastFile !== filePath && !fileName.includes("vs")) {
       dispatch(setHistory({ id: fileIndex, history: [...history, filePath] }));
     }
   };
@@ -122,7 +122,7 @@ const FileTab = ({ fileName, filePath, fileIndex }) => {
       <div
         className={css.close}
         onClick={(e) => closeFile(e)}
-        style={focusedFile === filePath ? { color: "#ffffff" } : {}}
+        style={focusedFile === filePath ? { color: "#ffffff", opacity: 1 } : {}}
       >
         <VscChromeClose />
       </div>

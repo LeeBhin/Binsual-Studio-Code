@@ -5,7 +5,7 @@ const historySlice = createSlice({
     initialState: {
         windows: {
             0: {
-                currentFiles: [{ pinned: true, path: 'LEE BHIN/시작.vs' }],
+                currentFiles: [{ pinned: false, path: 'LEE BHIN/시작.vs' }],
                 history: [],
                 focusedFile: 'LEE BHIN/시작.vs',
             }
@@ -85,6 +85,20 @@ const historySlice = createSlice({
             const { id, focusedFile } = action.payload;
             if (state.windows[id]) {
                 state.windows[id].focusedFile = focusedFile;
+
+                if (focusedFile.includes("vs")) {
+                    return;
+                }
+
+                const recent = JSON.parse(localStorage.getItem('recent')) || [];
+
+                const updatedRecent = [focusedFile, ...recent.filter(file => file !== focusedFile)];
+
+                if (updatedRecent.length > 5) {
+                    updatedRecent.pop();
+                }
+
+                localStorage.setItem('recent', JSON.stringify(updatedRecent));
             }
         },
         setFocusedTask: (state, action) => {

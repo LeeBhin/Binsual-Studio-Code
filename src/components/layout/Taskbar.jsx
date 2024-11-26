@@ -8,6 +8,8 @@ import {
   VscExtensions,
   VscDatabase,
   VscMail,
+  VscAccount,
+  VscSettingsGear,
 } from "react-icons/vsc";
 import { setFocusedTask, setIsLayoutActive } from "../../features/historySlice";
 
@@ -66,6 +68,15 @@ const Taskbar = () => {
           <Icon style={{ marginRight: "2px" }} />
         </div>
       ))}
+
+      <div className={css.setting}>
+        <div className={css["taskbar-wrap"]}>
+          <VscAccount />
+        </div>
+        <div className={css["taskbar-wrap"]}>
+          <VscSettingsGear />
+        </div>
+      </div>
     </div>
   );
 };

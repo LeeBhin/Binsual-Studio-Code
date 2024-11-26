@@ -30,7 +30,7 @@ const TreeNode = ({
   setActiveNode,
   path = name,
 }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(name === "LEE BHIN");
   const sidebarRef = useRef(null);
   const dispatch = useDispatch();
   const { activeFile } = useSelector((state) => state.history);
