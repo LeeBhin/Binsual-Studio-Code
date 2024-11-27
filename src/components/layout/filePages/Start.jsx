@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { setStartLink } from "../../../features/historySlice";
+import { setFocusedTask, setStartLink } from "../../../features/historySlice";
 import css from "../../../styles/Start.module.css";
 import {
   VscAccount,
@@ -9,12 +9,37 @@ import {
   VscCallOutgoing,
   VscStarFull,
   VscDebugRerun,
-  VscShare,
+  VscCommentDiscussion,
   VscFlame,
 } from "react-icons/vsc";
 
 const Start = () => {
   const dispatch = useDispatch();
+
+  const handleStartClick = (target) => {
+    switch (target) {
+      case "profile":
+        dispatch(setStartLink(["LEE BHIN", "about", "introduction.json"]));
+        break;
+      case "skill":
+        dispatch(setStartLink(["LEE BHIN", "skills", "detail"]));
+        break;
+      case "certification":
+        dispatch(setStartLink(["LEE BHIN", "certifications"]));
+        break;
+      case "project":
+        dispatch(setStartLink(["LEE BHIN", "projects"]));
+        break;
+      case "contact":
+        dispatch(setStartLink(["LEE BHIN", "contact"]));
+        break;
+
+      default:
+        break;
+    }
+
+    dispatch(setFocusedTask("files"));
+  };
   return (
     <div className={css.Start}>
       <div className={css.wrap}>
@@ -29,31 +54,46 @@ const Start = () => {
             <h3 className={css.sTitle}>시작</h3>
             <ul className={css.links}>
               <li className={css.link}>
-                <div className={css.btn}>
+                <div
+                  className={css.btn}
+                  onClick={() => handleStartClick("profile")}
+                >
                   <VscAccount className={css.linkIcon} />
                   <span className={css.linkTxt}>프로필...</span>
                 </div>
               </li>
               <li className={css.link}>
-                <div className={css.btn}>
+                <div
+                  className={css.btn}
+                  onClick={() => handleStartClick("skill")}
+                >
                   <VscTools className={css.linkIcon} />
                   <span className={css.linkTxt}>스킬...</span>
                 </div>
               </li>
               <li className={css.link}>
-                <div className={css.btn}>
+                <div
+                  className={css.btn}
+                  onClick={() => handleStartClick("certification")}
+                >
                   <VscVerified className={css.linkIcon} />
                   <span className={css.linkTxt}>자격증...</span>
                 </div>
               </li>
               <li className={css.link}>
-                <div className={css.btn}>
+                <div
+                  className={css.btn}
+                  onClick={() => handleStartClick("project")}
+                >
                   <VscRepo className={css.linkIcon} />
                   <span className={css.linkTxt}>프로젝트...</span>
                 </div>
               </li>
               <li className={css.link}>
-                <div className={css.btn}>
+                <div
+                  className={css.btn}
+                  onClick={() => handleStartClick("contact")}
+                >
                   <VscCallOutgoing className={css.linkIcon} />
                   <span className={css.linkTxt}>연락...</span>
                 </div>
@@ -66,7 +106,8 @@ const Start = () => {
                 (file, index) => {
                   const parts = file.split("/");
                   const fileName = parts.pop();
-                  const filePath = parts.join("/").replace(/\//g, "\\");
+                  const filePath =
+                    "C:\\Users\\" + parts.join("/").replace(/\//g, "\\");
                   return (
                     <li key={index} className={css.link}>
                       <div className={css.recentBtn}>
@@ -74,6 +115,7 @@ const Start = () => {
                           className={css.linkTxt}
                           onClick={() => {
                             dispatch(setStartLink(file.split("/")));
+                            dispatch(setFocusedTask("files"));
                           }}
                         >
                           {fileName}
@@ -112,7 +154,7 @@ const Start = () => {
             </div>
             <div className={css.banner}>
               <span className={css.bannerTxt}>
-                <VscShare className={css.bannerIcon} />
+                <VscCommentDiscussion className={css.bannerIcon} />
                 소통하고 공유하며 함께 성장
               </span>
               <div className={css.bar} />
