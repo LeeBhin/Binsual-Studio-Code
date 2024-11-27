@@ -160,10 +160,10 @@ const treeData = {
             }
         },
         contact: {
-            'phone.txt': 'null',
-            'email.txt': 'null',
-            'github.gitignore': 'null',
-            'instagram.url': 'null',
+            'phone.txt': '010-4995-1042',
+            'email.txt': 'dlqls1042@infocz.co.kr',
+            'github.gitignore': 'https://github.com/leebhin',
+            'instagram.url': 'https://www.instagram.com/2._.been',
         },
         '.env': 'null',
         '.gitignore': 'null',
