@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import css from "../styles/File.module.css";
 import { VscChevronRight } from "react-icons/vsc";
@@ -8,8 +9,12 @@ import { errorMsg } from "./../data/errorMsg";
 import getLanguage from "./../features/getLanguage";
 import getExtension from "./../features/getExtension";
 import Start from "./layout/filePages/Start";
+import treeData from "../data/treeData";
+import Images from "../assets/Images";
 
 const FileScreen = ({ fileIndex }) => {
+  const [zoomLevel, setZoomLevel] = useState(1);
+  const [zoom, setZoom] = useState(false);
   const { focusedFile } = useSelector(
     (state) => state.history.windows[fileIndex]
   );
@@ -72,6 +77,54 @@ const FileScreen = ({ fileIndex }) => {
     });
   };
 
+  const getFileData = (filePath) => {
+    const fileName = filePath.split("/").pop();
+    const findFileData = (data) => {
+      for (const key in data) {
+        if (typeof data[key] === "object") {
+          const result = findFileData(data[key]);
+          if (result) return result;
+        } else if (key === fileName) return data[key];
+      }
+      return null;
+    };
+    return findFileData(treeData);
+  };
+
+  const getPNG = (filePath) => {
+    const fileName = filePath.split("/").pop();
+    const fileNameWithoutExtension = fileName.split(".")[0];
+
+    const IconComponent = Images[fileNameWithoutExtension];
+
+    if (IconComponent) {
+      return <img src={IconComponent} alt={fileName} className={css.png} />;
+    }
+    return null;
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === "Control") {
+        setZoom(true);
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      if (e.key === "Control") {
+        setZoom(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
   return (
     <div className={css.FileScreen}>
       {getFileName(focusedFile) === "시작.vs" ? (
@@ -98,14 +151,33 @@ const FileScreen = ({ fileIndex }) => {
             ))}
           </div>
           <div className={css.screen}>
-            <MonacoEditor
-              height="100%"
-              width="100%"
-              language={getLanguage(getExtension(getFileName(focusedFile)))}
-              value={"hello world"}
-              theme="vs-dark"
-              onMount={handleEditorMount}
-            />
+            {focusedFile.includes("png") ? (
+              <div
+                className={css.pngWrap}
+                style={{
+                  transform: `scale(${zoomLevel})`,
+                  cursor: zoom ? "zoom-out" : "zoom-in",
+                }}
+                onClick={(e) => {
+                  if (!e.ctrlKey) {
+                    setZoomLevel((prevZoom) => Math.min(prevZoom * 1.3, 3));
+                  } else {
+                    setZoomLevel((prevZoom) => Math.max(prevZoom / 1.3, 0.5));
+                  }
+                }}
+              >
+                {getPNG(focusedFile)}
+              </div>
+            ) : (
+              <MonacoEditor
+                height="100%"
+                width="100%"
+                language={getLanguage(getExtension(getFileName(focusedFile)))}
+                value={getFileData(focusedFile)}
+                theme="vs-dark"
+                onMount={handleEditorMount}
+              />
+            )}
           </div>
         </>
       )}

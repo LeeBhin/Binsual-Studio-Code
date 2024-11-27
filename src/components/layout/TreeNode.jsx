@@ -369,8 +369,10 @@ const TreeNode = ({
               key={key}
               name={key}
               children={children[key]}
-              isFile={children[key] === null}
-              extension={children[key] === null ? getExtension(key) : null}
+              isFile={typeof children[key] !== "object"}
+              extension={
+                typeof children[key] !== "object" ? getExtension(key) : null
+              }
               depth={depth + 1}
               activeNode={activeNode}
               setActiveNode={setActiveNode}
