@@ -5,7 +5,7 @@ const treeData = {
         about: {
             'introduction.json': about.introduction,
             'picture.png': 'png',
-            'timeline.yaml': 'null',
+            'timeline.yaml': about.timeline,
         },
         skills: {
             detail: {
@@ -45,6 +45,11 @@ const treeData = {
                     'thiscord-6.png': 'null',
                     'thiscord-7.png': 'null',
                     'thiscord-8.png': 'null',
+                    'thiscord-9.png': 'null',
+                    'thiscord-10.png': 'null',
+                    'thiscord-11.png': 'null',
+                    'thiscord-12.png': 'null',
+                    'thiscord-13.png': 'null',
                 },
                 'README.md': 'null',
             },
@@ -55,7 +60,6 @@ const treeData = {
                     'windows-3.png': 'null',
                     'windows-4.png': 'null',
                     'windows-5.png': 'null',
-                    'windows-6.png': 'null',
                 },
                 'README.md': 'null',
             },
@@ -69,14 +73,14 @@ const treeData = {
                 },
                 'README.md': 'null',
             },
-            Portfolio: {
+            'Binsual-Studio-Code': {
                 images: {
-                    'portfolio-1.png': 'null',
-                    'portfolio-2.png': 'null',
-                    'portfolio-3.png': 'null',
-                    'portfolio-4.png': 'null',
-                    'portfolio-5.png': 'null',
-                    'portfolio-6.png': 'null',
+                    'bscode-1.png': 'null',
+                    'bscode-2.png': 'null',
+                    'bscode-3.png': 'null',
+                    'bscode-4.png': 'null',
+                    'bscode-5.png': 'null',
+                    'bscode-6.png': 'null',
                 },
                 'README.md': 'null',
             },
