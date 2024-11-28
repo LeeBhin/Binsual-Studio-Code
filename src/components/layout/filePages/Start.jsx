@@ -1,5 +1,9 @@
-import { useDispatch } from "react-redux";
-import { setFocusedTask, setStartLink } from "../../../features/historySlice";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setFocusedTask,
+  setIsLayoutActive,
+  setStartLink,
+} from "../../../features/historySlice";
 import css from "../../../styles/Start.module.css";
 import {
   VscAccount,
@@ -14,6 +18,8 @@ import {
 } from "react-icons/vsc";
 
 const Start = () => {
+  const { isLayoutActive } = useSelector((state) => state.history);
+
   const dispatch = useDispatch();
 
   const handleStartClick = (target) => {
@@ -39,6 +45,13 @@ const Start = () => {
     }
 
     dispatch(setFocusedTask("files"));
+    dispatch(
+      setIsLayoutActive({
+        width: isLayoutActive.width,
+        isActive: true,
+        from: "layout",
+      })
+    );
   };
   return (
     <div className={css.Start}>
@@ -114,6 +127,13 @@ const Start = () => {
                         <span
                           className={css.linkTxt}
                           onClick={() => {
+                            dispatch(
+                              setIsLayoutActive({
+                                width: isLayoutActive.width,
+                                isActive: true,
+                                from: "layout",
+                              })
+                            );
                             dispatch(setStartLink(file.split("/")));
                             dispatch(setFocusedTask("files"));
                           }}

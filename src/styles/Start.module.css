@@ -7,9 +7,6 @@
   padding: 0 25px;
 }
 
-.Start * {
-}
-
 .wrap {
   display: grid;
   grid-template-columns:
@@ -210,7 +207,7 @@
 
   .wrap {
     grid-template-rows: 0fr auto 1fr;
-    height: 70%;
+    height: 93%;
     grid-template-columns: 1fr;
   }
 }
