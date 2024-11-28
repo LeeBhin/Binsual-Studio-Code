@@ -30,12 +30,14 @@ const Git = () => {
     }));
   };
 
-  useEffect(() => {
-    fetch(
+  const fetchData = async () => {
+    return fetch(
       "https://api.github.com/repos/leebhin/Binsual-Studio-Code/commits?page=1&per_page=10000"
-    )
-      .then((res) => res.json())
-      .then((data) => setCommits(nameAndMsg(data)));
+    ).then((res) => res.json());
+  };
+
+  useEffect(() => {
+    fetchData().then((data) => setCommits(nameAndMsg(data)));
   }, []);
 
   return (
@@ -56,7 +58,7 @@ const Git = () => {
         <div className={css.source}>
           <div className={css.header}>
             소스 제어 그래프
-            <div className={css["icon-bg"]}>
+            <div className={css["icon-bg"]} onClick={() => fetchData()}>
               <VscRefresh className={css.icon} />
             </div>
           </div>
