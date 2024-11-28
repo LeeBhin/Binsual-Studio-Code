@@ -9,11 +9,17 @@ const CommitDot = ({ index, totalCount }) => {
   return (
     <div
       className={css.wrap}
-      style={index === 0 ? { marginLeft: "-2.5px" } : {}}
+      style={index === 0 ? { marginLeft: "-2px" } : {}}
     >
       {!first && <div className={css.line} />}
       {first && <div className={css.line} style={{ background: "none" }} />}
-      {first ? <PiCircleBold color="#0078d4" /> : <div className={css.dot} />}
+      {first ? (
+        <div className={css.firstDot}>
+          <div className={css.inner} />
+        </div>
+      ) : (
+        <div className={css.dot} />
+      )}
       {!last && <div className={css.line} style={{ background: "none" }} />}
       {last && <div className={css.line} />}
     </div>
