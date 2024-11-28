@@ -55,7 +55,8 @@ const Sidebar = () => {
 
       if (contentRef.current) {
         const rect = contentRef.current.getBoundingClientRect();
-        const isNearRightEdge = Math.abs(e.clientX - rect.right) < HOVER_EDGE_AREA;
+        const isNearRightEdge =
+          Math.abs(e.clientX - rect.right) < HOVER_EDGE_AREA;
 
         if (!isNearRightEdge) {
           clearTimeout(timer);
@@ -65,8 +66,9 @@ const Sidebar = () => {
       }
     };
 
-    document.addEventListener('mousemove', handleDocumentMouseMove);
-    return () => document.removeEventListener('mousemove', handleDocumentMouseMove);
+    document.addEventListener("mousemove", handleDocumentMouseMove);
+    return () =>
+      document.removeEventListener("mousemove", handleDocumentMouseMove);
   }, [isResizing, timer]);
 
   const handleMouseMove = useCallback(
@@ -167,6 +169,27 @@ const Sidebar = () => {
     }
   };
 
+  const focusedTitle = () => {
+    switch (focusedTask) {
+      case "files":
+        return "탐색기";
+      case "search":
+        return "검색";
+      case "git":
+        return "소스 제어";
+      case "debug":
+        return "실행 및 디버그: 실행";
+      case "extensions":
+        return "확장";
+      case "db":
+        return "데이터베이스";
+      case "mail":
+        return "메일";
+      default:
+        return "탐색기";
+    }
+  };
+
   return (
     <Resizable
       size={{ width: resizeWidth, height: "100%" }}
@@ -187,10 +210,12 @@ const Sidebar = () => {
         style={{ opacity: isCollapsed ? 0 : 1 }}
       >
         <div className={css["sidebar-title"]}>
-          <span className={css["sidebar-title-txt"]}>탐색기</span>
-          <div className={`${css["icon-bg"]} ${css.ellipsis}`}>
-            <VscEllipsis />
-          </div>
+          <span className={css["sidebar-title-txt"]}>{focusedTitle()}</span>
+          {focusedTask !== "search" && (
+            <div className={`${css["icon-bg"]} ${css.ellipsis}`}>
+              <VscEllipsis />
+            </div>
+          )}
         </div>
         <div className={css["sidebar-content"]}>{focusedComponent()}</div>
       </div>

@@ -1,0 +1,160 @@
+.Git {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: calc(100% - 35px);
+}
+
+.top {
+  height: 30vh;
+}
+
+.top,
+.bottom {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.input {
+  background-color: #313131;
+  border: solid 1px #3c3c3c;
+  border-radius: 2px;
+  padding: 4px 5px;
+  width: calc(100% - 15px);
+  outline: none;
+  color: #cccccc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.input:focus {
+  border-color: #0078d4;
+}
+
+.submit {
+  width: calc(100% - 15px);
+  padding: 5px 0;
+  border-radius: 2px;
+  border: none;
+  background-color: #0078d4;
+  color: white;
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  opacity: 0.5;
+}
+
+.check {
+  font-size: 16px;
+}
+
+.source {
+  font-size: 11px;
+  width: 100%;
+  color: #cccccc;
+  height: 100%;
+}
+
+.header {
+  padding: 3px 0 5px 3px;
+  border-top: solid 1px #2b2b2b;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.commits {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  height: calc(60vh);
+}
+
+.commits::-webkit-scrollbar {
+  display: none;
+}
+
+.commit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  cursor: pointer;
+  height: 22px;
+  padding-left: 8px;
+}
+
+.commit:hover {
+  background-color: #3c3c3c8c;
+}
+
+.commitDot {
+  color: #0078d4;
+  font-size: 17px;
+  transform: rotate(90deg);
+}
+
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.line {
+  height: 5px;
+  width: 1px;
+  background-color: #0078d4;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  background-color: #0078d4;
+}
+
+.commitMSG {
+  padding-right: 5px;
+}
+
+.commitMSG,
+.who {
+  height: 22px;
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-all;
+}
+
+.who {
+  color: #ffffff80;
+  font-size: 12px;
+  line-height: 23px;
+}
+
+.icon-bg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 18.5px;
+  height: 18.5px;
+  border-radius: 3px;
+  margin-right: 3px;
+}
+
+.icon-bg:hover {
+  background-color: #5a5d5e80;
+}
+
+.icon {
+  font-size: 16px;
+}

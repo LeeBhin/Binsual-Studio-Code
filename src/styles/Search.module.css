@@ -1,0 +1,70 @@
+.inputWrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 6px;
+}
+
+.input {
+  background-color: #313131;
+  border: solid 1px #3c3c3c;
+  border-radius: 2px;
+  padding: 4px 5px;
+  width: calc(100% - 15px);
+  outline: none;
+  color: #cccccc;
+}
+
+.input:focus {
+  border-color: #0078d4;
+}
+
+.iconWrap {
+  position: absolute;
+  right: 11px;
+  display: flex;
+  gap: 2px;
+}
+
+.icon-bg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 18.5px;
+  height: 18.5px;
+  border-radius: 3px;
+}
+
+.icon-bg:hover {
+  background-color: #5a5d5e80;
+}
+
+.icon {
+  font-size: 16px;
+}
+
+.ellipsis {
+  position: absolute;
+  right: 12px;
+  cursor: pointer;
+  margin-top: -2px;
+}
+
+.filter {
+  color: #cccccc;
+  font-size: 11px;
+}
+
+.include {
+  margin-top: 6px;
+}
+
+.includeTxt {
+  margin-left: 7.5px;
+}
+
+.include .inputWrap {
+  margin-top: -3px;
+}

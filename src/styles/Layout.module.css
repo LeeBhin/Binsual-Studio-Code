@@ -139,6 +139,10 @@
   z-index: 1;
 }
 
+.ResizableWrap {
+  height: 100%;
+}
+
 .sidebar-title {
   display: flex;
   justify-content: space-between;
@@ -146,6 +150,10 @@
   height: 35px;
   font-size: 11px;
   padding: 0 15px;
+}
+
+.sidebar-content {
+  height: 100%;
 }
 
 .ellipsis {
