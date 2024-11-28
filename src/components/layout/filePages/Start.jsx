@@ -174,15 +174,15 @@ const Start = () => {
             </div>
             <div className={css.banner}>
               <span className={css.bannerTxt}>
-                <VscCommentDiscussion className={css.bannerIcon} />
-                소통하고 공유하며 함께 성장
+                <VscFlame className={css.bannerIcon} />한 번 시작한 일은 끝낼
+                때까지
               </span>
               <div className={css.bar} />
             </div>
             <div className={css.banner}>
               <span className={css.bannerTxt}>
-                <VscFlame className={css.bannerIcon} />한 번 시작한 일은 끝낼
-                때까지
+                <VscCommentDiscussion className={css.bannerIcon} />
+                소통하고 공유하며 함께 성장
               </span>
               <div className={css.bar} />
             </div>
