@@ -73,7 +73,7 @@ const treeData = {
                 },
                 'README.md': 'null',
             },
-            'Binsual-Studio-Code': {
+            BScode: {
                 images: {
                     'bscode-1.png': 'null',
                     'bscode-2.png': 'null',

@@ -4,7 +4,12 @@ import css from "../styles/File.module.css";
 import { VscChevronRight } from "react-icons/vsc";
 import FileIcon from "./FileIcon";
 import MonacoEditor from "@monaco-editor/react";
-import { setErr, setRowCol, setSelected } from "../features/historySlice";
+import {
+  setCurrentFiles,
+  setErr,
+  setRowCol,
+  setSelected,
+} from "../features/historySlice";
 import { errorMsg } from "./../data/errorMsg";
 import getLanguage from "./../features/getLanguage";
 import getExtension from "./../features/getExtension";
@@ -15,9 +20,12 @@ import Images from "../assets/Images";
 const FileScreen = ({ fileIndex }) => {
   const [zoomLevel, setZoomLevel] = useState(1);
   const [zoom, setZoom] = useState(false);
-  const { focusedFile } = useSelector(
+  const { activeFile } = useSelector((state) => state.history);
+
+  const { currentFiles, focusedFile } = useSelector(
     (state) => state.history.windows[fileIndex]
   );
+
   const dispatch = useDispatch();
   const splitPath = focusedFile.split("/").slice(1);
 
@@ -125,6 +133,13 @@ const FileScreen = ({ fileIndex }) => {
     };
   }, []);
 
+  const handleChange = () => {
+    const updatedFiles = currentFiles.map((file) =>
+      file.path === focusedFile ? { ...file, pinned: true } : file
+    );
+    dispatch(setCurrentFiles({ id: activeFile, currentFiles: updatedFiles }));
+  };
+
   return (
     <div className={css.FileScreen}>
       {getFileName(focusedFile) === "시작.vs" ? (
@@ -176,6 +191,7 @@ const FileScreen = ({ fileIndex }) => {
                 value={getFileData(focusedFile)}
                 theme="vs-dark"
                 onMount={handleEditorMount}
+                onChange={() => handleChange()}
               />
             )}
           </div>
