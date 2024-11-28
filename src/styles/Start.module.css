@@ -8,9 +8,6 @@
 }
 
 .Start * {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .wrap {
@@ -93,6 +90,13 @@
   font-size: 13px;
 }
 
+.link div {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #cccccc;
+}
+
 .btn {
   padding: 3px 0;
   display: flex;
@@ -109,6 +113,7 @@
 .linkTxt {
   white-space: nowrap;
   cursor: pointer;
+  color: #4daafc;
 }
 
 .linkPath {

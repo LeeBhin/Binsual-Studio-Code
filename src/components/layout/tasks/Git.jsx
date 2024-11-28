@@ -1,13 +1,21 @@
 import { useEffect, useState } from "react";
 import css from "../../../styles/Git.module.css";
 import { VscCheck, VscRefresh } from "react-icons/vsc";
+import { PiCircleBold } from "react-icons/pi";
 
-const CommitDot = () => {
+const CommitDot = ({ index, totalCount }) => {
+  const first = index === 0;
+  const last = index < totalCount - 1;
   return (
-    <div className={css.wrap}>
-      <div className={css.line} />
-      <div className={css.dot} />
-      <div className={css.line} />
+    <div
+      className={css.wrap}
+      style={index === 0 ? { marginLeft: "-2.5px" } : {}}
+    >
+      {!first && <div className={css.line} />}
+      {first && <div className={css.line} style={{ background: "none" }} />}
+      {first ? <PiCircleBold color="#0078d4" /> : <div className={css.dot} />}
+      {!last && <div className={css.line} style={{ background: "none" }} />}
+      {last && <div className={css.line} />}
     </div>
   );
 };
@@ -55,8 +63,15 @@ const Git = () => {
           <div className={css.commits}>
             {commits.map((commit, index) => (
               <div key={index} className={css.commit}>
-                <CommitDot className={css.commitDot} />
-                <span className={css.commitMSG}>
+                <CommitDot
+                  index={index}
+                  totalCount={commits.length}
+                  className={css.commitDot}
+                />
+                <span
+                  className={css.commitMSG}
+                  style={index === 0 ? { fontWeight: "bold" } : {}}
+                >
                   {commit.msg} <span className={css.who}>{commit.name}</span>
                 </span>
               </div>
