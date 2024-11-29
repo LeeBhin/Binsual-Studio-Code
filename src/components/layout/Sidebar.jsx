@@ -178,7 +178,7 @@ const Sidebar = () => {
       case "git":
         return "소스 제어";
       case "debug":
-        return "실행 및 디버그: 실행";
+        return "디버그: 벌레 잡기";
       case "extensions":
         return "확장";
       case "db":

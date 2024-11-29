@@ -54,20 +54,22 @@ const Taskbar = () => {
 
   return (
     <div className={css.taskbar}>
-      {icons.map(({ id, Icon }) => (
-        <div
-          key={id}
-          className={css["taskbar-wrap"]}
-          onClick={() => handleClick(id, Icon)}
-          style={
-            focusedTask === id && isLayoutActive.isActive
-              ? { color: "#cccccc", borderLeft: "solid 2px #0078d4" }
-              : { borderLeft: "solid 2px transparent" }
-          }
-        >
-          <Icon style={{ marginRight: "2px" }} />
-        </div>
-      ))}
+      <div className={css.tasks}>
+        {icons.map(({ id, Icon }) => (
+          <div
+            key={id}
+            className={css["taskbar-wrap"]}
+            onClick={() => handleClick(id, Icon)}
+            style={
+              focusedTask === id && isLayoutActive.isActive
+                ? { color: "#cccccc", borderLeft: "solid 2px #0078d4" }
+                : { borderLeft: "solid 2px transparent" }
+            }
+          >
+            <Icon style={{ marginRight: "2px" }} />
+          </div>
+        ))}
+      </div>
 
       <div className={css.setting}>
         <div className={css["taskbar-wrap"]}>

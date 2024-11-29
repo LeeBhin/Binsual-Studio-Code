@@ -47,7 +47,7 @@ const Footer = () => {
     (state) => state.history.windows[activeFile] || {}
   );
 
-  const [thumbs, setThumbs] = useState();
+  const [thumbs, setThumbs] = useState(0);
 
   const getExtension = (filePath) => {
     const extension = filePath?.split(".").pop();
@@ -93,27 +93,28 @@ const Footer = () => {
 
       <div className={css["footer-right"]}>
         <div className={css["right-content"]}>
-          {focusedFile && !focusedFile.includes("vs") && (
-            <>
-              <div className={css["row-colmun"]}>
-                줄 {rowAndCol.row}, 열 {rowAndCol.col}
-                {selected > 0 && `(${selected} 선택됨)`}
-              </div>
-              <div className={css["blank"]}>공백: 4</div>
-              <div className={css["utf"]}>UTF-8</div>
-              <div className={css["CRLF"]}>CRLF</div>
-              {getExtension(focusedFile) !== "text" ? (
-                <div className={css["json"]}>
-                  <VscJson />
-                  <span className={css["json-txt"]}>
-                    {getExtension(focusedFile)}
-                  </span>
+          {focusedFile &&
+            !(focusedFile.includes("vs") || focusedFile.includes("debug")) && (
+              <>
+                <div className={css["row-colmun"]}>
+                  줄 {rowAndCol.row}, 열 {rowAndCol.col}
+                  {selected > 0 && `(${selected} 선택됨)`}
                 </div>
-              ) : (
-                <div className={css["general-txt"]}>일반 텍스트</div>
-              )}
-            </>
-          )}
+                <div className={css["blank"]}>공백: 4</div>
+                <div className={css["utf"]}>UTF-8</div>
+                <div className={css["CRLF"]}>CRLF</div>
+                {getExtension(focusedFile) !== "text" ? (
+                  <div className={css["json"]}>
+                    <VscJson />
+                    <span className={css["json-txt"]}>
+                      {getExtension(focusedFile)}
+                    </span>
+                  </div>
+                ) : (
+                  <div className={css["general-txt"]}>일반 텍스트</div>
+                )}
+              </>
+            )}
 
           <div className={css["key-array"]}>배열: US</div>
           <div className={css["key-array"]}>응원: {thumbs}</div>

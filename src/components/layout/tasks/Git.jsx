@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import css from "../../../styles/Git.module.css";
 import { VscCheck, VscRefresh } from "react-icons/vsc";
-import { PiCircleBold } from "react-icons/pi";
 
 const CommitDot = ({ index, totalCount }) => {
   const first = index === 0;

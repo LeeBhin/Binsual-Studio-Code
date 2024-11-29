@@ -16,6 +16,7 @@ import getExtension from "./../features/getExtension";
 import Start from "./layout/filePages/Start";
 import treeData from "../data/treeData";
 import Images from "../assets/Images";
+import Debug from "./layout/filePages/Debug";
 
 const FileScreen = ({ fileIndex }) => {
   const [zoomLevel, setZoomLevel] = useState(1);
@@ -140,12 +141,19 @@ const FileScreen = ({ fileIndex }) => {
     dispatch(setCurrentFiles({ id: activeFile, currentFiles: updatedFiles }));
   };
 
+  const getPage = () => {
+    if (getFileName(focusedFile) === "시작.vs") {
+      return <Start />;
+    } else {
+      return <Debug />;
+    }
+  };
+
   return (
     <div className={css.FileScreen}>
-      {getFileName(focusedFile) === "시작.vs" ? (
-        <>
-          <Start />
-        </>
+      {getFileName(focusedFile) === "시작.vs" ||
+      getFileName(focusedFile) === "debug.exe" ? (
+        <>{getPage()}</>
       ) : (
         <>
           <div className={css.pathTab}>

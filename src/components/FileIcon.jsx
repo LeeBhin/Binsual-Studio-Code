@@ -12,6 +12,8 @@ const FileIcon = ({ extension }) => {
 
   if (extension === "robots") iconKey = "robots";
 
+  if (extension === ".exe") iconKey = "debug";
+
   const IconComponent =
     Icons[iconKey.charAt(0).toUpperCase() + iconKey.slice(1)];
 
