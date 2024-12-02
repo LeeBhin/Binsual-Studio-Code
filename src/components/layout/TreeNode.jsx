@@ -52,7 +52,6 @@ const TreeNode = ({
         activeElement.classList.remove(css.active);
         activeElement.classList.add(css.lowActive);
       }
-      setActiveNode();
     }
   };
 
