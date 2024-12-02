@@ -22,7 +22,7 @@ const Debug = () => {
       dispatch(
         setCurrentFiles({
           id: activeFile,
-          currentFiles: [{ pinned: false, path: "debug.exe" }],
+          currentFiles: [{ pinned: true, path: "debug.exe" }],
         })
       );
     }
@@ -50,7 +50,7 @@ const Debug = () => {
     });
 
     if (currentFiles[i]?.pinned && !fileExists) {
-      files.splice(i + 1, 0, { pinned: false, path: "debug.exe" });
+      files.splice(i + 1, 0, { pinned: true, path: "debug.exe" });
     }
 
     if (currentFiles.length !== 0 && !fileExists) {

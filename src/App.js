@@ -2,18 +2,21 @@ import { useEffect, useRef } from 'react';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
 import './styles/App.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { db, setDoc, doc } from './firebase';
 import { getDoc } from 'firebase/firestore';
+import { setFocusedTask, setIsLayoutActive } from './features/historySlice';
 
 const App = () => {
-  const { activeFile } = useSelector((state) => state.history);
+  const { activeFile, isLayoutActive } = useSelector((state) => state.history);
   const { focusedFile } = useSelector(state => state.history.windows[activeFile]);
   const vh = useRef(0);
   const triggerCount = useRef(0);
   const sendCount = useRef(0);
   const lastTriggeredTime = useRef(Date.now());
   const timeoutRef = useRef(null);
+
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const updateVH = () => {
@@ -82,6 +85,9 @@ const App = () => {
         }, 5000);
 
         lastTriggeredTime.current = currentTime;
+      } else if (event.ctrlKey && event.shiftKey && event.code === 'KeyF') {
+        dispatch(setIsLayoutActive({ isActive: true, width: isLayoutActive.width, from: 'layout' }))
+        dispatch(setFocusedTask('search'))
       }
     };
 
@@ -165,7 +171,7 @@ const App = () => {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, []);
+  }, [dispatch, isLayoutActive.width]);
 
   return (
     <div>
