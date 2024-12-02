@@ -16,6 +16,7 @@ import {
   setCurrentFiles,
   setFocusedFile,
   setHistory,
+  setIsCurrentActive,
 } from "../../features/historySlice";
 import getExtension from "../../features/getExtension";
 
@@ -36,7 +37,7 @@ const TreeNode = ({
   const [isOpen, setIsOpen] = useState(
     name === "LEE BHIN" || startLink.includes(name)
   );
-  const { currentFiles, focusedFile, history } = useSelector(
+  const { currentFiles, focusedFile, history, isCurrentActive } = useSelector(
     (state) => state.history.windows[activeFile] || {}
   );
 
@@ -52,6 +53,7 @@ const TreeNode = ({
         activeElement.classList.remove(css.active);
         activeElement.classList.add(css.lowActive);
       }
+      setActiveNode();
     }
   };
 
@@ -152,9 +154,12 @@ const TreeNode = ({
   };
 
   const isActiveFile = (activeNode, path, index, depth) => {
-    if (!activeNode) return;
+    if (!activeNode && !isCurrentActive) return;
+    let { isFile, isOpen, depth: nodeDepth, path: nodePath } = activeNode || {};
 
-    const { isFile, isOpen, depth: nodeDepth, path: nodePath } = activeNode;
+    if (!activeNode) {
+      ({ isFile, isOpen, depth: nodeDepth, path: nodePath } = isCurrentActive);
+    }
 
     return (
       (nodeDepth === index + 1 &&
@@ -193,7 +198,15 @@ const TreeNode = ({
             focusedFile === path && currentFiles.length > 0 ? css.lowActive : ""
           }`}
             onDoubleClick={() => handleDoubleClick(path)}
-            onClick={() => setActiveNode({ path, name, depth, isFile })}
+            onClick={() => {
+              setActiveNode({ path, name, depth, isFile });
+              dispatch(
+                setIsCurrentActive({
+                  id: activeFile,
+                  isCurrentActive: { path, name, depth, isFile },
+                })
+              );
+            }}
             style={name === "" ? { background: "none", cursor: "default" } : {}}
           >
             <div className={css.file} style={{ paddingLeft: `${depth * 8}px` }}>

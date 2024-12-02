@@ -8,6 +8,7 @@ const historySlice = createSlice({
                 currentFiles: [{ pinned: false, path: 'LEE BHIN/시작.vs' }],
                 history: [],
                 focusedFile: 'LEE BHIN/시작.vs',
+                isCurrentActive: {}
             }
         },
         focusedTask: 'files',
@@ -126,6 +127,12 @@ const historySlice = createSlice({
         setStartLink: (state, action) => {
             state.startLink = action.payload;
         },
+        setIsCurrentActive: (state, action) => {
+            const { id, isCurrentActive } = action.payload;
+            if (state.windows[id]) {
+                state.windows[id].isCurrentActive = isCurrentActive;
+            }
+        },
     },
 });
 
@@ -142,7 +149,8 @@ export const {
     setErr,
     setFileSplit,
     setActiveFile,
-    setStartLink
+    setStartLink,
+    setIsCurrentActive
 } = historySlice.actions;
 
 export default historySlice.reducer;
