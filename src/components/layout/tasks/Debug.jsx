@@ -44,7 +44,7 @@ const Debug = () => {
 
     const files = currentFiles.map((file, index) => {
       if (index === i && !file.pinned) {
-        return { ...file, path: "debug.exe" };
+        return { ...file, pinned: true, path: "debug.exe" };
       }
       return file;
     });
