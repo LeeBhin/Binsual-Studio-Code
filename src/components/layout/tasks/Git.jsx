@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import css from "../../../styles/Git.module.css";
 import { VscCheck, VscRefresh } from "react-icons/vsc";
 
@@ -6,10 +6,7 @@ const CommitDot = ({ index, totalCount }) => {
   const first = index === 0;
   const last = index < totalCount - 1;
   return (
-    <div
-      className={css.wrap}
-      style={index === 0 ? { marginLeft: "-2px" } : {}}
-    >
+    <div className={css.wrap} style={index === 0 ? { marginLeft: "-2px" } : {}}>
       {!first && <div className={css.line} />}
       {first && <div className={css.line} style={{ background: "none" }} />}
       {first ? (
@@ -35,15 +32,21 @@ const Git = () => {
     }));
   };
 
-  const fetchData = async () => {
-    return fetch(
-      "https://api.github.com/repos/leebhin/Binsual-Studio-Code/commits?page=1&per_page=10000"
-    ).then((res) => res.json());
-  };
+  const fetchData = useCallback(async () => {
+    try {
+      const response = await fetch(
+        "https://api.github.com/repos/leebhin/Binsual-Studio-Code/commits?page=1&per_page=10000"
+      );
+      const data = await response.json();
+      setCommits(nameAndMsg(data));
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }, []);
 
   useEffect(() => {
-    fetchData().then((data) => setCommits(nameAndMsg(data)));
-  }, []);
+    fetchData();
+  }, [fetchData]);
 
   return (
     <div className={css.Git}>
