@@ -3,13 +3,12 @@ import css from "../../../styles/Debug.module.css";
 import {
   setCurrentFiles,
   setFocusedFile,
-  setHistory,
 } from "../../../features/historySlice";
 
 const Debug = () => {
   const { activeFile } = useSelector((state) => state.history);
 
-  const { currentFiles, focusedFile, history } = useSelector(
+  const { currentFiles, focusedFile } = useSelector(
     (state) => state.history.windows[activeFile]
   );
 
@@ -23,17 +22,6 @@ const Debug = () => {
         setCurrentFiles({
           id: activeFile,
           currentFiles: [{ pinned: true, path: "debug.exe" }],
-        })
-      );
-    }
-
-    const lastFile = history[history.length - 1];
-
-    if (lastFile !== "debug.exe") {
-      dispatch(
-        setHistory({
-          id: activeFile,
-          history: [...history, "debug.exe"],
         })
       );
     }

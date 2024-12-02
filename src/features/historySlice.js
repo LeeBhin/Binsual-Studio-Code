@@ -87,7 +87,7 @@ const historySlice = createSlice({
             if (state.windows[id]) {
                 state.windows[id].focusedFile = focusedFile;
 
-                if (focusedFile.includes("vs")) {
+                if (focusedFile.includes("vs") || focusedFile.includes("debug.exe")) {
                     return;
                 }
 
