@@ -51,14 +51,14 @@ const about = {
 
   - year: 2013
     event: 컴퓨터 첫 경험
-    description: 7살에 PowerPoint를 통해 처음으로 컴퓨터를 접하며 흥미를 가짐.
+    description: 7살에 PowerPoint를 통해 처음으로 컴퓨터를 접하며 흥미를 가짐
 
   - year: 2013
     event: 초등학교 입학
 
   - year: 2015
     event: DIAT 프리젠테이션 자격증 취득
-    description: 첫 IT 관련 자격증 취득.
+    description: 첫 IT 관련 자격증 취득
 
   - year: 2018
     events:
@@ -100,11 +100,11 @@ const about = {
       - event: 자격증 인증제 1위
       - event: 교과우수상 (빅데이터 분석)
       - event: AI ESG School 대상 수상
-        description: 공학도서관 주관 경진대회.
+        description: 공학도서관 주관 경진대회
       - event: 2024 직업계고 동아리 경진대회 금상
-        description: 교육부장관상 수상.
+        description: 교육부장관상 수상
       - event: AI 지니어스 아카데미 대상
-        description: 공학도서관 주관 대회.
+        description: 공학도서관 주관 대회
       - event: (주)인포시즈 현장실습
       - event: (주)인포시즈 인턴
 

@@ -104,45 +104,26 @@ const treeData = {
         activites: {
             awards: {
                 '서울교육-빅데이터-활용-아이디어-공모전': {
-                    'README.md': 'null',
-                    images: {
-                        'bigdata-1.png': 'null',
-                        'bigdata-2.png': 'null',
-                    }
+                    'bigdata-1.png': 'null',
+                    'bigdata-2.png': 'null',
                 },
                 'AI-ESG-School': {
-                    'README.md': 'null',
-                    images: {
-                        'ESG-1.png': 'null',
-                        'ESG-2.png': 'null',
-                        'ESG-3.png': 'null',
-                        'ESG-4.png': 'null',
-                    }
+                    'esg-1.png': 'null',
+                    'esg-2.png': 'null',
                 },
                 '2024-직업계고-동아리-경진대회': {
-                    'README.md': 'null',
-                    images: {
-                        'club-1.png': 'null',
-                    }
+                    'club-1.png': 'null',
                 },
                 'AI-지니어스-아카데미': {
-                    'README.md': 'null',
-                    images: {
-                        'genius-1.png': 'null',
-                        'genius-2.png': 'null',
-                        'genius-3.png': 'null',
-                        'genius-4.png': 'null',
-                    }
+                    'genius-1.png': 'null',
+                    'genius-2.png': 'null',
+                    'genius-3.png': 'null',
                 },
             },
             clubs: {
                 '인공지능-프로젝트-동아리': {
                     'aiproject-1.png': 'null',
                     'aiproject-2.png': 'null',
-                    'aiproject-3.png': 'null',
-                    'aiproject-4.png': 'null',
-                    'aiproject-5.png': 'null',
-                    'aiproject-6.png': 'null',
                 },
                 '클라우드컴퓨팅-전공심화동아리': {
                     'aws-1.png': 'null',
@@ -150,13 +131,10 @@ const treeData = {
                 }
             },
             seminars: {
-                'README.md': 'null',
-                images: {
-                    'seminar-1.png': 'null',
-                    'seminar-2.png': 'null',
-                    'seminar-3.png': 'null',
-                    'seminar-4.png': 'null',
-                }
+                'seminar-1.png': 'null',
+                'seminar-2.png': 'null',
+                'seminar-3.png': 'null',
+                'seminar-4.png': 'null',
             }
         },
         contact: {

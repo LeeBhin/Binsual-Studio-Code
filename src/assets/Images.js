@@ -1,4 +1,4 @@
-import picture from './images/picture.jpg';
+import picture from './images/picture.png';
 import chathsf1 from './images/chathsf-1.png';
 import chathsf2 from './images/chathsf-2.png';
 import chathsf3 from './images/chathsf-3.png';
@@ -32,6 +32,21 @@ import bscode3 from './images/bscode-3.png';
 import bscode4 from './images/bscode-4.png';
 import bscode5 from './images/bscode-5.png';
 import bscode6 from './images/bscode-6.png';
+import bigdata1 from './images/bigdata-1.png';
+import bigdata2 from './images/bigdata-2.png';
+import esg1 from './images/esg-1.png';
+import club1 from './images/club-1.png';
+import genius1 from './images/genius-1.png';
+import genius2 from './images/genius-2.png';
+import genius3 from './images/genius-3.png';
+import aiproject1 from './images/aiproject-1.png';
+import aiproject2 from './images/aiproject-2.png';
+import aws1 from './images/aws-1.png';
+import aws2 from './images/aws-2.png';
+import seminar1 from './images/seminar-1.png';
+import seminar2 from './images/seminar-2.png';
+import seminar3 from './images/seminar-3.png';
+import seminar4 from './images/seminar-4.png';
 
 const Images = {
     picture: picture,
@@ -72,6 +87,28 @@ const Images = {
     'bscode-4': bscode4,
     'bscode-5': bscode5,
     'bscode-6': bscode6,
+
+    'bigdata-1': bigdata1,
+    'bigdata-2': bigdata2,
+
+    'esg-1': esg1,
+
+    'club-1': club1,
+
+    'genius-1': genius1,
+    'genius-2': genius2,
+    'genius-3': genius3,
+
+    'aiproject-1': aiproject1,
+    'aiproject-2': aiproject2,
+
+    'aws-1': aws1,
+    'aws-2': aws2,
+
+    'seminar-1': seminar1,
+    'seminar-2': seminar2,
+    'seminar-3': seminar3,
+    'seminar-4': seminar4,
 };
 
 export default Images;
