@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import css from "../../../styles/Debug.module.css";
+import css from "../../../styles/tasks/Debug.module.css";
 import {
   setCurrentFiles,
   setFocusedFile,

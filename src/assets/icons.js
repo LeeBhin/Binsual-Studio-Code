@@ -27,13 +27,18 @@ import { ReactComponent as Txt } from './svgs/txt.svg';
 import { ReactComponent as FolderImages } from './svgs/folder-images.svg';
 import { ReactComponent as FolderImagesOpen } from './svgs/folder-images-open.svg';
 import { ReactComponent as Robots } from './svgs/robots.svg';
-import { ReactComponent as Vscode } from './svgs/vscode.svg';
 import { ReactComponent as Debug } from './svgs/debug.svg';
+import { ReactComponent as Vscode } from './svgs/vscode.svg';
+import { ReactComponent as Brackets } from './svgs/brackets.svg';
+import { ReactComponent as Inntellij } from './svgs/intellij.svg';
+import { ReactComponent as Github } from './svgs/github.svg';
+import { ReactComponent as Notion } from './svgs/notion.svg';
 
 const Icons = {
     Folder, FolderOpen, FolderImages, FolderImagesOpen,
     Json, Png, Yaml, Html, Css, Js, Jsx, Tsx, Vue, Py, Sql, Ts, Cql, Md,
-    Pkt, Xlsx, Psd, Pptx, Docx, Gitignore, Url, Env, Hwp, Txt, Robots, Vscode, Debug
+    Pkt, Xlsx, Psd, Pptx, Docx, Gitignore, Url, Env, Hwp, Txt, Robots, Debug,
+    Vscode, Brackets, Inntellij, Github, Notion
 };
 
 export default Icons;

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import css from "../../../styles/Search.module.css";
+import css from "../../../styles/tasks/Search.module.css";
 import {
   VscCaseSensitive,
   VscWholeWord,

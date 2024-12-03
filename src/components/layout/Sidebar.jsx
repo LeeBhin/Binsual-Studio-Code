@@ -9,7 +9,6 @@ import Search from "./tasks/Search";
 import Git from "./tasks/Git";
 import Debug from "./tasks/Debug";
 import Extension from "./tasks/Extension";
-import Database from "./tasks/Database";
 import Mail from "./tasks/Mail";
 
 const START_WIDTH = 170;
@@ -148,7 +147,7 @@ const Sidebar = () => {
     );
   };
 
-  const focusedComponent = () => {
+  const focusedComponent = (resizeWidth) => {
     switch (focusedTask) {
       case "files":
         return <FolderTree />;
@@ -159,9 +158,7 @@ const Sidebar = () => {
       case "debug":
         return <Debug />;
       case "extensions":
-        return <Extension />;
-      case "db":
-        return <Database />;
+        return <Extension resizeWidth={resizeWidth} />;
       case "mail":
         return <Mail />;
       default:
@@ -217,7 +214,9 @@ const Sidebar = () => {
             </div>
           )}
         </div>
-        <div className={css["sidebar-content"]}>{focusedComponent()}</div>
+        <div className={css["sidebar-content"]}>
+          {focusedComponent(resizeWidth)}
+        </div>
       </div>
 
       <div

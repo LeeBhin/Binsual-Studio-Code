@@ -1,0 +1,47 @@
+.Mail {
+  width: 100%;
+}
+
+.form {
+  margin-top: 6px;
+  width: calc(100% - 15px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.form > * {
+  width: 100%;
+}
+
+.input {
+  background-color: #313131;
+  border: solid 1px #3c3c3c;
+  border-radius: 2px;
+  padding: 5px 5px;
+  width: 90%;
+  outline: none;
+  color: #cccccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.input:focus {
+  border-color: #0078d4;
+}
+
+.submit {
+  width: 90%;
+  padding: 5px 0;
+  border-radius: 2px;
+  border: none;
+  background-color: #0078d4;
+  color: white;
+  cursor: pointer;
+}
+
+.submit:hover {
+  background-color: #0078d4dd;
+}

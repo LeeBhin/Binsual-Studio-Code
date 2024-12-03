@@ -1,0 +1,175 @@
+.Extension {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.inputWrap {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 6px;
+}
+
+.wrap {
+  display: flex;
+  align-items: center;
+  background-color: #313131;
+  border: solid 1px #3c3c3c;
+  border-radius: 2px;
+  width: calc(100% - 15px);
+  outline: none;
+  color: #cccccc;
+  position: relative;
+}
+
+.input {
+  background-color: #313131;
+  border: none;
+  border-radius: 2px;
+  padding: 4px 5px;
+  width: 70%;
+  outline: none;
+  color: #cccccc;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.outline {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background: none;
+  border: solid 1px #0078d4;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.input:focus .outline {
+  opacity: 1;
+}
+
+.iconWrap {
+  position: absolute;
+  right: 9px;
+  display: flex;
+  gap: 3px;
+  padding-left: 10px;
+  background-color: #313131;
+}
+
+.icon-bg {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  width: 19px;
+  height: 19px;
+  padding: 1.5px;
+  border-radius: 3px;
+}
+
+.icon-bg:hover {
+  background-color: #5a5d5e80;
+}
+
+.icon {
+  font-size: 16px;
+}
+
+.installed {
+  font-size: 11px;
+  color: #cccccc;
+  font-weight: bold;
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  cursor: pointer;
+  width: 100%;
+  margin: 13px 10px 3px 10px;
+  padding-left: 1px;
+}
+
+.count {
+  position: absolute;
+  right: 12px;
+  width: 18px;
+  height: 18px;
+  color: #f8f8f8;
+  background-color: #616161;
+  padding: 3px 6px;
+  border-radius: 100%;
+  line-height: 1;
+  font-weight: normal;
+  font-size: 11px;
+}
+
+.tools {
+  width: 100%;
+}
+
+.tool {
+  display: flex;
+  align-items: center;
+  word-break: 100%;
+  width: 100%;
+  height: 72px;
+  cursor: pointer;
+  width: 100%;
+  position: relative;
+}
+
+.tool:hover {
+  background-color: rgb(42, 45, 46);
+}
+
+.iconDiv {
+  min-width: 72px;
+  height: 72px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon {
+  width: 40px;
+  height: auto;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  justify-content: space-evenly;
+  overflow: hidden;
+  width: 100%;
+  padding-right: 10px;
+}
+
+.name,
+.description,
+.author {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.name {
+  color: #cccccc;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.description {
+  color: #9d9d9d;
+  font-size: 13px;
+}
+
+.author {
+  color: #9d9d9d;
+  font-size: 11.7px;
+  font-weight: bold;
+  margin: 5px 0 5px 0;
+}

@@ -6,7 +6,6 @@ import {
   VscSourceControl,
   VscDebugAlt,
   VscExtensions,
-  VscDatabase,
   VscMail,
   VscAccount,
   VscSettingsGear,
@@ -19,7 +18,6 @@ const icons = [
   { id: "git", Icon: VscSourceControl },
   { id: "debug", Icon: VscDebugAlt },
   { id: "extensions", Icon: VscExtensions },
-  { id: "db", Icon: VscDatabase },
   { id: "mail", Icon: VscMail },
 ];
 

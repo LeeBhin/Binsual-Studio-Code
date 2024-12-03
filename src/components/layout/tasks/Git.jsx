@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from "react";
-import css from "../../../styles/Git.module.css";
+import { useCallback, useEffect, useRef, useState } from "react";
+import css from "../../../styles/tasks/Git.module.css";
 import { VscCheck, VscRefresh } from "react-icons/vsc";
 
 const CommitDot = ({ index, totalCount }) => {
@@ -24,6 +24,11 @@ const CommitDot = ({ index, totalCount }) => {
 
 const Git = () => {
   const [commits, setCommits] = useState([]);
+  const inputRef = useRef(null);
+
+  useEffect(() => {
+    inputRef.current.focus();
+  }, []);
 
   const nameAndMsg = (data) => {
     return data.map((item) => ({
@@ -55,6 +60,7 @@ const Git = () => {
           type="text"
           className={css.input}
           placeholder="메시지(Github의 'main'에 커밋하고 푸시하려면 Ctrl+Enter"
+          ref={inputRef}
         />
         <button className={css.submit}>
           <VscCheck className={css.check} />
