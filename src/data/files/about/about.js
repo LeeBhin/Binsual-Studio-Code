@@ -1,6 +1,6 @@
 const about = {
-    introduction:
-        `{
+  introduction:
+    `{
   "기본정보": {
     "이름": "이빈",
     "출생년도": 2006,
@@ -43,26 +43,31 @@ const about = {
     "정보기기운용기능사"
   ]
 }`,
-    picture: 'picture',
-    timeline:
+  picture: 'picture',
+  timeline:
     `timeline:
   - year: 2006
     event: 출생
 
-  - year: 2013
+  - year: 2012
     event: 컴퓨터 첫 경험
     description: 7살에 PowerPoint를 통해 처음으로 컴퓨터를 접하며 흥미를 가짐
 
   - year: 2013
     event: 초등학교 입학
+    description: 컴퓨터 방과후 활동
 
   - year: 2015
     event: DIAT 프리젠테이션 자격증 취득
     description: 첫 IT 관련 자격증 취득
 
+  - year: 2017
+    event: DIAT 스프레드시트 자격증 취득
+
   - year: 2018
     events:
       - event: ITQ 아래한글 자격증 취득
+      - event: ITQ 한글파워포인트 자격증 취득
       - event: DIAT 인터넷정보검색 자격증 취득
 
   - year: 2019
@@ -80,27 +85,32 @@ const about = {
     events:
       - event: 세명컴퓨터고등학교 입학
         description: 인공지능 소프트웨어과
+      - event: 컴퓨터활용능력 1급 자격증 취득
+      - event: 웹개발/코딩 첫 경험
+      - event: 웹디자인기능사 자격증 취득
       - event: 서울교육 빅데이터 활용 아이디어 공모전 장려상 수상
       - event: 자기성장보고서 경진대회 2위
-      - event: 클라우드컴퓨팅 동아리 활동 시작
+      - event: 클라우드컴퓨팅 동아리 활동
       - event: 교내 세미나 발표
+        description: 첫 프로젝트 발표
 
   - year: 2023
     events:
-      - event: 웹디자인기능사 자격증 취득
       - event: 정보기기운용기능사 자격증 취득
       - event: 자격증 인증제 3위
       - event: 교과우수상 (영어)
       - event: 교과우수상 (응용프로그래밍 화면구현)
-      - event: 인공지능 프로젝트 동아리 활동 시작
+      - event: 교과우수상 (빅데이터 분석)
+      - event: 인공지능 프로젝트 동아리 활동
       - event: 교내 세미나 발표
 
   - year: 2024
     events:
+      - event: 인공지능 프로젝트 동아리 활동
       - event: 자격증 인증제 1위
       - event: 교과우수상 (빅데이터 분석)
       - event: AI ESG School 대상 수상
-        description: 공학도서관 주관 경진대회
+        description: 공학도서관 주관 대회
       - event: 2024 직업계고 동아리 경진대회 금상
         description: 교육부장관상 수상
       - event: AI 지니어스 아카데미 대상
