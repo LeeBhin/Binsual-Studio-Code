@@ -44,6 +44,8 @@ const Search = () => {
       ...prev,
       [option]: !prev[option],
     }));
+
+    searchFiles(keyword);
   };
 
   const toggleResultOpen = (path) => {
@@ -93,8 +95,6 @@ const Search = () => {
 
   const searchFiles = useCallback(
     (searchKeyword) => {
-      setKeyword(searchKeyword);
-
       if (!searchKeyword) {
         setResults([]);
         return;
@@ -106,9 +106,29 @@ const Search = () => {
         if (typeof node === "string") {
           const lines = node.split("\n");
           const matchedLines = lines.reduce((acc, line, index) => {
-            const matchCondition = searchOptions.caseSensitive
-              ? line.includes(searchKeyword)
-              : line.toLowerCase().includes(searchKeyword.toLowerCase());
+            let matchCondition = false;
+
+            if (searchOptions.regex) {
+              try {
+                const regex = new RegExp(
+                  searchKeyword,
+                  searchOptions.caseSensitive ? "" : "i"
+                );
+                matchCondition = regex.test(line);
+              } catch (error) {
+                return acc;
+              }
+            } else if (searchOptions.wholeWord) {
+              const wordRegex = new RegExp(
+                `\\b${searchKeyword}\\b`,
+                searchOptions.caseSensitive ? "" : "i"
+              );
+              matchCondition = wordRegex.test(line);
+            } else {
+              matchCondition = searchOptions.caseSensitive
+                ? line.includes(searchKeyword)
+                : line.toLowerCase().includes(searchKeyword.toLowerCase());
+            }
 
             if (matchCondition) {
               acc.push({
@@ -139,6 +159,10 @@ const Search = () => {
     [searchOptions]
   );
 
+  useEffect(() => {
+    searchFiles(keyword);
+  }, [keyword, searchFiles]);
+
   return (
     <div className={css.Search}>
       <div className={css.inputWrap}>
@@ -147,7 +171,7 @@ const Search = () => {
           className={css.input}
           placeholder="검색"
           ref={searchRef}
-          onChange={(e) => searchFiles(e.target.value)}
+          onChange={(e) => setKeyword(e.target.value)}
         />
         <div className={css.iconWrap}>
           <div
