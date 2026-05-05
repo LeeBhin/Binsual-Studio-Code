@@ -1,26 +1,24 @@
-import css from "../styles/File.module.css";
-import { useSelector, useDispatch } from "react-redux";
 import FileTab from "./FileTab";
 import { useEffect, useRef } from "react";
 import {
+  useHistory,
   addWindow,
   setActiveFile,
   setFileSplit,
   setFocusedFile,
-} from "../features/historySlice";
+} from "../store/history";
 import { VscEllipsis, VscSplitHorizontal } from "react-icons/vsc";
 
 const CurrentFiles = ({ isActive, fileIndex }) => {
   const trackRef = useRef();
   const sliderRef = useRef();
   const scrollAreaRef = useRef();
-  const dispatch = useDispatch();
 
-  const { fileSplit, activeFile } = useSelector((state) => state.history);
-
-  const { currentFiles, focusedFile } = useSelector(
-    (state) => state.history.windows[fileIndex]
-  );
+  const fileSplit = useHistory((s) => s.fileSplit);
+  const activeFile = useHistory((s) => s.activeFile);
+  const win = useHistory((s) => s.windows[fileIndex]);
+  const currentFiles = win?.currentFiles ?? [];
+  const focusedFile = win?.focusedFile ?? "";
 
   const getFileName = (filePath) => {
     const parts = filePath.split("/");
@@ -31,7 +29,7 @@ const CurrentFiles = ({ isActive, fileIndex }) => {
     const scrollArea = scrollAreaRef.current;
     if (!scrollArea) return;
 
-    const fileElements = scrollArea.getElementsByClassName(css.FileTab);
+    const fileElements = scrollArea.querySelectorAll("[data-filetab]");
     if (!fileElements[fileIndex]) return;
 
     const fileElement = fileElements[fileIndex];
@@ -71,12 +69,10 @@ const CurrentFiles = ({ isActive, fileIndex }) => {
         if (nextIndex < 0) return;
       }
 
-      dispatch(
-        setFocusedFile({
-          id: activeFile,
-          focusedFile: currentFiles[nextIndex].path,
-        })
-      );
+      setFocusedFile({
+        id: activeFile,
+        focusedFile: currentFiles[nextIndex].path,
+      });
       scrollToFile(nextIndex);
     };
 
@@ -163,44 +159,51 @@ const CurrentFiles = ({ isActive, fileIndex }) => {
       document.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mousemove", handleScroll);
     };
-  }, [currentFiles, focusedFile, dispatch, activeFile]);
+  }, [currentFiles, focusedFile, activeFile]);
+
+  const iconBg =
+    "w-[22px] h-[22px] rounded-[5px] flex justify-center items-center cursor-pointer hover:bg-[var(--hover)]";
 
   return (
-    <div className={css.wrap}>
-      <div className={css.CurrentFiles} ref={scrollAreaRef}>
-        {currentFiles.map((file, index) => (
+    <div className="relative group/scrollarea">
+      <div
+        className="h-[35px] w-full flex overflow-x-scroll [&::-webkit-scrollbar]:hidden"
+        ref={scrollAreaRef}
+      >
+        {currentFiles.map((file) => (
           <FileTab
-            key={index}
+            key={file.path}
             fileName={getFileName(file.path)}
             filePath={file.path}
             fileIndex={fileIndex}
           />
         ))}
-        <div className={css.fill}>
-          <div className={css.fillWrap}>
+        <div className="flex-1 pl-[3px] flex items-center justify-end text-[var(--text)] text-base">
+          <div className="flex items-center justify-end gap-[5px] mr-2.5">
             {isActive && (
-              <>
-                <div
-                  className={css["icon-bg"]}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    dispatch(setFileSplit([...fileSplit, fileSplit.length]));
-                    dispatch(addWindow(fileSplit.length));
-                    dispatch(setActiveFile(fileIndex + 1));
-                  }}
-                >
-                  <VscSplitHorizontal />
-                </div>
-              </>
+              <div
+                className={iconBg}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setFileSplit([...fileSplit, fileSplit.length]);
+                  addWindow(fileSplit.length);
+                  setActiveFile(fileIndex + 1);
+                }}
+              >
+                <VscSplitHorizontal />
+              </div>
             )}
-            <div className={css["icon-bg"]}>
+            <div className={iconBg}>
               <VscEllipsis />
             </div>
           </div>
         </div>
       </div>
-      <div className={css.track} ref={trackRef}>
-        <div className={css.slider} ref={sliderRef} />
+      <div className="absolute bottom-0 right-0 w-full h-[3px]" ref={trackRef}>
+        <div
+          className="h-full absolute z-[1] max-w-[calc(100%-30px)] transition-[background-color] duration-[1.3s] group-hover/scrollarea:bg-[var(--scrollbar)] group-hover/scrollarea:duration-300 hover:!bg-[var(--scrollbar-hover)] hover:!transition-none active:!bg-[var(--scrollbar-active)] active:!transition-none"
+          ref={sliderRef}
+        />
       </div>
     </div>
   );

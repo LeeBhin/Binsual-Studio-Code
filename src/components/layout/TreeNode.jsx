@@ -3,22 +3,51 @@ import {
   VscChevronDown,
   VscChevronRight,
   VscBlank,
-  VscNewFile,
-  VscNewFolder,
-  VscRefresh,
-  VscCollapseAll,
 } from "react-icons/vsc";
 import Icons from "../../assets/icons";
 import FileIcon from "../FileIcon";
-import css from "../../styles/Layout.module.css";
-import { useDispatch, useSelector } from "react-redux";
+import Codicon from "../Codicon";
+import Tooltip from "../Tooltip";
 import {
+  useHistory,
   setCurrentFiles,
   setFocusedFile,
   setHistory,
   setIsCurrentActive,
-} from "../../features/historySlice";
+} from "../../store/history";
 import getExtension from "../../features/getExtension";
+
+const sideIconBg =
+  "w-5 h-5 rounded-[5px] flex justify-center items-center cursor-pointer hover:bg-[var(--hover)]";
+
+// indent guide 위치 상수 — 파일/폴더 두 군데에서 동일하게 사용
+const FILE_PADDING_PX = 8; // depth × 이 값 = 파일 노드 paddingLeft
+const FOLDER_PADDING_PX = 8.9; // depth × 이 값 = 폴더 노드 paddingLeft (chevron 정렬 보정)
+const FILE_GUIDE_LEFT = 14;
+const FILE_GUIDE_GAP = 8;
+const FOLDER_GUIDE_LEFT = 17;
+const FOLDER_GUIDE_GAP = 11;
+const FOLDER_GUIDE_OFFSET = 3;
+
+const IndentGuides = ({ depth, leftPx, gapPx, marginLeftPx = 0, isActive }) => (
+  <div
+    className="absolute flex h-full"
+    style={{ left: `${leftPx}px`, gap: `${gapPx}px` }}
+  >
+    {Array.from({ length: depth }).map((_, index) => (
+      <div
+        key={index}
+        className={`border-l border-[var(--text-dim)] opacity-0 transition-[opacity] duration-100 ease-linear group-hover/tree:opacity-10 ${
+          index === 0 ? "hidden" : ""
+        }`}
+        style={{
+          ...(marginLeftPx ? { marginLeft: `-${marginLeftPx}px` } : {}),
+          ...(isActive(index) ? { opacity: "0.3" } : {}),
+        }}
+      />
+    ))}
+  </div>
+);
 
 const TreeNode = ({
   name,
@@ -32,13 +61,15 @@ const TreeNode = ({
   path = name,
 }) => {
   const sidebarRef = useRef(null);
-  const dispatch = useDispatch();
-  const { activeFile, startLink } = useSelector((state) => state.history);
+  const activeFile = useHistory((s) => s.activeFile);
+  const startLink = useHistory((s) => s.startLink);
+  const win = useHistory((s) => s.windows[activeFile]);
+  const currentFiles = win?.currentFiles ?? [];
+  const focusedFile = win?.focusedFile ?? "";
+  const history = win?.history ?? [];
+  const isCurrentActive = win?.isCurrentActive;
   const [isOpen, setIsOpen] = useState(
     name === "LEE BHIN" || startLink.includes(name)
-  );
-  const { currentFiles, focusedFile, history, isCurrentActive } = useSelector(
-    (state) => state.history.windows[activeFile] || {}
   );
 
   useEffect(() => {
@@ -48,11 +79,6 @@ const TreeNode = ({
 
   const handleClickOutside = (event) => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-      const activeElement = document.querySelector(`.${css.active}`);
-      if (activeElement) {
-        activeElement.classList.remove(css.active);
-        activeElement.classList.add(css.lowActive);
-      }
       setActiveNode();
     }
   };
@@ -63,9 +89,7 @@ const TreeNode = ({
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  });
-
-  const depthArray = Array(depth).fill(null);
+  }, []);
 
   const handleClick = () => {
     if (name === "") return;
@@ -73,28 +97,24 @@ const TreeNode = ({
     if (!isFile) {
       setIsOpen((prev) => !prev);
     } else {
-      dispatch(
-        setFocusedFile({
-          id: activeFile,
-          focusedFile: path,
-        })
-      );
+      setFocusedFile({
+        id: activeFile,
+        focusedFile: path,
+      });
 
       const fileExists = currentFiles.some((file) => file.path === path);
 
       if (currentFiles.length === 0 && !fileExists) {
-        dispatch(
-          setCurrentFiles({
-            id: activeFile,
-            currentFiles: [{ pinned: false, path }],
-          })
-        );
+        setCurrentFiles({
+          id: activeFile,
+          currentFiles: [{ pinned: false, path }],
+        });
       }
 
       const lastFile = history[history.length - 1];
 
       if (lastFile !== path) {
-        dispatch(setHistory({ id: activeFile, history: [...history, path] }));
+        setHistory({ id: activeFile, history: [...history, path] });
       }
 
       if (focusedFile === "") return;
@@ -113,66 +133,50 @@ const TreeNode = ({
       }
 
       if (currentFiles.length !== 0 && !fileExists) {
-        dispatch(
-          setCurrentFiles({
-            id: activeFile,
-            currentFiles: files,
-          })
-        );
+        setCurrentFiles({
+          id: activeFile,
+          currentFiles: files,
+        });
       }
     }
   };
 
-  // 상위폴더 active
-  const findGroup = (activePath, path) => {
-    const basePath = activePath?.split("/").slice(0, -1).join("/");
-    const parts = path?.split("/");
-
-    return findParents(parts, basePath);
-  };
-
-  // 같은 폴더 안에 있을때
-  const findGroupFolder = (activePath, path) => {
-    const basePath = activePath?.split("/").slice(0, -1).join("/");
-    const parentPath = path?.split("/").slice(0, -2).join("/");
-    return basePath === parentPath;
-  };
-
-  // 내가 active
-  const findGroupFolderIn = (activePath, path) => {
-    const basePath = activePath;
-    const parts = path?.split("/");
-
-    return findParents(parts, basePath);
-  };
-
-  const findParents = (parts, basePath) => {
+  // path가 base를 ancestor segment로 가지는지 (자기 자신 제외)
+  const hasAncestor = (pathStr, base) => {
+    if (!pathStr || !base) return false;
+    const parts = pathStr.split("/");
     for (let i = parts.length - 1; i > 0; i--) {
-      const current = parts.slice(0, i).join("/");
-      if (current === basePath) return true;
+      if (parts.slice(0, i).join("/") === base) return true;
     }
+    return false;
   };
 
   const isActiveFile = (activeNode, path, index, depth) => {
-    if (!activeNode && !isCurrentActive) return;
-    let { isFile, isOpen, depth: nodeDepth, path: nodePath } = activeNode || {};
+    const node = activeNode || isCurrentActive;
+    if (!node) return false;
 
-    if (!activeNode) {
-      ({ isFile, isOpen, depth: nodeDepth, path: nodePath } = isCurrentActive);
+    const { isFile: nIsFile, isOpen: nIsOpen, depth: nDepth, path: nPath } = node;
+    const nParent = nPath?.split("/").slice(0, -1).join("/");
+    const qGrand = path?.split("/").slice(0, -2).join("/");
+
+    const sharesParent = nParent && nParent === qGrand; // active의 부모 === 현재의 grandparent
+    const groupHit = hasAncestor(path, nParent); // active의 부모가 현재의 ancestor
+    const inHit = hasAncestor(path, nPath); // active 자체가 현재의 ancestor
+
+    if (nIsFile) {
+      return (
+        nDepth === index + 1 && (sharesParent || (groupHit && nDepth === depth))
+      );
     }
 
-    return (
-      (nodeDepth === index + 1 &&
-        isFile &&
-        (findGroupFolder(nodePath, path) ||
-          (findGroup(nodePath, path) && nodeDepth === depth))) ||
-      (!isFile &&
-        ((isOpen && findGroupFolderIn(nodePath, path) && nodeDepth === depth) ||
-          (isOpen && findGroup(nodePath, path) && nodeDepth === index + 1) ||
-          (!isOpen &&
-            findGroupFolderIn(nodePath, path) &&
-            nodeDepth === index)))
-    );
+    if (nIsOpen) {
+      return (
+        (inHit && nDepth === depth) ||
+        (groupHit && nDepth === index + 1)
+      );
+    }
+
+    return inHit && nDepth === index;
   };
 
   const handleDoubleClick = (path) => {
@@ -180,83 +184,97 @@ const TreeNode = ({
       file.path === path ? { ...file, pinned: true } : file
     );
 
-    dispatch(setCurrentFiles({ id: activeFile, currentFiles: updatedFiles }));
+    setCurrentFiles({ id: activeFile, currentFiles: updatedFiles });
   };
+
+  const isActive = activeNode?.path === path && name !== "";
+  const isLowActive = focusedFile === path && currentFiles.length > 0;
+
+  const wrapStyle = isActive
+    ? { backgroundColor: "var(--active)", boxShadow: "0 0 0 1px var(--accent) inset" }
+    : isLowActive
+    ? { backgroundColor: "var(--active-low)" }
+    : {};
 
   return (
     <div
-      className={css.treeNodeWrap}
+      className={`overflow-hidden group/wrap ${
+        name === "LEE BHIN" ? "group/root" : ""
+      }`}
       ref={name === "LEE BHIN" ? sidebarRef : null}
     >
-      <div className={css.treeNode} onClick={handleClick}>
+      <div
+        className="cursor-pointer flex items-center h-[22px] relative"
+        onClick={handleClick}
+      >
         {isFile ? (
           <div
-            className={`${css.fileWrap} ${
-              activeNode?.path === path && name !== "" ? css.active : ""
-            } 
-          ${
-            focusedFile === path && currentFiles.length > 0 ? css.lowActive : ""
-          }`}
+            className="h-[22px] w-full hover:bg-[var(--hover)]"
             onDoubleClick={() => handleDoubleClick(path)}
             onClick={() => {
               setActiveNode({ path, name, depth, isFile });
-              dispatch(
-                setIsCurrentActive({
-                  id: activeFile,
-                  isCurrentActive: { path, name, depth, isFile },
-                })
-              );
+              setIsCurrentActive({
+                id: activeFile,
+                isCurrentActive: { path, name, depth, isFile },
+              });
             }}
-            style={name === "" ? { background: "none", cursor: "default" } : {}}
+            style={
+              name === ""
+                ? { background: "none", cursor: "default" }
+                : wrapStyle
+            }
           >
-            <div className={css.file} style={{ paddingLeft: `${depth * 8}px` }}>
-              <div>
-                <div className={css["indent-wrap"]}>
-                  {depthArray.map((_, index) => (
-                    <div
-                      key={index}
-                      className={css["indent-guide"]}
-                      style={
-                        isActiveFile(activeNode, path, index, depth)
-                          ? { opacity: "1" }
-                          : {}
-                      }
-                    />
-                  ))}
-                </div>
+            <div
+              className="flex items-center gap-1.5 h-[22px] leading-none relative w-full pr-0.5"
+              style={{ paddingLeft: `${depth * FILE_PADDING_PX}px` }}
+            >
+              <div className="flex items-center h-[22px]">
+                <IndentGuides
+                  depth={depth}
+                  leftPx={FILE_GUIDE_LEFT}
+                  gapPx={FILE_GUIDE_GAP}
+                  isActive={(i) => isActiveFile(activeNode, path, i, depth)}
+                />
                 <VscBlank style={{ marginRight: "-1px" }} />
               </div>
-              <div>
+              <div className="flex items-center h-[22px]">
                 <FileIcon extension={extension} />
               </div>
-              <span className={css.name}>{name}</span>
+              <span className="w-full h-[22px] leading-[22px] truncate">
+                {name}
+              </span>
             </div>
           </div>
         ) : (
           <div
-            style={name === "LEE BHIN" ? { background: "none" } : {}}
-            className={`${css.folderWrap} ${
-              activeNode?.path === path && name !== "" ? css.active : ""
-            }`}
+            style={
+              name === "LEE BHIN" ? { background: "none" } : wrapStyle
+            }
+            className="h-[22px] w-full hover:bg-[var(--hover)]"
             onClick={() => setActiveNode({ path, name, depth, isFile, isOpen })}
           >
             <div
-              className={css.folder}
-              style={{ paddingLeft: `${depth * 8.9}px` }}
+              className="flex items-center gap-1.5 h-[22px] leading-none relative w-full pr-0.5"
+              style={{
+                paddingLeft:
+                  name === "LEE BHIN"
+                    ? "1px"
+                    : `${depth * FOLDER_PADDING_PX}px`,
+              }}
             >
               {name === "LEE BHIN" ? (
                 <>
                   {isOpen ? (
                     <div>
                       <VscChevronDown
-                        className={css.treeIcon}
+                        className="text-base -mr-1"
                         style={{ paddingLeft: "1px" }}
                       />
                     </div>
                   ) : (
                     <div>
                       <VscChevronRight
-                        className={css.treeIcon}
+                        className="text-base -mr-1"
                         style={{ paddingLeft: "1px" }}
                       />
                     </div>
@@ -264,42 +282,36 @@ const TreeNode = ({
                 </>
               ) : (
                 <>
-                  <div className={css["indent-wrap-folder"]}>
-                    {depthArray.map((_, index) => (
-                      <div
-                        key={index}
-                        className={css["indent-guide-folder"]}
-                        style={
-                          isActiveFile(activeNode, path, index, depth)
-                            ? { opacity: "1" }
-                            : {}
-                        }
-                      />
-                    ))}
-                  </div>
+                  <IndentGuides
+                    depth={depth}
+                    leftPx={FOLDER_GUIDE_LEFT}
+                    gapPx={FOLDER_GUIDE_GAP}
+                    marginLeftPx={FOLDER_GUIDE_OFFSET}
+                    isActive={(i) => isActiveFile(activeNode, path, i, depth)}
+                  />
                   {isOpen ? (
                     <>
                       <div>
-                        <VscChevronDown className={css.treeIcon} />
+                        <VscChevronDown className="text-base -mr-1" />
                       </div>
                       <div>
                         {name === "images" ? (
-                          <Icons.FolderImagesOpen className={css.folderIcon} />
+                          <Icons.FolderImagesOpen />
                         ) : (
-                          <Icons.FolderOpen className={css.folderIcon} />
+                          <Icons.FolderOpen />
                         )}
                       </div>
                     </>
                   ) : (
                     <>
                       <div>
-                        <VscChevronRight className={css.treeIcon} />
+                        <VscChevronRight className="text-base -mr-1" />
                       </div>
                       <div>
                         {name === "images" ? (
-                          <Icons.FolderImages className={css.folderIcon} />
+                          <Icons.FolderImages />
                         ) : (
-                          <Icons.Folder className={css.folderIcon} />
+                          <Icons.Folder />
                         )}
                       </div>
                     </>
@@ -307,6 +319,7 @@ const TreeNode = ({
                 </>
               )}
               <span
+                className="overflow-hidden"
                 style={
                   name === "LEE BHIN"
                     ? {
@@ -315,15 +328,12 @@ const TreeNode = ({
                         fontSize: "12px",
                         display: "flex",
                         justifyContent: "space-between",
-                        overflow: "hidden",
                       }
-                    : {
-                        overflow: "hidden",
-                      }
+                    : {}
                 }
               >
                 <div
-                  className={css.name}
+                  className="w-full h-[22px] leading-[22px] truncate group/name"
                   style={
                     name === "LEE BHIN"
                       ? {
@@ -334,21 +344,32 @@ const TreeNode = ({
                       : {}
                   }
                 >
-                  <div className={css.nameTxt}>{name}</div>
+                  <div className="truncate w-full">{name}</div>
                   {name === "LEE BHIN" && (
-                    <div className={css.rootFolderTool}>
-                      <div className={css["side-icon-bg"]}>
-                        <VscNewFile />
-                      </div>
-                      <div className={css["side-icon-bg"]}>
-                        <VscNewFolder />
-                      </div>
-                      <div className={css["side-icon-bg"]}>
-                        <VscRefresh />
-                      </div>
-                      <div className={css["side-icon-bg"]}>
-                        <VscCollapseAll />
-                      </div>
+                    <div
+                      className="flex items-center text-base gap-[3px] pr-[3px] opacity-0 pointer-events-none group-hover/root:opacity-100 group-hover/root:pointer-events-auto"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <Tooltip label="새 파일..." position="bottom" group="explorer-actions">
+                        <div className={sideIconBg}>
+                          <Codicon name="new-file" size={16} />
+                        </div>
+                      </Tooltip>
+                      <Tooltip label="새 폴더..." position="bottom" group="explorer-actions">
+                        <div className={sideIconBg}>
+                          <Codicon name="new-folder" size={16} />
+                        </div>
+                      </Tooltip>
+                      <Tooltip label="탐색기 새로 고침" position="bottom" group="explorer-actions">
+                        <div className={sideIconBg}>
+                          <Codicon name="refresh" size={16} />
+                        </div>
+                      </Tooltip>
+                      <Tooltip label="탐색기에서 폴더 축소" position="bottom" group="explorer-actions">
+                        <div className={sideIconBg}>
+                          <Codicon name="collapse-all" size={16} />
+                        </div>
+                      </Tooltip>
                     </div>
                   )}
                 </div>
@@ -359,7 +380,7 @@ const TreeNode = ({
       </div>
 
       <div
-        className={css.treeChildren}
+        className="overflow-x-hidden [&::-webkit-scrollbar]:hidden group-hover/wrap:[&::-webkit-scrollbar-thumb]:bg-[var(--scrollbar-hover)]"
         ref={name === "LEE BHIN" ? scrollref : null}
         style={
           name === "LEE BHIN"

@@ -1,20 +1,36 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
-import css from "../../../styles/tasks/Search.module.css";
 import {
   VscCaseSensitive,
   VscWholeWord,
   VscRegex,
-  VscEllipsis,
   VscBook,
   VscExclude,
   VscChevronDown,
+  VscChevronRight,
+  VscReplaceAll,
+  VscPreserveCase,
 } from "react-icons/vsc";
 import treeData from "../../../data/treeData";
 import FileIcon from "../../FileIcon";
+import Tooltip from "../../Tooltip";
+import EllipsisDots from "../../EllipsisDots";
 import getExtension from "../../../features/getExtension";
+
+const cls = {
+  input:
+    "w-full min-w-0 rounded-sm bg-[var(--input)] border-none text-[var(--text)] text-[13px] py-[3px] outline-none focus:[box-shadow:0_0_0_1px_var(--accent)]",
+  iconBg:
+    "flex justify-center items-center cursor-pointer w-[20px] h-[20px] p-[1px] rounded-[3px] hover:bg-[color-mix(in_srgb,white_8%,transparent)]",
+  iconBgActive:
+    "!bg-[color-mix(in_srgb,var(--accent)_45%,transparent)] [box-shadow:inset_0_0_0_1px_var(--accent)]",
+  icon: "text-[17px]",
+  externalSlot:
+    "flex justify-center items-center cursor-pointer w-5 h-[22px] rounded-[3px] shrink-0 hover:bg-[var(--hover-soft)]",
+};
 
 const Search = () => {
   const [isActive, setIsActive] = useState(false);
+  const [isReplaceOpen, setIsReplaceOpen] = useState(false);
   const [results, setResults] = useState({});
   const [openResults, setOpenResults] = useState({});
   const [searchOptions, setSearchOptions] = useState({
@@ -22,6 +38,9 @@ const Search = () => {
     wholeWord: false,
     regex: false,
   });
+  const [preserveCase, setPreserveCase] = useState(false);
+  const [openOnly, setOpenOnly] = useState(false);
+  const [useIgnore, setUseIgnore] = useState(false);
   const [keyword, setKeyword] = useState("");
 
   const searchRef = useRef(null);
@@ -84,7 +103,7 @@ const Search = () => {
 
     return line.split(regex).map((part, index) =>
       regex.test(part) ? (
-        <mark key={index} className={css.highlight}>
+        <mark key={index} className="bg-[var(--highlight)] text-[var(--text)]">
           {part}
         </mark>
       ) : (
@@ -163,86 +182,162 @@ const Search = () => {
     searchFiles(keyword);
   }, [keyword, searchFiles]);
 
+  const iconBgCls = (active) =>
+    `${cls.iconBg} ${active ? cls.iconBgActive : ""}`;
+
   return (
-    <div className={css.Search}>
-      <div className={css.inputWrap}>
-        <input
-          type="text"
-          className={css.input}
-          placeholder="검색"
-          ref={searchRef}
-          onChange={(e) => setKeyword(e.target.value)}
-        />
-        <div className={css.iconWrap}>
+    <div>
+      <div className="pl-px pr-2 pt-1.5">
+        <div className="flex items-stretch gap-0.5">
           <div
-            className={`${css["icon-bg"]} ${
-              searchOptions.caseSensitive ? css.active : ""
-            }`}
-            onClick={() => toggleSearchOption("caseSensitive")}
+            className="flex justify-center items-center cursor-pointer w-[16px] hover:bg-[var(--hover-soft)] rounded-[3px] shrink-0 text-white"
+            onClick={() => setIsReplaceOpen((p) => !p)}
           >
-            <VscCaseSensitive className={css.icon} />
+            {isReplaceOpen ? (
+              <VscChevronDown className="text-[17px] stroke-current [stroke-width:0.5]" />
+            ) : (
+              <VscChevronRight className="text-[17px] stroke-current [stroke-width:0.5]" />
+            )}
           </div>
-          <div
-            className={`${css["icon-bg"]} ${
-              searchOptions.wholeWord ? css.active : ""
-            }`}
-            onClick={() => toggleSearchOption("wholeWord")}
-          >
-            <VscWholeWord className={css.icon} />
-          </div>
-          <div
-            className={`${css["icon-bg"]} ${
-              searchOptions.regex ? css.active : ""
-            }`}
-            onClick={() => toggleSearchOption("regex")}
-          >
-            <VscRegex className={css.icon} />
-          </div>
-        </div>
-      </div>
-      <div
-        className={css.ellipsis}
-        onClick={() => setIsActive((prev) => !prev)}
-      >
-        <VscEllipsis />
-      </div>
 
-      {isActive && (
-        <div className={css.filter}>
-          <div className={css.include}>
-            <span className={css.includeTxt}>포함할 파일</span>
-            <div className={css.inputWrap}>
-              <input type="text" className={css.input} ref={includeRef} />
-              <div className={css.iconWrap}>
-                <div className={css["icon-bg"]}>
-                  <VscBook className={css.icon} />
+          <div className="flex-1 flex flex-col gap-[5px] min-w-0">
+            <div className="flex items-center gap-0.5">
+              <div className="relative flex-1 flex items-center min-w-0">
+                <input
+                  type="text"
+                  className={`${cls.input} pl-[5px] pr-[68px]`}
+                  placeholder="검색"
+                  ref={searchRef}
+                  onChange={(e) => setKeyword(e.target.value)}
+                />
+                <div className="absolute right-1 flex gap-0.5">
+                  <Tooltip label="대/소문자 구분(Alt+C)" group="search">
+                    <div
+                      className={iconBgCls(searchOptions.caseSensitive)}
+                      onClick={() => toggleSearchOption("caseSensitive")}
+                    >
+                      <VscCaseSensitive className={cls.icon} />
+                    </div>
+                  </Tooltip>
+                  <Tooltip label="단어 단위로(Alt+W)" group="search">
+                    <div
+                      className={iconBgCls(searchOptions.wholeWord)}
+                      onClick={() => toggleSearchOption("wholeWord")}
+                    >
+                      <VscWholeWord className={cls.icon} />
+                    </div>
+                  </Tooltip>
+                  <Tooltip label="정규식 사용(Alt+R)" group="search">
+                    <div
+                      className={iconBgCls(searchOptions.regex)}
+                      onClick={() => toggleSearchOption("regex")}
+                    >
+                      <VscRegex className={cls.icon} />
+                    </div>
+                  </Tooltip>
                 </div>
               </div>
             </div>
+
+            {isReplaceOpen && (
+              <div className="flex items-center gap-0.5">
+                <div className="relative flex-1 flex items-center min-w-0">
+                  <input
+                    type="text"
+                    className={`${cls.input} pl-[5px] pr-[26px]`}
+                    placeholder="바꾸기"
+                  />
+                  <div className="absolute right-1 flex gap-0.5">
+                    <Tooltip label="대/소문자 보존(Alt+P)" group="replace">
+                      <div
+                        className={iconBgCls(preserveCase)}
+                        onClick={() => setPreserveCase((p) => !p)}
+                      >
+                        <VscPreserveCase className={cls.icon} />
+                      </div>
+                    </Tooltip>
+                  </div>
+                </div>
+                <Tooltip label="모두 바꾸기(사용하려면 검색 전송)" group="replace">
+                  <div className="flex justify-center items-center w-5 h-[22px] rounded-[3px] shrink-0 opacity-50 cursor-default">
+                    <VscReplaceAll className={cls.icon} />
+                  </div>
+                </Tooltip>
+              </div>
+            )}
           </div>
-          <div className={css.include}>
-            <span className={css.includeTxt}>제외할 파일</span>
-            <div className={css.inputWrap}>
-              <input type="text" className={css.input} />
-              <div className={css.iconWrap}>
-                <div className={css["icon-bg"]}>
-                  <VscExclude className={css.icon} />
+        </div>
+
+        <div className="pl-[18px]">
+          <div className="flex justify-end mt-[0.5px]">
+            <Tooltip label="검색 세부 정보 설정/해제">
+              <div
+                className="flex justify-center items-center cursor-pointer w-5 h-[12px] shrink-0"
+                onClick={() => setIsActive((p) => !p)}
+              >
+                <EllipsisDots />
+              </div>
+            </Tooltip>
+          </div>
+
+          {isActive && (
+            <div className="text-[var(--text)] text-[11.5px] -mt-[7px]">
+              <div>
+                <span className="pl-[2px] mb-[1px] block leading-tight">포함할 파일</span>
+                <div className="relative flex items-center min-w-0">
+                  <input
+                    type="text"
+                    className={`${cls.input} pl-[5px] pr-[26px]`}
+                    ref={includeRef}
+                  />
+                  <div className="absolute right-1 flex gap-0.5">
+                    <Tooltip label="열린 편집기에서만 검색" group="include">
+                      <div
+                        className={iconBgCls(openOnly)}
+                        onClick={() => setOpenOnly((p) => !p)}
+                      >
+                        <VscBook className={cls.icon} />
+                      </div>
+                    </Tooltip>
+                  </div>
+                </div>
+              </div>
+              <div className="mt-1">
+                <span className="pl-[2px] mb-[1px] block leading-tight">제외할 파일</span>
+                <div className="relative flex items-center min-w-0">
+                  <input
+                    type="text"
+                    className={`${cls.input} pl-[5px] pr-[26px]`}
+                  />
+                  <div className="absolute right-1 flex gap-0.5">
+                    <Tooltip label="제외 설정 및 파일 무시 사용" group="exclude">
+                      <div
+                        className={iconBgCls(useIgnore)}
+                        onClick={() => setUseIgnore((p) => !p)}
+                      >
+                        <VscExclude className={cls.icon} />
+                      </div>
+                    </Tooltip>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
-      )}
+      </div>
 
-      <div className={css.results}>
+      <div className="mt-[13px] overflow-y-auto h-[calc(100vh-143px)] [&::-webkit-scrollbar]:hidden">
         {Object.entries(results)?.length > 0 && (
-          <div className={css.count}>{`${
+          <div className="text-[13px] pl-2 mb-2.5 text-[color-mix(in_srgb,var(--text)_65%,transparent)]">{`${
             Object.entries(results)?.length
           }개 파일에서 ${Object.values(results).flat().length}개 결과`}</div>
         )}
         {Object.entries(results).map(([path, matches]) => (
-          <div key={path} className={css.result}>
-            <div className={css.file} onClick={() => toggleResultOpen(path)}>
+          <div key={path} className="truncate">
+            <div
+              className="flex items-center gap-[5px] px-[5px] cursor-pointer h-[22px] leading-[22px] hover:bg-[var(--hover-search)]"
+              onClick={() => toggleResultOpen(path)}
+            >
               <VscChevronDown
                 style={{
                   minWidth: "16px",
@@ -253,17 +348,22 @@ const Search = () => {
                 }}
               />
               <FileIcon extension={getExtension(path.split("/").pop())} />
-              <div className={css.namepath}>
-                <span className={css.name}>{path.split("/").pop()}</span>
-                <span className={css.path}>
+              <div className="truncate">
+                <span className="text-[13px] text-[var(--text)] leading-none h-full">
+                  {path.split("/").pop()}
+                </span>
+                <span className="text-[11.7px] text-[var(--text)] opacity-70 pl-[5px] leading-none h-full">
                   {path.split("/").slice(0, -1).join("/")}
                 </span>
               </div>
             </div>
             {!openResults[path] && (
-              <div className={css.matches}>
+              <div>
                 {matches.map((match, index) => (
-                  <div key={index} className={css.code}>
+                  <div
+                    key={index}
+                    className="text-[13px] text-[var(--text)] pl-[31px] pr-[7px] cursor-pointer h-[22px] leading-[22px] truncate hover:bg-[var(--hover-search)]"
+                  >
                     {highlightKeyword(match.line, keyword)}
                   </div>
                 ))}

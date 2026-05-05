@@ -1,10 +1,8 @@
 import React, { useState, useCallback, useEffect, useRef } from "react";
-import { VscEllipsis } from "react-icons/vsc";
 import { Resizable } from "re-resizable";
+import EllipsisDots from "../EllipsisDots";
 import FolderTree from "./FolderTree";
-import css from "../../styles/Layout.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { setIsLayoutActive } from "../../features/historySlice";
+import { useHistory, setIsLayoutActive } from "../../store/history";
 import Search from "./tasks/Search";
 import Git from "./tasks/Git";
 import Debug from "./tasks/Debug";
@@ -27,8 +25,8 @@ const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const contentRef = useRef(null);
 
-  const { isLayoutActive, focusedTask } = useSelector((state) => state.history);
-  const dispatch = useDispatch();
+  const isLayoutActive = useHistory((s) => s.isLayoutActive);
+  const focusedTask = useHistory((s) => s.focusedTask);
 
   useEffect(() => {
     if (!isLayoutActive.from) return;
@@ -39,7 +37,7 @@ const Sidebar = () => {
       setIsCollapsed(true);
       setResizeWidth(0);
     }
-  }, [isLayoutActive, dispatch]);
+  }, [isLayoutActive]);
 
   useEffect(() => {
     const updateMaxWidth = () => setMaxWidth(window.innerWidth * 0.86);
@@ -79,14 +77,14 @@ const Sidebar = () => {
           if (rect.right - e.clientX >= CLOSE_RANGE) {
             setIsCollapsed(true);
             setResizeWidth(0);
-            dispatch(setIsLayoutActive({ isActive: false, width: 0 }));
+            setIsLayoutActive({ isActive: false, width: 0 });
             return;
           }
         } else if (isCollapsed) {
           if (e.clientX - rect.left >= OPEN_RANGE) {
             setIsCollapsed(false);
             setResizeWidth(START_WIDTH);
-            dispatch(setIsLayoutActive({ isActive: true, width: START_WIDTH }));
+            setIsLayoutActive({ isActive: true, width: START_WIDTH });
             return;
           }
         }
@@ -107,7 +105,7 @@ const Sidebar = () => {
         setIsHover(false);
       }
     },
-    [timer, isResizing, isCollapsed, resizeWidth, dispatch]
+    [timer, isResizing, isCollapsed, resizeWidth]
   );
 
   const handleMouseLeave = useCallback(() => {
@@ -139,12 +137,10 @@ const Sidebar = () => {
     setIsResizing(false);
     if (!isNearRightEdge) setIsHover(false);
 
-    dispatch(
-      setIsLayoutActive({
-        isActive: isLayoutActive.isActive,
-        width: resizeWidth,
-      })
-    );
+    setIsLayoutActive({
+      isActive: isLayoutActive.isActive,
+      width: resizeWidth,
+    });
   };
 
   const focusedComponent = (resizeWidth) => {
@@ -196,32 +192,36 @@ const Sidebar = () => {
       onResizeStart={handleResizeStart}
       onResize={handleResize}
       onResizeStop={handleResizeStop}
-      className={css.sidebar}
+      className="bg-[var(--panel)] text-[var(--text)] relative z-[1]"
+      style={{
+        "--text": "#CFD2D2",
+        "--text-strong": "#CFD2D2",
+        "--text-muted": "#CFD2D2",
+        "--text-dim": "#CFD2D2",
+      }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       handleStyles={{ right: { cursor: "ew-resize" } }}
     >
       <div
         ref={contentRef}
-        className={css.ResizableWrap}
+        className="h-full"
         style={{ opacity: isCollapsed ? 0 : 1 }}
       >
-        <div className={css["sidebar-title"]}>
-          <span className={css["sidebar-title-txt"]}>{focusedTitle()}</span>
+        <div className="flex justify-between items-center h-[35px] text-[11px] px-[15px]">
+          <span>{focusedTitle()}</span>
           {focusedTask !== "search" && (
-            <div className={`${css["icon-bg"]} ${css.ellipsis}`}>
-              <VscEllipsis />
+            <div className="w-[22px] h-[22px] rounded-[5px] flex justify-center items-center cursor-pointer hover:bg-[var(--hover)]">
+              <EllipsisDots />
             </div>
           )}
         </div>
-        <div className={css["sidebar-content"]}>
-          {focusedComponent(resizeWidth)}
-        </div>
+        <div className="h-full">{focusedComponent(resizeWidth)}</div>
       </div>
 
       <div
-        className={css.resizeBar}
-        style={isHover ? { backgroundColor: "#0078d4" } : {}}
+        className="absolute -right-[2.5px] top-0 w-1 h-full transition-[background-color] duration-150"
+        style={isHover ? { backgroundColor: "var(--accent)" } : {}}
       />
     </Resizable>
   );

@@ -1,15 +1,14 @@
 import React, { useRef, useEffect, useState } from "react";
 import treeData from "../../data/treeData";
 import TreeNode from "./TreeNode";
-import css from "../../styles/Layout.module.css";
-import { useSelector } from "react-redux";
+import { useHistory } from "../../store/history";
 
 const FolderTree = () => {
   const [activeNode, setActiveNode] = useState(null);
   const trackRef = useRef();
   const sliderRef = useRef();
   const scrollAreaRef = useRef();
-  const { startLink } = useSelector((state) => state.history);
+  const startLink = useHistory((s) => s.startLink);
 
   useEffect(() => {
     setActiveNode({ path: startLink.join("/"), name: startLink.at(-1) });
@@ -112,14 +111,14 @@ const FolderTree = () => {
       scrollArea.removeEventListener("mouseup", handleScrollAreaMouseUp);
       scrollArea.removeEventListener("scroll", handleScroll);
       slider.removeEventListener("mousedown", handleMouseDown);
-      track.removeEventListener("click", handleTrackClick);
+      track.removeEventListener("mousedown", handleTrackClick);
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
     };
   }, []);
 
   return (
-    <div className={css.folderTree}>
+    <div className="text-[13px] relative group/tree">
       {Object.keys(treeData).map((key) => (
         <TreeNode
           key={key}
@@ -132,8 +131,14 @@ const FolderTree = () => {
           setActiveNode={setActiveNode}
         />
       ))}
-      <div className={css.track} ref={trackRef}>
-        <div className={css.slider} ref={sliderRef} />
+      <div
+        className="absolute top-[22px] right-0 w-2.5 h-[calc(100%-30px)]"
+        ref={trackRef}
+      >
+        <div
+          className="w-full absolute z-[1] max-h-[calc(100%-30px)] transition-[background-color] duration-[1.3s] group-hover/tree:bg-[var(--scrollbar)] group-hover/tree:duration-300 hover:!bg-[var(--scrollbar-hover)] hover:!transition-none active:!bg-[var(--scrollbar-active)] active:!transition-none"
+          ref={sliderRef}
+        />
       </div>
     </div>
   );

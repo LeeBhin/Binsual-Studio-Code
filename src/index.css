@@ -1,15 +1,118 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@import "tailwindcss";
+@import "@vscode/codicons/dist/codicon.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Segoe UI', 'Malgun Gothic', 'Apple SD Gothic Neo', system-ui, sans-serif;
+  --font-mono: Consolas, 'Courier New', monospace;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
-    monospace;
+:root {
+  --vh: 100%;
+
+  /* base palette (dark) — VSCode default */
+  --bg: #1E1E1E;          /* editor */
+  --panel: #252526;       /* left sidebar (file tree, search results) */
+  --activitybar: #333333; /* leftmost icon bar */
+  --titlebar: #3C3C3C;    /* top header */
+  --border: #3C3C3C;
+  --accent: #007ACC;      /* statusbar / footer */
+  --text: #FFFFFF;
+
+  --tab-active: #1E1E1E;
+  --tab-inactive: #2D2D2D;
+  --tab-bar: #252526;
+
+  /* derived tokens (used by components) */
+  --bg-2: var(--bg);
+  --bg-3: var(--panel);
+  --bg-4: var(--panel);
+  --bg-titlebar: var(--titlebar);
+
+  --hover: var(--titlebar);
+  --hover-2: color-mix(in srgb, var(--titlebar) 60%, transparent);
+  --hover-soft: color-mix(in srgb, var(--titlebar) 50%, transparent);
+  --hover-banner: var(--panel);
+  --hover-search: var(--titlebar);
+
+  --active: color-mix(in srgb, var(--accent) 35%, var(--bg));
+  --active-low: var(--titlebar);
+
+  --border-2: var(--border);
+  --border-soft: color-mix(in srgb, var(--border) 50%, transparent);
+
+  --input: var(--titlebar);
+
+  --text-strong: var(--text);
+  --text-muted: color-mix(in srgb, var(--text) 65%, var(--bg));
+  --text-dim: color-mix(in srgb, var(--text) 45%, var(--bg));
+
+  --accent-hover: color-mix(in srgb, var(--accent) 85%, white);
+  --accent-soft: color-mix(in srgb, var(--accent) 75%, white);
+
+  --scrollbar: color-mix(in srgb, var(--text) 25%, transparent);
+  --scrollbar-hover: color-mix(in srgb, var(--text) 45%, transparent);
+  --scrollbar-active: color-mix(in srgb, var(--text) 65%, transparent);
+
+  --highlight: color-mix(in srgb, var(--accent) 30%, transparent);
+
+  color-scheme: dark;
+}
+
+:root:not(.dark) {
+  /* base palette (light) — VSCode default */
+  --bg: #FFFFFF;
+  --panel: #F3F3F3;
+  --activitybar: #F3F3F3;
+  --titlebar: #DDDDDD;
+  --border: #DDDDDD;
+  --accent: #007ACC;
+  --text: #2C2C2C;
+
+  --tab-active: #FFFFFF;
+  --tab-inactive: #ECECEC;
+  --tab-bar: #F3F3F3;
+
+  --text-strong: #000000;
+
+  color-scheme: light;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: calc(var(--vh, 1vh) * 100);
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  code {
+    font-family: var(--font-mono);
+  }
+
+  ul, ol {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+}
+
+@keyframes fall {
+  to {
+    transform: translateY(110vh);
+  }
 }
 
 .monaco-editor .decorationsOverviewRuler {

@@ -1,5 +1,4 @@
 import Icons from "../assets/icons";
-import css from "../styles/Layout.module.css";
 
 const FileIcon = ({ extension }) => {
   let iconKey = extension.replace(".", "");
@@ -18,7 +17,12 @@ const FileIcon = ({ extension }) => {
     Icons[iconKey.charAt(0).toUpperCase() + iconKey.slice(1)];
 
   if (IconComponent) {
-    return <IconComponent className={css.icon} />;
+    const extra = iconKey === "js" ? "text-[#F7DF1E] text-[10px]" : "";
+    return (
+      <IconComponent
+        className={`w-4 h-5 min-w-4 min-h-5 ${extra}`}
+      />
+    );
   }
 };
 

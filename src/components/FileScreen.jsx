@@ -1,34 +1,147 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import css from "../styles/File.module.css";
-import { VscChevronRight } from "react-icons/vsc";
+import React, { useEffect, useRef, useState } from "react";
+import Codicon from "./Codicon";
 import FileIcon from "./FileIcon";
 import MonacoEditor from "@monaco-editor/react";
 import {
+  useHistory,
   setCurrentFiles,
   setErr,
   setRowCol,
   setSelected,
-} from "../features/historySlice";
+} from "../store/history";
 import { errorMsg } from "./../data/errorMsg";
 import getLanguage from "./../features/getLanguage";
 import getExtension from "./../features/getExtension";
+import {
+  registerSymbolProviders,
+  getEnclosingPath,
+} from "./../features/symbolPath";
 import Start from "./layout/filePages/Start";
 import treeData from "../data/treeData";
 import Images from "../assets/Images";
 import Debug from "./layout/filePages/Debug";
 
+// monaco.languages.SymbolKind enum index → codicon suffix
+const kindByIndex = [
+  "file",
+  "namespace",
+  "namespace",
+  "package",
+  "class",
+  "method",
+  "property",
+  "field",
+  "constructor",
+  "enum",
+  "interface",
+  "method",
+  "variable",
+  "variable",
+  "string",
+  "number",
+  "boolean",
+  "array",
+  "object",
+  "key",
+  "null",
+  "enum-member",
+  "structure",
+  "event",
+  "operator",
+  "parameter",
+];
+
+// TS ScriptElementKind (string) → codicon suffix
+const kindByName = {
+  method: "method",
+  function: "method",
+  "local function": "method",
+  getter: "method",
+  setter: "method",
+  accessor: "method",
+  property: "property",
+  class: "class",
+  "local class": "class",
+  variable: "variable",
+  var: "variable",
+  "local var": "variable",
+  let: "variable",
+  const: "variable",
+  field: "field",
+  interface: "interface",
+  enum: "enum",
+  "enum member": "enum-member",
+  constructor: "constructor",
+  module: "namespace",
+  namespace: "namespace",
+  type: "interface",
+  alias: "namespace",
+  parameter: "parameter",
+  string: "string",
+};
+
+const kindToSuffix = (kind) => {
+  if (typeof kind === "number") return kindByIndex[kind] || "misc";
+  if (typeof kind === "string") return kindByName[kind] || "misc";
+  return "misc";
+};
+
+const pickCodiconName = ({ name, kind, lang }) => {
+  if (lang === "json") return "json";
+  if (lang === "html") return "symbol-field";
+  if (lang === "css") return "symbol-class";
+  if (lang === "javascript" || lang === "typescript") {
+    if (name && /\bcallback\b/i.test(name)) return "symbol-method";
+    if (kind === "property") return "symbol-property";
+  }
+  return `symbol-${kindToSuffix(kind)}`;
+};
+
+const codiconColorMap = {
+  "symbol-method": "#73BAF9",
+  "symbol-variable": "#73BAF9",
+  "symbol-property": "white",
+  "symbol-class": "#F2A528",
+  "symbol-field": "#3B90EC",
+};
+
 const FileScreen = ({ fileIndex }) => {
-  const [zoomLevel, setZoomLevel] = useState(1);
+  const [zoomLevels, setZoomLevels] = useState({});
   const [zoom, setZoom] = useState(false);
-  const { activeFile } = useSelector((state) => state.history);
+  const [symbolPath, setSymbolPath] = useState([]);
+  const activeFile = useHistory((s) => s.activeFile);
+  const win = useHistory((s) => s.windows[fileIndex]);
+  const currentFiles = win?.currentFiles ?? [];
+  const focusedFile = win?.focusedFile ?? "";
 
-  const { currentFiles, focusedFile } = useSelector(
-    (state) => state.history.windows[fileIndex]
-  );
+  const debounceRef = useRef(null);
 
-  const dispatch = useDispatch();
   const splitPath = focusedFile.split("/").slice(1);
+
+  const zoomLevel = zoomLevels[focusedFile] ?? 1;
+  const setZoomLevel = (updater) => {
+    setZoomLevels((prev) => {
+      const cur = prev[focusedFile] ?? 1;
+      const next = typeof updater === "function" ? updater(cur) : updater;
+      return { ...prev, [focusedFile]: next };
+    });
+  };
+
+  useEffect(() => {
+    setSymbolPath([]);
+  }, [focusedFile]);
+
+  // 닫힌 파일의 zoom 정리 (재오픈 시 초기화)
+  useEffect(() => {
+    setZoomLevels((prev) => {
+      const openPaths = new Set(currentFiles.map((f) => f.path));
+      const next = {};
+      for (const k of Object.keys(prev)) {
+        if (openPaths.has(k)) next[k] = prev[k];
+      }
+      return next;
+    });
+  }, [currentFiles]);
 
   const getFileName = (filePath) => {
     const parts = filePath.split("/");
@@ -37,6 +150,16 @@ const FileScreen = ({ fileIndex }) => {
 
   const handleEditorMount = (editor, monaco) => {
     const model = editor.getModel();
+    registerSymbolProviders(monaco);
+
+    const updateSymbolPath = (position) => {
+      clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(async () => {
+        const path = await getEnclosingPath(monaco, model, position);
+        setSymbolPath(path);
+      }, 150);
+    };
+    updateSymbolPath(editor.getPosition());
 
     const updateMarkers = (e) => {
       const code = model.getValue();
@@ -65,14 +188,19 @@ const FileScreen = ({ fileIndex }) => {
         (marker) => marker.severity === monaco.MarkerSeverity.Warning
       ).length;
 
-      dispatch(setErr({ err: errors, warning: warnings }));
+      setErr({ err: errors, warning: warnings });
     };
 
     editor.onDidChangeModelContent(updateMarkers);
 
     editor.onDidChangeCursorPosition((e) => {
       const position = e.position;
-      dispatch(setRowCol({ row: position.lineNumber, col: position.column }));
+      setRowCol({ row: position.lineNumber, col: position.column });
+      updateSymbolPath(position);
+    });
+
+    editor.onDidChangeModelContent(() => {
+      updateSymbolPath(editor.getPosition());
     });
 
     editor.onDidChangeCursorSelection((e) => {
@@ -82,7 +210,7 @@ const FileScreen = ({ fileIndex }) => {
       const text = model.getValueInRange(selection);
       const selectionLength = text.length;
 
-      dispatch(setSelected(selectionLength));
+      setSelected(selectionLength);
     });
   };
 
@@ -107,7 +235,13 @@ const FileScreen = ({ fileIndex }) => {
     const IconComponent = Images[fileNameWithoutExtension];
 
     if (IconComponent) {
-      return <img src={IconComponent} alt={fileName} className={css.png} />;
+      return (
+        <img
+          src={IconComponent}
+          alt={fileName}
+          className="max-w-full max-h-full w-auto h-auto"
+        />
+      );
     }
     return null;
   };
@@ -138,7 +272,7 @@ const FileScreen = ({ fileIndex }) => {
     const updatedFiles = currentFiles.map((file) =>
       file.path === focusedFile ? { ...file, pinned: true } : file
     );
-    dispatch(setCurrentFiles({ id: activeFile, currentFiles: updatedFiles }));
+    setCurrentFiles({ id: activeFile, currentFiles: updatedFiles });
   };
 
   const getPage = () => {
@@ -150,33 +284,59 @@ const FileScreen = ({ fileIndex }) => {
   };
 
   return (
-    <div className={css.FileScreen}>
+    <div className="w-full h-full">
       {getFileName(focusedFile) === "시작.vs" ||
       getFileName(focusedFile) === "debug.exe" ? (
         <>{getPage()}</>
       ) : (
         <>
-          <div className={css.pathTab}>
+          <div className="flex items-center text-[#A1A1A1] text-[13px] py-[3px] px-[17px]">
             {splitPath.map((item, index) => (
-              <div key={index} className={css.pathElement}>
+              <div
+                key={`f-${index}`}
+                className="flex items-center cursor-pointer hover:text-[var(--text-strong)]"
+              >
                 {index === splitPath.length - 1 && (
-                  <div className={css.fileIcon}>
+                  <div className="h-5 pr-[5px]">
                     <FileIcon
                       extension={getExtension(getFileName(focusedFile))}
                     />
                   </div>
                 )}
-                <div className={css.pathName}>{item}</div>
-                {index !== splitPath.length - 1 && (
-                  <VscChevronRight className={css.pathIcon} />
+                <div className="h-[18px] leading-[18px]">{item}</div>
+                {(index !== splitPath.length - 1 ||
+                  symbolPath.length > 0) && (
+                  <Codicon name="chevron-right" size={18} />
                 )}
               </div>
             ))}
+            {symbolPath.map((item, index) => {
+              const iconName = pickCodiconName(item);
+              return (
+                <div
+                  key={`s-${index}`}
+                  className="flex items-center cursor-pointer hover:text-[var(--text-strong)]"
+                >
+                  <Codicon
+                    name={iconName}
+                    size={16}
+                    className="mr-1"
+                    style={{ color: codiconColorMap[iconName] || "white" }}
+                  />
+                  <div className="h-[18px] leading-[18px] truncate max-w-[200px]">
+                    {item.name}
+                  </div>
+                  {index !== symbolPath.length - 1 && (
+                    <Codicon name="chevron-right" size={18} />
+                  )}
+                </div>
+              );
+            })}
           </div>
-          <div className={css.screen}>
+          <div className="w-full h-[calc(100%-26px)] relative overflow-hidden">
             {focusedFile.includes("png") ? (
               <div
-                className={css.pngWrap}
+                className="w-full h-full flex justify-center items-center"
                 style={{
                   transform: `scale(${zoomLevel})`,
                   cursor: zoom ? "zoom-out" : "zoom-in",

@@ -1,23 +1,16 @@
-import css from "../../styles/Layout.module.css";
-import { VscMenu } from "react-icons/vsc";
 import Titlebar from "./Titlebar";
 import Taskbar from "./Taskbar";
 import Sidebar from "./Sidebar";
 import Footer from "./Footer";
-import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
-import { setFocusedFile } from "../../features/historySlice";
+import { useHistory, setFocusedFile } from "../../store/history";
 
 const Layout = ({ children }) => {
-  const { activeFile } = useSelector((state) => state.history);
-
-  const {
-    currentFiles = [],
-    focusedFile = null,
-    history = [],
-  } = useSelector((state) => state.history.windows[activeFile] || {});
-
-  const dispatch = useDispatch();
+  const activeFile = useHistory((s) => s.activeFile);
+  const win = useHistory((s) => s.windows[activeFile]);
+  const currentFiles = win?.currentFiles ?? [];
+  const focusedFile = win?.focusedFile ?? null;
+  const history = win?.history ?? [];
 
   useEffect(() => {
     if (
@@ -31,37 +24,29 @@ const Layout = ({ children }) => {
           currentFiles.some((file) => file.path === historyPath)
         );
 
-      dispatch(
-        setFocusedFile({
-          id: activeFile,
-          focusedFile:
-            nextFocusedFile || currentFiles[currentFiles.length - 1]?.path,
-        })
-      );
+      setFocusedFile({
+        id: activeFile,
+        focusedFile:
+          nextFocusedFile || currentFiles[currentFiles.length - 1]?.path,
+      });
     }
-  }, [currentFiles, dispatch, focusedFile, history, activeFile]);
+  }, [currentFiles, focusedFile, history, activeFile]);
 
   return (
-    <div className={css.Layout}>
+    <div>
       <Titlebar />
 
-      <div className={css.wrap}>
-        <header className={css.activitybar}>
-          <div className={css["activitybar-wrap"]}>
-            <div className={css.menubar}>
-              <VscMenu />
-            </div>
-
-            <Taskbar />
-          </div>
+      <div className="flex overflow-hidden h-[calc((var(--vh,1vh)*100)-57px)]">
+        <header className="bg-[var(--activitybar)] w-auto h-full text-[var(--text-dim)] flex">
+          <Taskbar />
 
           <Sidebar />
         </header>
 
-        <main className={css.main}>{children}</main>
+        <main className="grow shrink overflow-hidden">{children}</main>
       </div>
 
-      <footer className={css.footer}>
+      <footer>
         <Footer />
       </footer>
     </div>
