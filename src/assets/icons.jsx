@@ -5,7 +5,14 @@ import { ReactComponent as Png } from './svgs/png.svg';
 import { ReactComponent as Yaml } from './svgs/yaml.svg';
 import { ReactComponent as Html } from './svgs/html.svg';
 import { ReactComponent as Css } from './svgs/css.svg';
-import { ReactComponent as Js } from './svgs/javascript.svg';
+const Js = ({ className = "", style }) => (
+  <span
+    className={`inline-flex items-center justify-center font-bold leading-none tracking-tight ${className}`}
+    style={{ fontStyle: "normal", ...style }}
+  >
+    JS
+  </span>
+);
 import { ReactComponent as Jsx } from './svgs/jsx.svg';
 import { ReactComponent as Tsx } from './svgs/tsx.svg';
 import { ReactComponent as Vue } from './svgs/vue.svg';
