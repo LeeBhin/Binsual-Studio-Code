@@ -86,20 +86,30 @@ const treeData = {
             },
         },
         certifications: {
-            '정보기기운용기능사.pkt': 'null',
-            '웹디자인기능사.html': 'null',
-            '정보처리기능사.md': 'null',
-            '컴퓨터활용능력-1급.accdb': 'null',
-            '컴퓨터활용능력-2급.xlsx': 'null',
+            기능사: {
+                '정보기기운용기능사.pkt': 'null',
+                '웹디자인기능사.html': 'null',
+                '정보처리기능사.md': 'null',
+            },
+            컴퓨터활용능력: {
+                '컴퓨터활용능력-1급.accdb': 'null',
+                '컴퓨터활용능력-2급.xlsx': 'null',
+            },
+            ITQ: {
+                'ITQ-엑셀.xlsx': 'null',
+                'ITQ-파워포인트.pptx': 'null',
+                'ITQ-한글.hwp': 'null',
+            },
+            DIAT: {
+                'DIAT-엑셀.xlsx': 'null',
+                'DIAT-파워포인트.pptx': 'null',
+                'DIAT-워드프로세서.docx': 'null',
+                'DIAT-정보검색.md': 'null',
+            },
+            GTQ: {
+                'GTQ-1급.psd': 'null',
+            },
             'AICE-certificate-basic.md': 'null',
-            'GTQ-1급.psd': 'null',
-            'ITQ-엑셀.xlsx': 'null',
-            'ITQ-파워포인트.pptx': 'null',
-            'ITQ-한글.hwp': 'null',
-            'DIAT-엑셀.xlsx': 'null',
-            'DIAT-파워포인트.pptx': 'null',
-            'DIAT-워드프로세서.docx': 'null',
-            'DIAT-정보검색.md': 'null',
         },
         activites: {
             awards: {
