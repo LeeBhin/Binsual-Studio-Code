@@ -83,7 +83,7 @@ const Section = ({
             <div className="flex items-center gap-1.5 shrink-0 pr-[3px]">
               {badge !== undefined && (
                 <span
-                  className="min-w-[16px] h-[16px] px-[5px] inline-flex items-center justify-center rounded-full text-[10px] font-normal leading-none"
+                  className="min-w-[16px] h-[16px] px-[5px] mr-[6px] inline-flex items-center justify-center rounded-full text-[10px] font-normal leading-none"
                   style={{
                     color: "#f8f8f8",
                     backgroundColor: "#616161",
