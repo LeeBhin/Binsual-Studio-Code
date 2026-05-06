@@ -59,7 +59,7 @@ const Mail = ({ isActive = true }) => {
     <div className="w-full">
       <form
         onSubmit={sendEmail}
-        className="pt-1.5 pl-[20px] pr-[11px] flex flex-col gap-2.5"
+        className="pt-1.5 pl-[19.4px] pr-[11px] flex flex-col gap-2.5"
       >
         <SearchInput
           ref={inputRef}

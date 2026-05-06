@@ -18,7 +18,7 @@ const SearchInput = forwardRef(
     >
       <input
         type="text"
-        className="flex-1 min-w-0 bg-transparent border-none outline-none text-[var(--text)] text-[13px] py-[3.5px] pl-[5px] pr-1 truncate"
+        className="flex-1 min-w-0 bg-transparent border-none outline-none text-[var(--text)] text-[13px] py-[3.5px] pl-[7px] pr-[7px] truncate"
         placeholder={placeholder}
         value={value}
         onChange={onChange}

@@ -76,7 +76,7 @@ const Extension = ({ resizeWidth, isActive = true }) => {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="pl-[20px] pr-[11px] pt-1.5 pb-2 shrink-0">
+      <div className="pl-[19.4px] pr-[11px] pt-1.5 pb-2 shrink-0">
         <SearchInput
           ref={inputRef}
           placeholder="마켓플레이스에서 확장 검색"
