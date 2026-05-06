@@ -50,10 +50,17 @@ const CommitDot = ({ index, totalCount }) => {
   );
 };
 
+const PAGE_SIZE = 100;
+
 const Git = ({ isActive = true }) => {
   const [commits, setCommits] = useState([]);
   const [commitMsg, setCommitMsg] = useState("");
+  const [hasMore, setHasMore] = useState(true);
   const inputRef = useRef(null);
+  const sentinelRef = useRef(null);
+  const pageRef = useRef(1);
+  const loadingRef = useRef(false);
+  const hasMoreRef = useRef(true);
 
   const disabled = !commitMsg.trim();
 
@@ -61,28 +68,63 @@ const Git = ({ isActive = true }) => {
     if (isActive) inputRef.current?.focus();
   }, [isActive]);
 
-  const nameAndMsg = (data) => {
-    return data.map((item) => ({
+  const nameAndMsg = (data) =>
+    data.map((item) => ({
       name: item.commit.author.name,
       msg: item.commit.message,
     }));
-  };
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (reset = false) => {
+    if (loadingRef.current) return;
+    if (!reset && !hasMoreRef.current) return;
+
+    loadingRef.current = true;
+    const pageToFetch = reset ? 1 : pageRef.current;
+
     try {
       const response = await fetch(
-        "https://api.github.com/repos/leebhin/Binsual-Studio-Code/commits?page=1&per_page=10000"
+        `https://api.github.com/repos/leebhin/Binsual-Studio-Code/commits?page=${pageToFetch}&per_page=${PAGE_SIZE}`
       );
       const data = await response.json();
-      setCommits(nameAndMsg(data));
+      const newCommits = nameAndMsg(data);
+
+      if (reset) {
+        setCommits(newCommits);
+        pageRef.current = 2;
+      } else {
+        setCommits((prev) => [...prev, ...newCommits]);
+        pageRef.current = pageToFetch + 1;
+      }
+
+      const more = newCommits.length === PAGE_SIZE;
+      hasMoreRef.current = more;
+      setHasMore(more);
     } catch (error) {
       console.error("Error fetching data:", error);
+    } finally {
+      loadingRef.current = false;
     }
   }, []);
 
   useEffect(() => {
-    fetchData();
+    fetchData(true);
   }, [fetchData]);
+
+  useEffect(() => {
+    if (!hasMore) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) fetchData();
+      },
+      { threshold: 0.1 }
+    );
+    const node = sentinelRef.current;
+    if (node) observer.observe(node);
+    return () => {
+      if (node) observer.unobserve(node);
+      observer.disconnect();
+    };
+  }, [hasMore, fetchData]);
 
   const graphActions = (
     <>
@@ -102,7 +144,7 @@ const Git = ({ isActive = true }) => {
         </div>
       </Tooltip>
       <Tooltip label="새로 고침" position="bottom" group="git-actions">
-        <div className={sideIconBg} onClick={() => fetchData()}>
+        <div className={sideIconBg} onClick={() => fetchData(true)}>
           <Codicon name="refresh" size={16} />
         </div>
       </Tooltip>
@@ -117,7 +159,7 @@ const Git = ({ isActive = true }) => {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <Section title="변경 내용" defaultOpen={true}>
-        <div className="flex flex-col pl-[22px] pr-[11px]">
+        <div className="flex flex-col pl-[19.4px] pr-[11px]">
           <div className="mt-1.5">
             <SearchInput
               ref={inputRef}
@@ -169,6 +211,7 @@ const Git = ({ isActive = true }) => {
               </span>
             </div>
           ))}
+          {hasMore && <div ref={sentinelRef} className="h-1 w-full shrink-0" />}
         </div>
       </Section>
     </div>
