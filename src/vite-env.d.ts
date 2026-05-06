@@ -6,9 +6,7 @@ declare module '*.module.css' {
 }
 
 interface ImportMetaEnv {
-  readonly VITE_MAILJS_SERVICE_ID: string
-  readonly VITE_MAILJS_TEMPLATE_ID: string
-  readonly VITE_MAILJS_PUBLIC_KEY: string
+  readonly VITE_FORMSUBMIT_EMAIL: string
 }
 
 interface ImportMeta {

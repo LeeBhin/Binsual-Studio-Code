@@ -1,80 +1,85 @@
-import emailjs from "emailjs-com";
 import { useState, useEffect, useRef } from "react";
+import SearchInput from "../../SearchInput";
+import CommitButton from "../../CommitButton";
 
-const Mail = () => {
+const Mail = ({ isActive = true }) => {
   const [activate, setActivate] = useState(false);
+  const [fromName, setFromName] = useState("");
+  const [message, setMessage] = useState("");
   const inputRef = useRef(null);
-  const msgRef = useRef(null);
 
-  const handleInputChange = (e) => {
-    const { from_name, message } = e.target.form;
-    const isFormValid =
-      from_name.value.trim() !== "" && message.value.trim() !== "";
-    setActivate(isFormValid);
+  const handleChange = (setter) => (e) => {
+    setter(e.target.value);
   };
 
   useEffect(() => {
-    inputRef.current.focus();
-  }, []);
+    setActivate(fromName.trim() !== "" && message.trim() !== "");
+  }, [fromName, message]);
 
-  const sendEmail = (e) => {
+  useEffect(() => {
+    if (isActive) inputRef.current?.focus();
+  }, [isActive]);
+
+  const sendEmail = async (e) => {
     e.preventDefault();
-
     setActivate(false);
 
-    emailjs
-      .sendForm(
-        import.meta.env.VITE_MAILJS_SERVICE_ID,
-        import.meta.env.VITE_MAILJS_TEMPLATE_ID,
-        e.target,
-        import.meta.env.VITE_MAILJS_PUBLIC_KEY
-      )
-      .then(
-        () => {
-          inputRef.current.value = "";
-          msgRef.current.value = "";
-
-          alert("성공적으로 전송되었습니다.");
-        },
-        (error) => {
-          alert(`전송에 실패하였습니다: ${error.text}`);
+    try {
+      const res = await fetch(
+        `https://formsubmit.co/ajax/${import.meta.env.VITE_FORMSUBMIT_EMAIL}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            name: fromName,
+            message,
+            _subject: "포트폴리오 메일",
+            _captcha: "false",
+          }),
         }
       );
-  };
 
-  const inputCls =
-    "w-[calc(100%-15px)] rounded-sm bg-[var(--input)] border border-[var(--border-2)] text-[var(--text)] text-[13px] px-[5px] py-[5px] outline-none truncate focus:border-[var(--accent)]";
-  const submitCls =
-    "w-[calc(100%-15px)] py-1 rounded-md border-none bg-[var(--accent)] hover:bg-[var(--accent-hover)] text-white text-[13px] cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed";
+      const data = await res.json();
+      if (data.success === "true" || data.success === true) {
+        setFromName("");
+        setMessage("");
+        alert("성공적으로 전송되었습니다.");
+      } else {
+        alert(`전송에 실패하였습니다: ${data.message ?? "unknown"}`);
+      }
+    } catch (error) {
+      alert(`전송에 실패하였습니다: ${error.message}`);
+    }
+  };
 
   return (
     <div className="w-full">
       <form
         onSubmit={sendEmail}
-        className="mt-1.5 w-full flex flex-col items-center gap-2.5"
+        className="pt-1.5 pl-[20px] pr-[11px] flex flex-col gap-2.5"
       >
-        <input
-          type="text"
-          name="from_name"
-          className={inputCls}
-          autoComplete="off"
-          placeholder="발신자 메일 입력"
+        <SearchInput
           ref={inputRef}
-          onChange={handleInputChange}
+          placeholder="발신자 메일 입력"
+          value={fromName}
+          onChange={handleChange(setFromName)}
         />
 
-        <input
-          name="message"
-          className={inputCls}
-          autoComplete="off"
+        <SearchInput
           placeholder="메시지 내용 입력"
-          ref={msgRef}
-          onChange={handleInputChange}
+          value={message}
+          onChange={handleChange(setMessage)}
         />
 
-        <button type="submit" className={submitCls} disabled={!activate}>
-          전송
-        </button>
+        <CommitButton
+          label="전송"
+          disabled={!activate}
+          onClick={sendEmail}
+          className="w-full rounded-sm"
+        />
       </form>
     </div>
   );

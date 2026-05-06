@@ -1,13 +1,13 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import treeData from "../../data/treeData";
 import TreeNode from "./TreeNode";
 import { useHistory } from "../../store/history";
 
-const FolderTree = () => {
+const FolderTree = ({ isOpen: controlledIsOpen, setIsOpen: controlledSetIsOpen, grow = 1 }) => {
   const [activeNode, setActiveNode] = useState(null);
-  const trackRef = useRef();
-  const sliderRef = useRef();
-  const scrollAreaRef = useRef();
+  const [internalOpen, setInternalOpen] = useState(true);
+  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalOpen;
+  const setIsOpen = controlledSetIsOpen !== undefined ? controlledSetIsOpen : setInternalOpen;
   const startLink = useHistory((s) => s.startLink);
 
   useEffect(() => {
@@ -15,110 +15,21 @@ const FolderTree = () => {
   }, [startLink]);
 
   useEffect(() => {
-    const track = trackRef.current;
-    const slider = sliderRef.current;
-    const scrollArea = scrollAreaRef.current;
-
-    if (!track || !slider || !scrollArea) return;
-
-    const updateScrollbar = () => {
-      const { scrollHeight, clientHeight } = scrollArea;
-
-      if (scrollHeight <= clientHeight) {
-        track.style.display = "none";
-        return;
-      }
-
-      track.style.display = "block";
-
-      const scrollRatio = clientHeight / scrollHeight;
-      const sliderHeight = Math.max(track.clientHeight * scrollRatio, 30);
-      slider.style.height = `${sliderHeight}px`;
-
-      const scrollTop = scrollArea.scrollTop;
-      const maxScrollTop = scrollHeight - clientHeight;
-      const maxSliderTop = track.clientHeight - sliderHeight;
-      const sliderTop = (scrollTop / maxScrollTop) * maxSliderTop;
-      slider.style.top = `${sliderTop}px`;
-    };
-
-    const handleScroll = () => updateScrollbar();
-
-    let isDragging = false;
-    let startY = 0;
-    let startScrollTop = 0;
-
-    const handleMouseDown = (e) => {
-      isDragging = true;
-      startY = e.clientY;
-      startScrollTop = scrollArea.scrollTop;
-      document.body.style.userSelect = "none";
-    };
-
-    const handleMouseMove = (e) => {
-      if (!isDragging) return;
-
-      const delta = e.clientY - startY;
-      const { scrollHeight, clientHeight } = scrollArea;
-      const maxScrollTop = scrollHeight - clientHeight;
-      const maxSliderTop = track.clientHeight - slider.clientHeight;
-      const scrollRatio = maxScrollTop / maxSliderTop;
-
-      scrollArea.scrollTop = startScrollTop + delta * scrollRatio;
-    };
-
-    const handleMouseUp = () => {
-      isDragging = false;
-      document.body.style.userSelect = "";
-    };
-
-    const handleTrackClick = (e) => {
-      if (e.target === slider) return;
-
-      const trackRect = track.getBoundingClientRect();
-      const clickPosition = e.clientY - trackRect.top;
-      const sliderHeight = slider.offsetHeight;
-      const maxSliderTop = track.clientHeight - sliderHeight;
-      const boundedSliderTop = Math.max(
-        0,
-        Math.min(clickPosition - sliderHeight / 2, maxSliderTop)
-      );
-
-      const scrollRatio = boundedSliderTop / maxSliderTop;
-      const maxScrollTop = scrollArea.scrollHeight - scrollArea.clientHeight;
-
-      scrollArea.scrollTop = scrollRatio * maxScrollTop;
-    };
-
-    const handleScrollAreaMouseUp = () => {
-      requestAnimationFrame(updateScrollbar);
-    };
-
-    const resizeObserver = new ResizeObserver(updateScrollbar);
-    resizeObserver.observe(scrollArea);
-
-    scrollArea.addEventListener("mouseup", handleScrollAreaMouseUp);
-    scrollArea.addEventListener("scroll", handleScroll);
-    slider.addEventListener("mousedown", handleMouseDown);
-    track.addEventListener("mousedown", handleTrackClick);
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", handleMouseUp);
-
-    updateScrollbar();
-
-    return () => {
-      resizeObserver.disconnect();
-      scrollArea.removeEventListener("mouseup", handleScrollAreaMouseUp);
-      scrollArea.removeEventListener("scroll", handleScroll);
-      slider.removeEventListener("mousedown", handleMouseDown);
-      track.removeEventListener("mousedown", handleTrackClick);
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, []);
+    if (startLink.length < 1) return;
+    setIsOpen(true);
+  }, [startLink]);
 
   return (
-    <div className="text-[13px] relative group/tree">
+    <div
+      className="text-[13px] flex flex-col overflow-hidden"
+      style={{
+        flexGrow: isOpen ? grow : 0,
+        flexBasis: 0,
+        flexShrink: 0,
+        minHeight: 22,
+        transition: "flex-grow 0.16s linear",
+      }}
+    >
       {Object.keys(treeData).map((key) => (
         <TreeNode
           key={key}
@@ -126,20 +37,12 @@ const FolderTree = () => {
           children={treeData[key]}
           isFile={false}
           depth={0}
-          scrollref={scrollAreaRef}
           activeNode={activeNode}
           setActiveNode={setActiveNode}
+          isOpenProp={isOpen}
+          setIsOpenProp={setIsOpen}
         />
       ))}
-      <div
-        className="absolute top-[22px] right-0 w-2.5 h-[calc(100%-30px)]"
-        ref={trackRef}
-      >
-        <div
-          className="w-full absolute z-[1] max-h-[calc(100%-30px)] transition-[background-color] duration-[1.3s] group-hover/tree:bg-[var(--scrollbar)] group-hover/tree:duration-300 hover:!bg-[var(--scrollbar-hover)] hover:!transition-none active:!bg-[var(--scrollbar-active)] active:!transition-none"
-          ref={sliderRef}
-        />
-      </div>
     </div>
   );
 };

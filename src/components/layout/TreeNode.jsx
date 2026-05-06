@@ -7,6 +7,7 @@ import {
 import Icons from "../../assets/icons";
 import FileIcon from "../FileIcon";
 import Codicon from "../Codicon";
+import CustomScrollbar from "../CustomScrollbar";
 import Tooltip from "../Tooltip";
 import {
   useHistory,
@@ -55,10 +56,11 @@ const TreeNode = ({
   isFile,
   extension,
   depth,
-  scrollref,
   activeNode,
   setActiveNode,
   path = name,
+  isOpenProp,
+  setIsOpenProp,
 }) => {
   const sidebarRef = useRef(null);
   const activeFile = useHistory((s) => s.activeFile);
@@ -68,14 +70,18 @@ const TreeNode = ({
   const focusedFile = win?.focusedFile ?? "";
   const history = win?.history ?? [];
   const isCurrentActive = win?.isCurrentActive;
-  const [isOpen, setIsOpen] = useState(
-    name === "LEE BHIN" || startLink.includes(name)
+  const isLeebhin = name === "LEE-BHIN";
+  const [isOpenInternal, setIsOpenInternal] = useState(
+    isLeebhin || startLink.includes(name)
   );
+  const isOpen = isLeebhin && isOpenProp !== undefined ? isOpenProp : isOpenInternal;
+  const setIsOpen = isLeebhin && setIsOpenProp ? setIsOpenProp : setIsOpenInternal;
 
   useEffect(() => {
+    if (isLeebhin) return;
     if (startLink.length < 1) return;
-    setIsOpen(name === "LEE BHIN" || startLink.includes(name));
-  }, [startLink, name]);
+    setIsOpenInternal(startLink.includes(name));
+  }, [startLink, name, isLeebhin]);
 
   const handleClickOutside = (event) => {
     if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
@@ -199,12 +205,12 @@ const TreeNode = ({
   return (
     <div
       className={`overflow-hidden group/wrap ${
-        name === "LEE BHIN" ? "group/root" : ""
+        isLeebhin ? "group/root flex flex-col flex-1 min-h-0" : ""
       }`}
-      ref={name === "LEE BHIN" ? sidebarRef : null}
+      ref={isLeebhin ? sidebarRef : null}
     >
       <div
-        className="cursor-pointer flex items-center h-[22px] relative"
+        className="cursor-pointer flex items-center h-[22px] relative shrink-0"
         onClick={handleClick}
       >
         {isFile ? (
@@ -248,34 +254,46 @@ const TreeNode = ({
         ) : (
           <div
             style={
-              name === "LEE BHIN" ? { background: "none" } : wrapStyle
+              isLeebhin
+                ? isActive
+                  ? { boxShadow: "0 0 0 1px var(--accent) inset" }
+                  : { background: "none" }
+                : wrapStyle
             }
-            className="h-[22px] w-full hover:bg-[var(--hover)]"
+            className={`h-[22px] w-full ${isLeebhin ? "" : "hover:bg-[var(--hover)]"}`}
             onClick={() => setActiveNode({ path, name, depth, isFile, isOpen })}
           >
             <div
               className="flex items-center gap-1.5 h-[22px] leading-none relative w-full pr-0.5"
               style={{
                 paddingLeft:
-                  name === "LEE BHIN"
+                  isLeebhin
                     ? "1px"
                     : `${depth * FOLDER_PADDING_PX}px`,
               }}
             >
-              {name === "LEE BHIN" ? (
+              {isLeebhin ? (
                 <>
                   {isOpen ? (
                     <div>
                       <VscChevronDown
-                        className="text-base -mr-1"
-                        style={{ paddingLeft: "1px" }}
+                        className="text-[17px] -mr-1"
+                        style={{
+                          paddingLeft: "1px",
+                          stroke: "currentColor",
+                          strokeWidth: 0.5,
+                        }}
                       />
                     </div>
                   ) : (
                     <div>
                       <VscChevronRight
-                        className="text-base -mr-1"
-                        style={{ paddingLeft: "1px" }}
+                        className="text-[17px] -mr-1"
+                        style={{
+                          paddingLeft: "1px",
+                          stroke: "currentColor",
+                          strokeWidth: 0.5,
+                        }}
                       />
                     </div>
                   )}
@@ -292,7 +310,10 @@ const TreeNode = ({
                   {isOpen ? (
                     <>
                       <div>
-                        <VscChevronDown className="text-base -mr-1" />
+                        <VscChevronDown
+                          className="text-[17px] -mr-1"
+                          style={{ stroke: "currentColor", strokeWidth: 0.5 }}
+                        />
                       </div>
                       <div>
                         {name === "images" ? (
@@ -305,7 +326,10 @@ const TreeNode = ({
                   ) : (
                     <>
                       <div>
-                        <VscChevronRight className="text-base -mr-1" />
+                        <VscChevronRight
+                          className="text-[17px] -mr-1"
+                          style={{ stroke: "currentColor", strokeWidth: 0.5 }}
+                        />
                       </div>
                       <div>
                         {name === "images" ? (
@@ -321,11 +345,11 @@ const TreeNode = ({
               <span
                 className="overflow-hidden"
                 style={
-                  name === "LEE BHIN"
+                  isLeebhin
                     ? {
                         width: "100%",
                         fontWeight: "bold",
-                        fontSize: "12px",
+                        fontSize: "11px",
                         display: "flex",
                         justifyContent: "space-between",
                       }
@@ -335,7 +359,7 @@ const TreeNode = ({
                 <div
                   className="w-full h-[22px] leading-[22px] truncate group/name"
                   style={
-                    name === "LEE BHIN"
+                    isLeebhin
                       ? {
                           width: "100%",
                           display: "flex",
@@ -345,9 +369,13 @@ const TreeNode = ({
                   }
                 >
                   <div className="truncate w-full">{name}</div>
-                  {name === "LEE BHIN" && (
+                  {isLeebhin && (
                     <div
-                      className="flex items-center text-base gap-[3px] pr-[3px] opacity-0 pointer-events-none group-hover/root:opacity-100 group-hover/root:pointer-events-auto"
+                      className={`flex items-center text-base gap-[3px] pr-[3px] opacity-0 pointer-events-none ${
+                        isOpen
+                          ? "group-hover/root:opacity-100 group-hover/root:pointer-events-auto"
+                          : ""
+                      }`}
                       onClick={(e) => e.stopPropagation()}
                     >
                       <Tooltip label="새 파일..." position="bottom" group="explorer-actions">
@@ -379,40 +407,48 @@ const TreeNode = ({
         )}
       </div>
 
-      <div
-        className="overflow-x-hidden [&::-webkit-scrollbar]:hidden group-hover/wrap:[&::-webkit-scrollbar-thumb]:bg-[var(--scrollbar-hover)]"
-        ref={name === "LEE BHIN" ? scrollref : null}
-        style={
-          name === "LEE BHIN"
-            ? {
-                display: isOpen ? "block" : "none",
-                overflowY: "auto",
-                maxHeight: "calc(100vh - 106px)",
-                height: "auto",
-                position: "relative",
-              }
-            : {
-                display: isOpen ? "block" : "none",
-              }
-        }
-      >
-        {!isFile &&
-          Object.keys(children).map((key) => (
-            <TreeNode
-              key={key}
-              name={key}
-              children={children[key]}
-              isFile={typeof children[key] !== "object"}
-              extension={
-                typeof children[key] !== "object" ? getExtension(key) : null
-              }
-              depth={depth + 1}
-              activeNode={activeNode}
-              setActiveNode={setActiveNode}
-              path={`${path}/${key}`}
-            />
-          ))}
-      </div>
+      {isLeebhin ? (
+        <CustomScrollbar style={{ flex: "1 1 0" }}>
+          {!isFile &&
+            Object.keys(children).map((key) => (
+              <TreeNode
+                key={key}
+                name={key}
+                children={children[key]}
+                isFile={typeof children[key] !== "object"}
+                extension={
+                  typeof children[key] !== "object" ? getExtension(key) : null
+                }
+                depth={depth + 1}
+                activeNode={activeNode}
+                setActiveNode={setActiveNode}
+                path={`${path}/${key}`}
+              />
+            ))}
+        </CustomScrollbar>
+      ) : (
+        <div
+          className="overflow-x-hidden"
+          style={{ display: isOpen ? "block" : "none" }}
+        >
+          {!isFile &&
+            Object.keys(children).map((key) => (
+              <TreeNode
+                key={key}
+                name={key}
+                children={children[key]}
+                isFile={typeof children[key] !== "object"}
+                extension={
+                  typeof children[key] !== "object" ? getExtension(key) : null
+                }
+                depth={depth + 1}
+                activeNode={activeNode}
+                setActiveNode={setActiveNode}
+                path={`${path}/${key}`}
+              />
+            ))}
+        </div>
+      )}
     </div>
   );
 };

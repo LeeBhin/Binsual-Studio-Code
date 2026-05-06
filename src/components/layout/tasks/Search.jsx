@@ -28,7 +28,7 @@ const cls = {
     "flex justify-center items-center cursor-pointer w-5 h-[22px] rounded-[3px] shrink-0 hover:bg-[var(--hover-soft)]",
 };
 
-const Search = () => {
+const Search = ({ isActive: tabIsActive = true }) => {
   const [isActive, setIsActive] = useState(false);
   const [isReplaceOpen, setIsReplaceOpen] = useState(false);
   const [results, setResults] = useState({});
@@ -47,16 +47,13 @@ const Search = () => {
   const includeRef = useRef(null);
 
   useEffect(() => {
-    searchRef.current.focus();
-  }, []);
-
-  useEffect(() => {
+    if (!tabIsActive) return;
     if (isActive) {
-      includeRef.current.focus();
+      includeRef.current?.focus();
     } else {
-      searchRef.current.focus();
+      searchRef.current?.focus();
     }
-  }, [isActive]);
+  }, [tabIsActive, isActive]);
 
   const toggleSearchOption = (option) => {
     setSearchOptions((prev) => ({
@@ -240,7 +237,7 @@ const Search = () => {
             </div>
 
             {isReplaceOpen && (
-              <div className="flex items-center gap-0.5">
+              <div className="flex items-center gap-0.5 mt-px">
                 <div className="relative flex-1 flex items-center min-w-0">
                   <input
                     type="text"
@@ -269,7 +266,7 @@ const Search = () => {
         </div>
 
         <div className="pl-[18px]">
-          <div className="flex justify-end mt-[0.5px]">
+          <div className="flex justify-end mt-[1.5px]">
             <Tooltip label="검색 세부 정보 설정/해제">
               <div
                 className="flex justify-center items-center cursor-pointer w-5 h-[12px] shrink-0"
@@ -281,9 +278,9 @@ const Search = () => {
           </div>
 
           {isActive && (
-            <div className="text-[var(--text)] text-[11.5px] -mt-[7px]">
+            <div className="text-[var(--text)] text-[11.5px] -mt-[6px]">
               <div>
-                <span className="pl-[2px] mb-[1px] block leading-tight">포함할 파일</span>
+                <span className="pl-[2px] mb-[2px] block leading-tight">포함할 파일</span>
                 <div className="relative flex items-center min-w-0">
                   <input
                     type="text"
@@ -302,8 +299,8 @@ const Search = () => {
                   </div>
                 </div>
               </div>
-              <div className="mt-1">
-                <span className="pl-[2px] mb-[1px] block leading-tight">제외할 파일</span>
+              <div className="mt-[5.5px]">
+                <span className="pl-[2px] mb-[2px] block leading-tight">제외할 파일</span>
                 <div className="relative flex items-center min-w-0">
                   <input
                     type="text"
