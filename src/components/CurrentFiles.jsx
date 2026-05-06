@@ -1,5 +1,5 @@
 import FileTab from "./FileTab";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   useHistory,
   addWindow,
@@ -7,12 +7,19 @@ import {
   setFileSplit,
   setFocusedFile,
 } from "../store/history";
-import { VscEllipsis, VscSplitHorizontal } from "react-icons/vsc";
+import { VscSplitHorizontal, VscSplitVertical } from "react-icons/vsc";
+import Tooltip from "./Tooltip";
+import EllipsisDots from "./EllipsisDots";
+
+const ICON_COLOR = "#CCCCCC";
+const SPLIT_COLOR = "rgb(196, 196, 196)";
 
 const CurrentFiles = ({ isActive, fileIndex }) => {
   const trackRef = useRef();
   const sliderRef = useRef();
   const scrollAreaRef = useRef();
+  const [splitHover, setSplitHover] = useState(false);
+  const [shiftDown, setShiftDown] = useState(false);
 
   const fileSplit = useHistory((s) => s.fileSplit);
   const activeFile = useHistory((s) => s.activeFile);
@@ -161,8 +168,30 @@ const CurrentFiles = ({ isActive, fileIndex }) => {
     };
   }, [currentFiles, focusedFile, activeFile]);
 
+  useEffect(() => {
+    if (!splitHover) return;
+    const onKeyDown = (e) => {
+      if (e.key === "Shift") setShiftDown(true);
+    };
+    const onKeyUp = (e) => {
+      if (e.key === "Shift") setShiftDown(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("keyup", onKeyUp);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("keyup", onKeyUp);
+      setShiftDown(false);
+    };
+  }, [splitHover]);
+
   const iconBg =
     "w-[22px] h-[22px] rounded-[5px] flex justify-center items-center cursor-pointer hover:bg-[var(--hover)]";
+
+  const splitDown = splitHover && shiftDown;
+  const splitTooltip = splitDown
+    ? "편집기를 아래로 분할"
+    : "편집기를 오른쪽으로 분할(Ctrl+\\) [<Alt>] 편집기를 아래로 분할";
 
   return (
     <div className="relative group/scrollarea">
@@ -178,24 +207,42 @@ const CurrentFiles = ({ isActive, fileIndex }) => {
             fileIndex={fileIndex}
           />
         ))}
-        <div className="flex-1 pl-[3px] flex items-center justify-end text-[var(--text)] text-base">
+        <div
+          className="flex-1 pl-[3px] flex items-center justify-end text-base"
+          style={{ color: ICON_COLOR }}
+        >
           <div className="flex items-center justify-end gap-[5px] mr-2.5">
             {isActive && (
-              <div
-                className={iconBg}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setFileSplit([...fileSplit, fileSplit.length]);
-                  addWindow(fileSplit.length);
-                  setActiveFile(fileIndex + 1);
-                }}
+              <Tooltip
+                label={splitTooltip}
+                position="bottom"
+                group="tabs-right"
+                maxWidth={splitDown ? null : 220}
               >
-                <VscSplitHorizontal />
-              </div>
+                <div
+                  className={iconBg}
+                  style={{ color: SPLIT_COLOR }}
+                  onMouseEnter={(e) => {
+                    setSplitHover(true);
+                    if (e.shiftKey) setShiftDown(true);
+                  }}
+                  onMouseLeave={() => setSplitHover(false)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setFileSplit([...fileSplit, fileSplit.length]);
+                    addWindow(fileSplit.length);
+                    setActiveFile(fileIndex + 1);
+                  }}
+                >
+                  {splitDown ? <VscSplitVertical /> : <VscSplitHorizontal />}
+                </div>
+              </Tooltip>
             )}
-            <div className={iconBg}>
-              <VscEllipsis />
-            </div>
+            <Tooltip label="기타 작업..." position="bottom" group="tabs-right">
+              <div className={iconBg} style={{ color: SPLIT_COLOR }}>
+                <EllipsisDots />
+              </div>
+            </Tooltip>
           </div>
         </div>
       </div>

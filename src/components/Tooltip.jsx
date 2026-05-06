@@ -7,7 +7,7 @@ let pendingHideFn = null;
 let pendingHideGroup = null;
 let pendingHideTimer = null;
 
-const Tooltip = ({ label, children, position = "top", group = null }) => {
+const Tooltip = ({ label, children, position = "top", group = null, maxWidth = null, className = "" }) => {
   const [show, setShow] = useState(false);
   const showTimer = useRef(null);
   const hideRef = useRef(null);
@@ -56,10 +56,54 @@ const Tooltip = ({ label, children, position = "top", group = null }) => {
     if (!show || !bubbleRef.current || !wrapRef.current) return;
     const PAD = 4;
     const TAIL_GAP = 0;
+
+    const bubble = bubbleRef.current;
+    bubble.style.width = "";
+
+    const clone = bubble.cloneNode(true);
+    clone.style.left = "0px";
+    clone.style.top = "0px";
+    clone.style.visibility = "hidden";
+    clone.style.width = "";
+    document.body.appendChild(clone);
+
+    let targetW = clone.offsetWidth;
+    if (maxWidth) {
+      const textNode = clone.firstChild;
+      if (textNode && textNode.nodeType === 3) {
+        const range = document.createRange();
+        range.selectNodeContents(textNode);
+        const rects = range.getClientRects();
+        const origLines = rects.length;
+        let longest = 0;
+        for (let i = 0; i < rects.length; i++) {
+          if (rects[i].width > longest) longest = rects[i].width;
+        }
+        if (longest > 0) {
+          let w = Math.ceil(longest) + 18;
+          clone.style.width = `${w}px`;
+          let attempts = 0;
+          while (attempts < 12) {
+            const r = document.createRange();
+            r.selectNodeContents(textNode);
+            if (r.getClientRects().length <= origLines) break;
+            w += 1;
+            clone.style.width = `${w}px`;
+            attempts++;
+          }
+          targetW = w;
+        }
+      }
+    }
+    const targetH = clone.offsetHeight;
+    document.body.removeChild(clone);
+
+    bubble.style.width = `${targetW}px`;
+
     const wrapRect = wrapRef.current.getBoundingClientRect();
     const wrapCenter = wrapRect.left + wrapRect.width / 2;
-    const bubbleW = bubbleRef.current.offsetWidth;
-    const bubbleH = bubbleRef.current.offsetHeight;
+    const bubbleW = targetW;
+    const bubbleH = targetH;
     const winW = window.innerWidth;
     const winH = window.innerHeight;
 
@@ -81,7 +125,7 @@ const Tooltip = ({ label, children, position = "top", group = null }) => {
     const tailLeft = wrapCenter - left;
 
     setPos({ placement, left, top, tailLeft });
-  }, [show, position, label]);
+  }, [show, position, label, maxWidth]);
 
   const onEnter = () => {
     if (pendingHideFn === hideRef) {
@@ -134,13 +178,16 @@ const Tooltip = ({ label, children, position = "top", group = null }) => {
   const bubble = (
     <span
       ref={bubbleRef}
-      className="fixed px-2 py-1 rounded-sm whitespace-nowrap text-[12px] text-[#CCCCCC] pointer-events-none z-[1000]"
+      className={`fixed px-[6px] py-[2px] rounded-sm text-[12px] text-[#CCCCCC] pointer-events-none z-[1000] ${
+        maxWidth ? "whitespace-normal break-words" : "whitespace-nowrap"
+      }`}
       style={{
         top: pos.top,
         left: pos.left,
         background: "#252526",
         border: "1px solid #4A4A4A",
         boxShadow: "0 0 3px rgba(0, 0, 0, 0.35)",
+        ...(maxWidth ? { maxWidth } : {}),
       }}
     >
       {label}
@@ -192,7 +239,7 @@ const Tooltip = ({ label, children, position = "top", group = null }) => {
   return (
     <span
       ref={wrapRef}
-      className="relative inline-flex"
+      className={`relative inline-flex ${className}`}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}
     >
