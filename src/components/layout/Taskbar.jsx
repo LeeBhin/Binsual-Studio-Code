@@ -52,8 +52,8 @@ const Taskbar = () => {
             onClick={() => handleClick(id)}
             style={
               focusedTask === id && isLayoutActive.isActive
-                ? { color: "var(--text)", borderLeft: "solid 2px var(--text-strong)" }
-                : { borderLeft: "solid 2px transparent" }
+                ? { color: "var(--text)", borderLeft: "solid 1px var(--text-strong)" }
+                : { borderLeft: "solid 1px transparent" }
             }
           >
             <Codicon name={name} size={24} style={{ marginRight: "2px" }} />
