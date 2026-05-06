@@ -1,7 +1,7 @@
 import about from "./files/about/about";
 
 const treeData = {
-    'LEE BHIN': {
+    'LEE-BHIN': {
         about: {
             'introduction.json': about.introduction,
             'picture.png': 'png',
@@ -109,7 +109,9 @@ const treeData = {
             GTQ: {
                 'GTQ-1급.psd': 'null',
             },
-            'AICE-certificate-basic.md': 'null',
+            AICE: {
+                'AICE-certificate-basic.md': 'null',
+            },
         },
         activites: {
             awards: {

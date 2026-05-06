@@ -60,9 +60,9 @@ interface HistoryActions {
 const initialState: HistoryState = {
   windows: {
     0: {
-      currentFiles: [{ pinned: false, path: 'LEE BHIN/시작.vs' }],
+      currentFiles: [{ pinned: false, path: 'LEE-BHIN/시작.vs' }],
       history: [],
-      focusedFile: 'LEE BHIN/시작.vs',
+      focusedFile: 'LEE-BHIN/시작.vs',
       isCurrentActive: {},
     },
   },

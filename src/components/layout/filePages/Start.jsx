@@ -31,19 +31,19 @@ const Start = () => {
   const handleStartClick = (target) => {
     switch (target) {
       case "profile":
-        setStartLink(["LEE BHIN", "about", "introduction.json"]);
+        setStartLink(["LEE-BHIN", "about", "introduction.json"]);
         break;
       case "skill":
-        setStartLink(["LEE BHIN", "skills", "detail"]);
+        setStartLink(["LEE-BHIN", "skills", "detail"]);
         break;
       case "certification":
-        setStartLink(["LEE BHIN", "certifications"]);
+        setStartLink(["LEE-BHIN", "certifications"]);
         break;
       case "project":
-        setStartLink(["LEE BHIN", "projects"]);
+        setStartLink(["LEE-BHIN", "projects"]);
         break;
       case "contact":
-        setStartLink(["LEE BHIN", "contact"]);
+        setStartLink(["LEE-BHIN", "contact"]);
         break;
 
       default:
@@ -66,7 +66,7 @@ const Start = () => {
           <h1 className="text-[#CDCDCD] text-[35px] font-normal leading-none">
             Binsual Studio Code
           </h1>
-          <h1 className="text-[#989898] text-[22px] font-normal leading-none mt-[1px]">
+          <h1 className="text-[#989898] text-[22px] font-normal leading-none mt-[3px]">
             실력 향상 중
           </h1>
         </div>

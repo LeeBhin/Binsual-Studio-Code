@@ -78,7 +78,7 @@ const FileTab = ({ fileName, filePath, fileIndex }) => {
   };
 
   const getUpPath = (filePath) => {
-    if (filePath.startsWith(`LEE BHIN/${fileName}`)) {
+    if (filePath.startsWith(`LEE-BHIN/${fileName}`)) {
       return filePath.split("/").slice(0)[0];
     } else {
       return `...\\${filePath.split("/").slice(-2, -1)[0]}`;
