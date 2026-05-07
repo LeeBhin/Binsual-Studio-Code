@@ -1,10 +1,5 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  VscChevronDown,
-  VscChevronRight,
-  VscBlank,
-} from "react-icons/vsc";
-import Icons from "../../assets/icons";
+import React, { useEffect, useState } from "react";
+import { VscChevronDown, VscChevronRight } from "react-icons/vsc";
 import FileIcon from "../FileIcon";
 import Codicon from "../Codicon";
 import CustomScrollbar from "../CustomScrollbar";
@@ -22,11 +17,11 @@ const sideIconBg =
   "w-5 h-5 rounded-[5px] flex justify-center items-center cursor-pointer hover:bg-[var(--hover)]";
 
 // indent guide 위치 상수 — 파일/폴더 두 군데에서 동일하게 사용
-const FILE_PADDING_PX = 8; // depth × 이 값 = 파일 노드 paddingLeft
+const FILE_PADDING_PX = 9; // 부모 폴더 chevron(17px) 중앙에 파일 왼쪽 끝이 맞도록
 const FOLDER_PADDING_PX = 8.9; // depth × 이 값 = 폴더 노드 paddingLeft (chevron 정렬 보정)
-const FILE_GUIDE_LEFT = 14;
+const FILE_GUIDE_LEFT = 15;
 const FILE_GUIDE_GAP = 8;
-const FOLDER_GUIDE_LEFT = 17;
+const FOLDER_GUIDE_LEFT = 18;
 const FOLDER_GUIDE_GAP = 11;
 const FOLDER_GUIDE_OFFSET = 3;
 
@@ -62,7 +57,6 @@ const TreeNode = ({
   isOpenProp,
   setIsOpenProp,
 }) => {
-  const sidebarRef = useRef(null);
   const activeFile = useHistory((s) => s.activeFile);
   const startLink = useHistory((s) => s.startLink);
   const win = useHistory((s) => s.windows[activeFile]);
@@ -82,20 +76,6 @@ const TreeNode = ({
     if (startLink.length < 1) return;
     setIsOpenInternal(startLink.includes(name));
   }, [startLink, name, isLeebhin]);
-
-  const handleClickOutside = (event) => {
-    if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
-      setActiveNode();
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   const handleClick = () => {
     if (name === "") return;
@@ -207,7 +187,6 @@ const TreeNode = ({
       className={`overflow-hidden group/wrap ${
         isLeebhin ? "group/root flex flex-col flex-1 min-h-0" : ""
       }`}
-      ref={isLeebhin ? sidebarRef : null}
     >
       <div
         className="cursor-pointer flex items-center h-[22px] relative shrink-0"
@@ -232,17 +211,14 @@ const TreeNode = ({
           >
             <div
               className="flex items-center gap-1.5 h-[22px] leading-none relative w-full pr-0.5"
-              style={{ paddingLeft: `${depth * FILE_PADDING_PX}px` }}
+              style={{ paddingLeft: `${(depth - 1) * FOLDER_PADDING_PX + FILE_PADDING_PX}px` }}
             >
-              <div className="flex items-center h-[22px]">
-                <IndentGuides
-                  depth={depth}
-                  leftPx={FILE_GUIDE_LEFT}
-                  gapPx={FILE_GUIDE_GAP}
-                  isActive={(i) => isActiveFile(activeNode, path, i, depth)}
-                />
-                <VscBlank style={{ marginRight: "-1px" }} />
-              </div>
+              <IndentGuides
+                depth={depth}
+                leftPx={FILE_GUIDE_LEFT}
+                gapPx={FILE_GUIDE_GAP}
+                isActive={(i) => isActiveFile(activeNode, path, i, depth)}
+              />
               <div className="flex items-center h-[22px]">
                 <FileIcon extension={extension} />
               </div>
@@ -277,7 +253,7 @@ const TreeNode = ({
                   {isOpen ? (
                     <div>
                       <VscChevronDown
-                        className="text-[17px] -mr-1"
+                        className="text-[17px] -mr-1 -mt-[2px]"
                         style={{
                           paddingLeft: "1px",
                           stroke: "currentColor",
@@ -288,7 +264,7 @@ const TreeNode = ({
                   ) : (
                     <div>
                       <VscChevronRight
-                        className="text-[17px] -mr-1"
+                        className="text-[17px] -mr-1 -mt-[2px]"
                         style={{
                           paddingLeft: "1px",
                           stroke: "currentColor",
@@ -308,37 +284,19 @@ const TreeNode = ({
                     isActive={(i) => isActiveFile(activeNode, path, i, depth)}
                   />
                   {isOpen ? (
-                    <>
-                      <div>
-                        <VscChevronDown
-                          className="text-[17px] -mr-1"
-                          style={{ stroke: "currentColor", strokeWidth: 0.5 }}
-                        />
-                      </div>
-                      <div>
-                        {name === "images" ? (
-                          <Icons.FolderImagesOpen />
-                        ) : (
-                          <Icons.FolderOpen />
-                        )}
-                      </div>
-                    </>
+                    <div>
+                      <VscChevronDown
+                        className="text-[17px] -mr-1 -mt-[2px]"
+                        style={{ stroke: "currentColor", strokeWidth: 0.5 }}
+                      />
+                    </div>
                   ) : (
-                    <>
-                      <div>
-                        <VscChevronRight
-                          className="text-[17px] -mr-1"
-                          style={{ stroke: "currentColor", strokeWidth: 0.5 }}
-                        />
-                      </div>
-                      <div>
-                        {name === "images" ? (
-                          <Icons.FolderImages />
-                        ) : (
-                          <Icons.Folder />
-                        )}
-                      </div>
-                    </>
+                    <div>
+                      <VscChevronRight
+                        className="text-[17px] -mr-1 -mt-[2px]"
+                        style={{ stroke: "currentColor", strokeWidth: 0.5 }}
+                      />
+                    </div>
                   )}
                 </>
               )}
@@ -409,22 +367,28 @@ const TreeNode = ({
 
       {isLeebhin ? (
         <CustomScrollbar style={{ flex: "1 1 0" }}>
-          {!isFile &&
-            Object.keys(children).map((key) => (
-              <TreeNode
-                key={key}
-                name={key}
-                children={children[key]}
-                isFile={typeof children[key] !== "object"}
-                extension={
-                  typeof children[key] !== "object" ? getExtension(key) : null
-                }
-                depth={depth + 1}
-                activeNode={activeNode}
-                setActiveNode={setActiveNode}
-                path={`${path}/${key}`}
-              />
-            ))}
+          <div className="flex flex-col min-h-full">
+            {!isFile &&
+              Object.keys(children).map((key) => (
+                <TreeNode
+                  key={key}
+                  name={key}
+                  children={children[key]}
+                  isFile={typeof children[key] !== "object"}
+                  extension={
+                    typeof children[key] !== "object" ? getExtension(key) : null
+                  }
+                  depth={depth + 1}
+                  activeNode={activeNode}
+                  setActiveNode={setActiveNode}
+                  path={`${path}/${key}`}
+                />
+              ))}
+            <div
+              className="flex-1 min-h-[1px]"
+              onClick={() => setActiveNode()}
+            />
+          </div>
         </CustomScrollbar>
       ) : (
         <div
