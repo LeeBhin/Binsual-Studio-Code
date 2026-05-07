@@ -56,17 +56,29 @@ const Taskbar = () => {
                 : { borderLeft: "solid 1px transparent" }
             }
           >
-            <Codicon name={name} size={24} style={{ marginRight: "2px" }} />
+            <Codicon
+              name={name}
+              size={24}
+              style={{ marginRight: "2px", WebkitTextStroke: "0.3px currentColor" }}
+            />
           </div>
         ))}
       </div>
 
       <div className="w-12 text-2xl flex flex-col items-center">
         <div className={taskCls}>
-          <Codicon name="account" size={24} />
+          <Codicon
+            name="account"
+            size={24}
+            style={{ WebkitTextStroke: "0.3px currentColor" }}
+          />
         </div>
         <div className={taskCls}>
-          <Codicon name="settings-gear" size={24} />
+          <Codicon
+            name="settings-gear"
+            size={24}
+            style={{ WebkitTextStroke: "0.3px currentColor" }}
+          />
         </div>
       </div>
     </div>

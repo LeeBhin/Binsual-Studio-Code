@@ -178,7 +178,7 @@ const Tooltip = ({ label, children, position = "top", group = null, maxWidth = n
   const bubble = (
     <span
       ref={bubbleRef}
-      className={`fixed px-[6px] py-[2px] rounded-sm text-[12px] text-[#CCCCCC] pointer-events-none z-[1000] ${
+      className={`fixed px-[7px] py-[2px] rounded-sm text-[12px] text-[#CCCCCC] pointer-events-none z-[1000] ${
         maxWidth ? "whitespace-normal break-words" : "whitespace-nowrap"
       }`}
       style={{

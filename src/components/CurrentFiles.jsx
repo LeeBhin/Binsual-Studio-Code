@@ -248,7 +248,7 @@ const CurrentFiles = ({ isActive, fileIndex }) => {
       </div>
       <div className="absolute bottom-0 right-0 w-full h-[3px]" ref={trackRef}>
         <div
-          className="h-full absolute z-[1] max-w-[calc(100%-30px)] transition-[background-color] duration-[1.3s] group-hover/scrollarea:bg-[var(--scrollbar)] group-hover/scrollarea:duration-300 hover:!bg-[var(--scrollbar-hover)] hover:!transition-none active:!bg-[var(--scrollbar-active)] active:!transition-none"
+          className="h-full absolute z-[1] max-w-[calc(100%-30px)] group-hover/scrollarea:bg-[var(--scrollbar)] hover:!bg-[var(--scrollbar-hover)] active:!bg-[var(--scrollbar-active)]"
           ref={sliderRef}
         />
       </div>

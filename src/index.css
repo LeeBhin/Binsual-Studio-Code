@@ -31,7 +31,7 @@
   --bg-titlebar: var(--titlebar);
 
   --hover: var(--titlebar);
-  --hover-2: color-mix(in srgb, var(--titlebar) 60%, transparent);
+  --hover-2: color-mix(in srgb, var(--titlebar) 55%, transparent);
   --hover-soft: color-mix(in srgb, var(--titlebar) 50%, transparent);
   --hover-banner: var(--panel);
   --hover-search: var(--titlebar);
@@ -51,9 +51,9 @@
   --accent-hover: color-mix(in srgb, var(--accent) 85%, white);
   --accent-soft: color-mix(in srgb, var(--accent) 75%, white);
 
-  --scrollbar: color-mix(in srgb, var(--text) 25%, transparent);
-  --scrollbar-hover: color-mix(in srgb, var(--text) 45%, transparent);
-  --scrollbar-active: color-mix(in srgb, var(--text) 65%, transparent);
+  --scrollbar: color-mix(in srgb, #5e5e5e 60%, transparent);
+  --scrollbar-hover: color-mix(in srgb, #5e5e5e 85%, transparent);
+  --scrollbar-active: color-mix(in srgb, #696969 100%, transparent);
 
   --highlight: color-mix(in srgb, var(--accent) 30%, transparent);
 
