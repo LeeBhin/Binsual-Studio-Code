@@ -3,9 +3,9 @@ import { Resizable } from "re-resizable";
 import EllipsisDots from "../EllipsisDots";
 import Codicon from "../Codicon";
 import Tooltip from "../Tooltip";
+import ResizeHandle from "../ResizeHandle";
 import FolderTree from "./FolderTree";
 import Section from "./Section";
-import Divider from "./Divider";
 import { useHistory, setIsLayoutActive } from "../../store/history";
 import Search from "./tasks/Search";
 import Git from "./tasks/Git";
@@ -62,39 +62,111 @@ const timelineActions = (
   </>
 );
 
-const FilesView = () => {
-  const [leebhinOpen, setLeebhinOpen] = useState(true);
-  const [outlineOpen, setOutlineOpen] = useState(false);
-  const [timelineOpen, setTimelineOpen] = useState(false);
+const MIN_SECTION_HEIGHT = 60;
 
-  const leebhinGrow = 1;
-  const outlineGrow = leebhinOpen ? 4 : 1;
-  const timelineGrow = outlineOpen ? 4 : 1;
+const FilesView = () => {
+  const [leebhinOpen, setLeebhinOpenRaw] = useState(true);
+  const [outlineOpen, setOutlineOpenRaw] = useState(false);
+  const [timelineOpen, setTimelineOpenRaw] = useState(false);
+  const [lastOpened, setLastOpened] = useState("leebhin");
+
+  const trackOpen = (id, raw) => (val) => {
+    raw((prev) => {
+      const next = typeof val === "function" ? val(prev) : val;
+      if (next && !prev) setLastOpened(id);
+      return next;
+    });
+  };
+
+  const setLeebhinOpen = trackOpen("leebhin", setLeebhinOpenRaw);
+  const setOutlineOpen = trackOpen("outline", setOutlineOpenRaw);
+  const setTimelineOpen = trackOpen("timeline", setTimelineOpenRaw);
+
+  const folderRef = useRef(null);
+  const outlineRef = useRef(null);
+  const timelineRef = useRef(null);
+  const [basis, setBasis] = useState([null, null, null]);
+  const [isResizing, setIsResizing] = useState(false);
+
+  const startResize = () => {
+    setIsResizing(true);
+    setBasis([
+      folderRef.current?.offsetHeight ?? 0,
+      outlineRef.current?.offsetHeight ?? 0,
+      timelineRef.current?.offsetHeight ?? 0,
+    ]);
+  };
+
+  const stopResize = () => setIsResizing(false);
+
+  const handleResizeAt = (i) => (delta) => {
+    setBasis((prev) => {
+      const next = [...prev];
+      let a = next[i] + delta;
+      let b = next[i + 1] - delta;
+      if (a < MIN_SECTION_HEIGHT) {
+        b -= MIN_SECTION_HEIGHT - a;
+        a = MIN_SECTION_HEIGHT;
+      }
+      if (b < MIN_SECTION_HEIGHT) {
+        a -= MIN_SECTION_HEIGHT - b;
+        b = MIN_SECTION_HEIGHT;
+      }
+      next[i] = a;
+      next[i + 1] = b;
+      return next;
+    });
+  };
+
+  const leebhinGrow = lastOpened === "leebhin" ? 4 : 1;
+  const outlineGrow = lastOpened === "outline" ? 4 : 1;
+  const timelineGrow = lastOpened === "timeline" ? 4 : 1;
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <FolderTree
+        innerRef={folderRef}
         isOpen={leebhinOpen}
         setIsOpen={setLeebhinOpen}
         grow={leebhinGrow}
+        basis={basis[0]}
+        isResizing={isResizing}
       />
-      <Divider />
+      <ResizeHandle
+        direction="vertical"
+        enabled={leebhinOpen && outlineOpen}
+        onResizeStart={startResize}
+        onResize={handleResizeAt(0)}
+        onResizeStop={stopResize}
+      />
       <Section
+        innerRef={outlineRef}
         title="개요"
         actions={outlineActions}
         isOpen={outlineOpen}
         setIsOpen={setOutlineOpen}
         grow={outlineGrow}
+        basis={basis[1]}
+        isResizing={isResizing}
       >
         <EmptyHint>활성 편집기에서 개요 정보를 제공할 수 없습니다.</EmptyHint>
       </Section>
-      <Divider />
+      <ResizeHandle
+        direction="vertical"
+        enabled={outlineOpen && timelineOpen}
+        onResizeStart={startResize}
+        onResize={handleResizeAt(1)}
+        onResizeStop={stopResize}
+      />
       <Section
+        innerRef={timelineRef}
         title="타임라인"
         actions={timelineActions}
         isOpen={timelineOpen}
         setIsOpen={setTimelineOpen}
         grow={timelineGrow}
+        basis={basis[2]}
+        isResizing={isResizing}
       >
         <EmptyHint>활성 편집기에서 타임라인 정보를 제공할 수 없습니다.</EmptyHint>
       </Section>
@@ -104,8 +176,8 @@ const FilesView = () => {
 
 const START_WIDTH = 300;
 const MIN_WIDTH = 238;
-const HOVER_EDGE_AREA = 6.1;
-const HOVER_DELAY = 300;
+const HOVER_EDGE_AREA = 3.5;
+const HOVER_DELAY = 280;
 const CLOSE_RANGE = 85;
 const OPEN_RANGE = 90;
 
@@ -304,7 +376,7 @@ const Sidebar = () => {
       }}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      handleStyles={{ right: { cursor: "ew-resize" } }}
+      handleStyles={{ right: { cursor: "ew-resize", width: "7px", right: "-3.5px" } }}
     >
       <div
         ref={contentRef}

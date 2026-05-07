@@ -12,6 +12,9 @@ const Section = ({
   isOpen: controlledIsOpen,
   setIsOpen: controlledSetIsOpen,
   grow = 1,
+  basis,
+  innerRef,
+  isResizing = false,
 }) => {
   const [internalIsOpen, setInternalIsOpen] = useState(defaultOpen);
   const isOpen =
@@ -31,16 +34,27 @@ const Section = ({
     return () => document.removeEventListener("mousedown", handleMouseDown);
   }, []);
 
+  const flexStyle = !isOpen
+    ? { flexGrow: 0, flexBasis: 0 }
+    : basis != null
+    ? { flexGrow: 0, flexBasis: `${basis}px` }
+    : { flexGrow: grow, flexBasis: 0 };
+
   return (
     <div
-      ref={sectionRef}
+      ref={(el) => {
+        sectionRef.current = el;
+        if (typeof innerRef === "function") innerRef(el);
+        else if (innerRef) innerRef.current = el;
+      }}
       className="overflow-hidden flex flex-col text-[13px] group/section"
       style={{
-        flexGrow: isOpen ? grow : 0,
-        flexBasis: 0,
+        ...flexStyle,
         flexShrink: 0,
         minHeight: 22,
-        transition: "flex-grow 0.15s linear",
+        transition: isResizing
+          ? "none"
+          : "flex-grow 0.15s linear, flex-basis 0.15s linear",
       }}
     >
       <div
@@ -48,11 +62,11 @@ const Section = ({
         style={isActive ? { boxShadow: "0 0 0 1px var(--accent) inset" } : {}}
         onClick={() => {
           setIsOpen((prev) => !prev);
-          setIsActive(true);
+          setIsActive((prev) => !prev);
         }}
       >
         <div
-          className="flex items-center gap-1.5 h-[22px] leading-none w-full pr-0.5"
+          className="flex items-center gap-1.5 h-[22px] leading-none w-full pr-[9px]"
           style={{ paddingLeft: "1px" }}
         >
           <div>
@@ -77,7 +91,7 @@ const Section = ({
             )}
           </div>
           <div className="flex-1 flex items-center justify-between overflow-hidden">
-            <span className="font-bold text-[11px] leading-[22px] truncate">
+            <span className="font-bold text-[11px] leading-[22px] truncate min-w-0">
               {title}
             </span>
             <div className="flex items-center gap-1.5 shrink-0 pr-[3px]">
@@ -99,7 +113,11 @@ const Section = ({
                     actionsAlwaysVisible
                       ? ""
                       : isOpen
-                      ? "opacity-0 pointer-events-none group-hover/section:opacity-100 group-hover/section:pointer-events-auto"
+                      ? `${
+                          isActive
+                            ? "opacity-100 pointer-events-auto"
+                            : "opacity-0 pointer-events-none"
+                        } group-hover/section:opacity-100 group-hover/section:pointer-events-auto`
                       : "opacity-0 pointer-events-none"
                   }`}
                   onClick={(e) => e.stopPropagation()}
@@ -111,7 +129,14 @@ const Section = ({
           </div>
         </div>
       </div>
-      <CustomScrollbar style={{ flex: "1 1 0" }}>{children}</CustomScrollbar>
+      <CustomScrollbar style={{ flex: "1 1 0" }}>
+        <div
+          className="min-h-full"
+          onMouseDown={() => setIsActive(true)}
+        >
+          {children}
+        </div>
+      </CustomScrollbar>
     </div>
   );
 };
